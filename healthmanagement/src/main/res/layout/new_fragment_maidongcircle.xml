@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--  <com.headlth.management.myview.MyRecyclerView
+          android:id="@+id/frgment_maidongcircle_recyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:cacheColorHint="@null"
+          android:scrollbars="vertical" />-->
+    <android.support.v4.widget.SwipeRefreshLayout
+
+        android:id="@+id/frgment_maidongcircle_SwipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/frgment_maidongcircle_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@null"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/maidongcircle_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/nodata"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:text="暂无数据"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </RelativeLayout>
+</FrameLayout>
+

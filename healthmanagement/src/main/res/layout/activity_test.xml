@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.headlth.management.circle.test">
+
+
+    <com.headlth.management.circle.RoundProgressBar
+        android:id="@+id/roundProgressBar2"
+        android:layout_width="140dip"
+        android:layout_height="140dip"
+
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+
+        android_custom:roundColor="@android:color/transparent"
+        android_custom:roundProgressColor="#4ad2f2"
+        android_custom:roundWidth="23dip"
+        android_custom:textColor="#42c3f7"
+        android_custom:textSize="18sp" />
+
+</RelativeLayout>

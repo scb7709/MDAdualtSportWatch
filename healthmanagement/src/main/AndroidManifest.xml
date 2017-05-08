@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.headlth.management"
+    android:anyDensity="true">
+
+    <uses-sdk android:minSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GRT_TASKS" />
+
+    <uses-permission android:name="com.huawei.launcher2.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.mediatek.launcherplus.permission.WRITE_SETTINGS" />
+
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+
+    <application
+        android:name=".acs.App"
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".TEXT"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!--HomeActivity-->
+        <activity
+            android:name=".activity.HomeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+
+        </activity>
+
+
+        <activity android:name=".blue.DeviceServicesActivity" />
+        <activity android:name=".blue.demo.DemoHeartRateSensorActivity" />
+        <!-- 鎺ュ彈蹇冪巼鐨勬湇鍔?-->
+        <service
+            android:name=".blue.BleService"
+            android:enabled="true" />
+
+        <activity android:name=".activity.NewChuFang" />
+        <activity
+            android:name=".activity.StrengthSportActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.headlth.management.scan.Search"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".movelistview.SimpleActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WebAboutUsActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.CalendarActivityCalendar"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.AerobicSportActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity
+            android:name=".activity.StrengthSportSummarizeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".activity.WBEntryActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+
+
+        <activity
+            android:name=".activity.Target"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChuFangDtail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.tijianBaoGao"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.OldMessageActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.MessageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MessageDetialsActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.YunDongChuFang"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.StrengthVideoPlayActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:process=":videojj"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".activity.XinlvTu"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShareActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".activity.ShareImageHandleActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.PhotoalbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ImageGridActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyPrescriptionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.RecommendPrescriptionListActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.MyPrescriptionDetialsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.MyOrderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MyOrderDetialsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HealthDatumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AdvancedPrescriptionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.QuestionnaireAnswerActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".activity.AccountManageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BoundPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.GetHeartActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.ContentDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CircleReplyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.Login"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".activity.FindPassWordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SetPassWordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CompleteInformationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LivingHabitActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <activity
+            android:name=".activity.ExercisePlanActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".activity.QuestionnaireActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.QuestionnaireResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+
+        </activity>
+        <activity
+            android:name=".activity.PayActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".activity.ExerciseRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.PrescriptionDetailsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.AboutUsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".activity.AboutMaiDongActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+
+        <activity android:name="com.umeng.fb.ConversationActivity" />
+
+
+        <!-- jj?-->
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="acf03257557e5a244e5cecc686711807" />
+
+        <!-- 鍙嬬洘鐗堟湰鏇存柊 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="56fb46a9e0f55a111400081b" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <activity
+            android:name=".circle.test"
+            android:label="@string/title_activity_test">
+            <!--      <intent-filter>
+                      <action android:name="android.intent.action.MAIN" />
+                      <category android:name="android.intent.category.LAUNCHER" />
+                  </intent-filter>-->
+        </activity>
+        <!-- 鑷姩涓婁紶鏈嶅姟 -->
+        <service android:name=".service.UpHistoryDataService">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </service>
+
+
+        <service
+            android:name=".service.FakePlayerService"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.dbjtech.myservice" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.NetworkService"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.dbjtech.myvideoservice" />
+            </intent-filter>
+        </service>
+
+
+        <!--qq登录-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1105190496" />
+            </intent-filter>
+        </activity>
+        <!--tencent-->
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+
+        <!--支付宝支付-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+    </application>
+
+</manifest>

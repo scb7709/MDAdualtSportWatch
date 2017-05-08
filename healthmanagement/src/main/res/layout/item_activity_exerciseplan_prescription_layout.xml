@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.headlth.management.myview.SubscriptView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_activity_exerciseplan_prescription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_activity_exerciseplan_prescription_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="所有处方"
+        android:textColor="#999999"
+        android:textSize="13dp" />
+
+    <TextView
+        android:id="@+id/item_activity_exerciseplan_prescription_line"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="#ffac04"
+        android:gravity="center"
+        android:text="所有处方"
+        android:textSize="13dp"
+        android:visibility="invisible" />
+
+</com.headlth.management.myview.SubscriptView>

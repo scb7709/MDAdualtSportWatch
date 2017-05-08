@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F2F2F2"
+        android:orientation="vertical">
+        <include
+            layout="@layout/view_publicctitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"></include>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="#ffad00"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="60dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+
+
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    android:text="身体评估"
+                    android:textColor="#333333"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:id="@+id/activity_questionnaireresult_pay_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical"
+
+                    >
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="30dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/activity_questionnaireresult_pay_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="150dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:ellipsize="end"
+                                android:scrollbars="vertical"
+                                android:singleLine="false"
+                                android:text=""
+                                android:textColor="#999999"
+                                android:textSize="13dp" />
+                        </LinearLayout>
+
+
+                        <ImageView
+                            android:id="@+id/activity_questionnaireresult_nopay_im"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/evaluate_shadow" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/activity_questionnaireresult_nopay_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="45dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"></View>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="*  "
+                            android:textColor="#ffac04"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="此结果需支付,支付后可查看完整问卷结果"
+                            android:textColor="#ffac04"
+                            android:textSize="13dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"></View>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/activity_questionnaireresult_nopay_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="40dp"
+                    android:text="颜色和不透明度 (alpha) 值以十六进制表示法表示。任何一种颜色的值范围都是 0 到 255(00 到 ff)。对于 alpha，00 表示完全透明，ff 表示完全不透明。表达式顺序是“aabbggrr”，其中“aa=alpha”(00 到 ff);“bb=blue”(00 到 ff);“gg=green”(00 到 ff);“rr=red”(00 到 ff)。例如，如果您希望对某叠加层应用不透明度为 50% 的蓝色，则应指定以下值：7fff0000  "
+                    android:textColor="#999999"
+                    android:textSize="13dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:src="@mipmap/icon_evaluate" />
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/activity_questionnaireresult_commit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/activite_login_selector"
+            android:text="支付"
+            android:textColor="#ffffff"
+            android:textSize="15dp" />
+
+
+        <Button
+            android:id="@+id/activity_questionnaireresult_lockquestionnaire"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/dialog_fifteen_minutes_shape"
+            android:text="查看已填问卷"
+            android:textColor="#ffac04"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+</ScrollView>

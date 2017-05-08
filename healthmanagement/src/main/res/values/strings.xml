@@ -1,0 +1,54 @@
+<resources>
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+
+    <string name="app_name">迈动健康</string>
+    <string name="default_progress">0%</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="feed_back_tip">\t亲，遇到什么系统问题了吗?或者有什么功能建议吗?如果是使用不满意也请尽情吐槽给我们，十分感谢哟!</string>
+
+    <string name="feeb_back_success_1">我们会迅速的处理您提出的意见</string>
+    <string name="keep">保持心率在有效范围内，积累20分钟</string>
+
+    <string name="feeb_back_success_2">努力做您最优秀的健康管家</string>
+
+    <string name="help_content">迈动健康®来自于一个拥有不同背景的团体：国家队专家、海归学者、体科所研究员等。
+       运动是良药。迈动健康®团队的每一成员都希望通过结合互联网的心率监控手段与科学严谨的专业知识提高中国人的体质水平，将健康通过运动带给每一个中国人。
+若您在App使用过程中有任何疑问，请联系我们：
+Email地址：
+电话：</string>
+
+    <string name="result_tip_not_finish">再接再厉！当您的累计运动时间未达到目标时，运动只能给您带来有限的健康益处，为了更好的坚持与养成科学的运动习惯，希望在下次锻炼时，您可以100%完成目标时间</string>
+    <string name="result_tip_finish">做的不错！完成所需的累计运动时间可以帮助您进一步改善心肺功能，提高健康水平，减少患慢性病的概率。希望您能继续坚持！</string>
+
+    <string name="ble_not_supported">Bluetooth LE is not supported</string>
+    <string name="label_data">Data:</string>
+    <string name="label_heartrate">Heart rate:</string>
+    <string name="label_device_address">Device address:</string>
+    <string name="label_state">State:</string>
+    <string name="label_services">Services</string>
+    <string name="no_data">No data</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="title_devices">Bluetooth LE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+
+    <string name="action_demo">Demo</string>
+
+    <string name="title_demo_accelerometer">Accelerometer Demo</string>
+    <string name="title_demo_gyroscope">Gyroscope Demo</string>
+    <string name="title_demo_heartrate">Heart rate variability Demo</string>
+
+    <string name="unknown_device">Unknown device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+
+    <!-- Menu items -->
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+    <string name="title_activity_prepared">Prepared</string>
+    <string name="title_activity_test">test</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
+
+
+        <include
+            layout="@layout/view_publicctitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"></include>
+
+
+        <include
+            layout="@layout/view_myprescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"></include>
+
+
+        <ListView
+            android:id="@+id/activity_myprescriptiondetials_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:divider="#00000000"
+            android:dividerHeight="0dip"></ListView>
+
+    </LinearLayout>
+
+</FrameLayout>

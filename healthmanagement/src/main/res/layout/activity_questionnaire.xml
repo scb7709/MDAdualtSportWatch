@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@color/white"
+    android:orientation="vertical">
+    <include
+        layout="@layout/view_publicctitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></include>
+
+    <TextView
+        android:id="@+id/activity_questionnaire_title_"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:text="风险类问卷(20题)"
+        android:textColor="#666666"
+        android:visibility="gone"
+        android:textSize="13dp" />
+
+    <ListView
+        android:id="@+id/activity_questionnaire_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="25dp"
+        android:dividerHeight="15dp"
+        android:divider="#00000000"
+        >
+    </ListView>
+</LinearLayout>

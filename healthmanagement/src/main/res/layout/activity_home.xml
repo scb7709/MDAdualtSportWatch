@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/home">
+
+    <ImageView
+        android:id="@+id/homeactivity_ad_im"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/homeactivity_ad_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"></android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/homeactivity_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone"></LinearLayout>
+
+    <Button
+        android:id="@+id/homeactivity_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/skip"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="5dp"
+        android:text="3秒后结束"
+        android:visibility="gone"
+        />
+</FrameLayout>

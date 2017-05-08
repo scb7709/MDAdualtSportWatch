@@ -1,0 +1,300 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:seekcircle="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SampleActivity">
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="465dp"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/bg_home">
+
+            <LinearLayout
+                android:id="@+id/layoutt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="平均心率"
+                        android:textColor="#836313"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/HeartRateAvg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="119"
+                        android:textColor="#3c3c3c"
+                        android:textSize="24dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="共运动"
+                        android:textColor="#836313"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/Duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="38.28"
+                        android:textColor="#3c3c3c"
+                        android:textSize="24dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="大卡"
+                        android:textColor="#836313"
+                        android:textSize="13dp" />
+
+                    <TextView
+                        android:id="@+id/BigCar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="119"
+
+                        android:textColor="#3c3c3c"
+                        android:textSize="24dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_below="@+id/layoutt"
+                android:layout_marginTop="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="175dp"
+                    android:layout_height="175dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp">
+
+                    <TextView
+                        android:id="@+id/ValidTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="00&apos;00&apos;&apos;"
+                        android:textColor="#000000"
+                        android:textSize="40dp" />
+
+                    <TextView
+                        android:id="@+id/Target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ValidTime"
+                        android:layout_centerHorizontal="true"
+                        android:text="10&apos;00" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/ValidTime"
+                        android:layout_centerHorizontal="true"
+                        android:text="有氧运动"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <com.headlth.management.circle.SeekCircleLeftHalf
+                        android:id="@+id/seekCircle"
+                        android:layout_width="175dp"
+                        android:layout_height="175dp"
+                        seekcircle:max="100"
+                        seekcircle:min="0"
+                        seekcircle:progress="0" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout_strength"
+                    android:layout_width="175dp"
+                    android:layout_height="175dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/ValidTime_strength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/Target_strength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ValidTime_strength"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:id="@+id/textView4_strength"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/ValidTime_strength"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="8dp"
+                        android:text="力量训练"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+
+                        />
+
+                    <com.headlth.management.circle.SeekCircleRightHalf
+                        android:id="@+id/seekCircle_strength"
+                        android:layout_width="175dp"
+                        android:layout_height="175dp"
+                        seekcircle:max="100"
+                        seekcircle:min="0"
+                        seekcircle:progress="0" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/TJbaogao"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/layout2"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/gerenchufang"
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/chakanxinlv"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:background="#00000000"
+                    android:text="个人运动处方"
+                    android:textColor="#000"
+                    android:textSize="15dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"></FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/chakanxinlv"
+                android:layout_width="24dp"
+                android:layout_height="30dp"
+                android:layout_alignTop="@+id/linearLayout"
+                android:layout_toStartOf="@+id/button"
+                android:background="@drawable/icon_heart_rate_map" />
+
+            <Button
+                android:id="@+id/TJbaogao"
+                android:layout_width="24dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/relativeLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/icon_personal_info" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="5dp"
+                android:layout_height="30dp"
+                android:layout_alignBaseline="@+id/chakanxinlv"
+                android:layout_alignBottom="@+id/chakanxinlv"
+                android:layout_alignParentEnd="true"
+                android:background="#00000000" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btstart"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/btn_start" />
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+</ScrollView>

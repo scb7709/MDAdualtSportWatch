@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:background="#ffad00">
+        <Button
+            android:id="@+id/btback"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignBottom="@+id/today"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/icon_back"
+            android:onClick="back"
+            android:textColor="#fafafa"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/statechange"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="17dp"
+            android:text="体检报告" />
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_marginTop="24dp"
+            android:textColor="#12A3A4"
+            android:text="          "
+            android:textSize="18dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#c7c7c7"
+
+            android:id="@+id/Target"
+            android:layout_below="@+id/line1"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="15dp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:flipInterval="30"
+            android:persistentDrawingCache="animation"
+            android:layout_below="@+id/Target"
+            android:layout_above="@+id/chankanchufang" />
+
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="个人信息"
+            android:id="@+id/geren"
+            android:background="#00000000"
+            android:textSize="17dp"
+            android:textColor="#999999"
+            android:layout_marginRight="20dp"
+            android:layout_above="@+id/line2"
+            android:layout_toStartOf="@+id/textView"
+            android:gravity="bottom|center_horizontal" />
+
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="体检项"
+            android:background="#00000000"
+            android:id="@+id/yichang"
+            android:textColor="#999999"
+            android:textSize="17dp"
+            android:layout_marginLeft="20dp"
+            android:layout_alignTop="@+id/textView"
+            android:layout_toEndOf="@+id/textView"
+            android:gravity="bottom|center_horizontal" />
+
+        <Button
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="查看运动处方"
+            android:background="#ffad00"
+            android:id="@+id/chankanchufang"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:textSize="17dp"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:background="#ffad00"
+            android:id="@+id/line1"
+            android:layout_below="@+id/geren"
+            android:layout_alignStart="@+id/geren"
+            android:layout_marginTop="6dp"
+            android:layout_alignEnd="@+id/geren" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:background="#ffad00"
+            android:id="@+id/line2"
+            android:layout_below="@+id/yichang"
+            android:layout_marginTop="6dp"
+            android:layout_alignStart="@+id/yichang"
+            android:layout_alignEnd="@+id/yichang" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

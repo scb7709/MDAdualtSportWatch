@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <FrameLayout
+        android:id="@+id/listview_livinghabit_FrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+
+        <RelativeLayout
+            android:id="@+id/listview_livinghabit_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/listview_livinghabit_appellation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="高血压"
+                android:textColor="#333333"
+                android:textSize="15dp" />
+
+            <ImageView
+                android:id="@+id/listview_livinghabit_ischoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_choice_negative" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/listview_livinghabit_title"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="#f2f2f2"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:text="是否确诊以下疾病"
+            android:textColor="#666666"
+            android:textSize="12dp"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/listview_livinghabit_commit"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/activite_login_selector"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusable="false"
+            android:text="注册"
+            android:textColor="#ffffff"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/listview_livinghabit_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray"></View>
+</RelativeLayout>

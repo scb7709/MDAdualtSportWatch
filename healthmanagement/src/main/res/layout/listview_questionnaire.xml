@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/listview_questionnaire"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/idview"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="5dp"
+                android:background="#ffad00" />
+
+            <TextView
+                android:layout_toRightOf="@id/idview"
+                android:id="@+id/listview_questionnaire_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:text="01.您的性别?"
+                android:textColor="#333333"
+                android:textSize="15dp" />
+
+            <LinearLayout
+                android:id="@+id/listview_questionnaire_getheart_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@id/listview_questionnaire_title"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_toRightOf="@id/idview"
+                    android:id="@+id/listview_questionnaire_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="0"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#ffac04"
+                    android:textSize="15dp" />
+
+                <Button
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/listview_questionnaire_getheart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/getheart_selector"
+                    android:text="获取安静心率"
+                    android:textColor="#ffac04"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
+            <TextView
+                android:layout_toRightOf="@id/listview_questionnaire_getheart_layout"
+                android:layout_alignParentRight="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                ></TextView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/listview_questionnaire_noheart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/listview_questionnaire_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"></LinearLayout>
+
+            <com.headlth.management.myview.ClearEditText
+                android:id="@+id/listview_questionnaire_edit"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/listview_questionnaire_commit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/activite_login_selector"
+        android:text="提交"
+        android:textColor="#ffffff"
+        android:textSize="15dp" />
+</LinearLayout>

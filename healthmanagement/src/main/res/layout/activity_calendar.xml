@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ffad00"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="17dp" />
+
+        <Button
+            android:id="@+id/bt_back"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/icon_back"
+            android:textColor="#fafafa"
+            android:textSize="15sp" />
+    </FrameLayout>
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center_vertical">
+
+        <TableRow
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip">
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="日"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="一"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="二"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="三"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="四"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="五"
+                android:textColor="#c7c7c7" />
+
+            <TextView
+                style="@style/dateStyle"
+                android:text="六"
+                android:textColor="#c7c7c7" />
+        </TableRow>
+    </TableLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_weight="0.8"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:allowUndo="true"
+        android:background="#aaaaaa"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/btn3"
+            />
+           <!-- android:src="@drawable/btn_forces" -->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:text="已完成有氧运动" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/btn1"
+            />
+          <!--  android:src="@mipmap/btn_forces"-->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:text="已完成力量训练"
+
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/btn2"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:text="已完成有氧运动和力量训练" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_recent"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+
+            android:layout_weight="1"
+            android:background="#eeeeee"
+            android:text="回到今天"
+            android:textColor="#ffad00"
+            android:textSize="15dp" />
+
+
+    </LinearLayout>
+</LinearLayout>
