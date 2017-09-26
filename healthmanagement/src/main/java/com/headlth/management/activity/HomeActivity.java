@@ -145,7 +145,7 @@ public class HomeActivity extends Activity {
         x.view().inject(this);
 
 
-/*
+/*gggg
         long sdsize[] = FileViewer.getSDSpace(HomeActivity.this);
         Log.e("aaaaaaaaaccc", sdsize[0] + "" + sdsize[1] + "'  ");*/
         activity = this;
