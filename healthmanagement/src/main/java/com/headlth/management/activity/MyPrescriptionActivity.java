@@ -4,19 +4,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
-import com.headlth.management.entity.MyOrderJson;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.MyPrescriptionJson;
 import com.headlth.management.fragment.PrescriptionFragment;
+import com.headlth.management.myview.NoPreloadViewPager;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -28,9 +27,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by abc on 2016/11/21.
@@ -65,7 +62,7 @@ public class MyPrescriptionActivity extends BaseActivity {
     @ViewInject(R.id.activity_myprescription_overline)
     private TextView activity_myprescription_overline;
     @ViewInject(R.id.activity_myprescription_ViewPager)
-    private ViewPager activity_myprescription_ViewPager;
+    private NoPreloadViewPager activity_myprescription_ViewPager;
     private List<Fragment> myPrescriptionFragmentList;
 
     private List<TextView> textList;
@@ -103,8 +100,7 @@ public class MyPrescriptionActivity extends BaseActivity {
         textList.add(activity_myprescription_overtext);
         lineList.add(activity_myprescription_overline);
         myPrescriptionFragmentList = new ArrayList<>();
-
-        activity_myprescription_ViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        activity_myprescription_ViewPager.setOnPageChangeListener(new NoPreloadViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -120,6 +116,23 @@ public class MyPrescriptionActivity extends BaseActivity {
 
             }
         });
+/*
+        activity_myprescription_ViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setClore(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });*/
         getMyPrescriptionActivityRequest();
     }
 

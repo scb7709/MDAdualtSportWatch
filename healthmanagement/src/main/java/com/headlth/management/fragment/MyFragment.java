@@ -23,21 +23,25 @@ import com.headlth.management.activity.AboutMaiDongActivity;
 import com.headlth.management.activity.AccountManageActivity;
 import com.headlth.management.activity.CompleteInformationActivity;
 import com.headlth.management.activity.HealthDatumActivity;
+import com.headlth.management.activity.MyDevicesActivity;
 import com.headlth.management.activity.MyOrderActivity;
 import com.headlth.management.activity.MyPrescriptionActivity;
 import com.headlth.management.activity.MyShareActivity;
+
 import com.headlth.management.entity.User;
 import com.headlth.management.entity.VersionClass;
 import com.headlth.management.myview.CircleImageView;
+
+import com.headlth.management.service.UpdateService;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
+
 import com.headlth.management.utils.VersonUtils;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.HttpManager;
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -128,12 +132,6 @@ public class MyFragment extends BaseFragment {
         }
 
     }
-
-    private void init() {
-
-
-    }
-
     @Event(value = {R.id.fragmrnt_my_update,
             R.id.fragment_my_aboutus,
             R.id.fragment_my_health,
@@ -141,7 +139,8 @@ public class MyFragment extends BaseFragment {
             R.id.fragment_my_user,
             R.id.fragmrnt_my_order,
             R.id.fragmrnt_my_prescription,
-            R.id.fragmrnt_my_share
+            R.id.fragmrnt_my_share,
+            R.id.fragment_my_mydevice
     })
     private void getEvent(View view) {
         switch (view.getId()) {
@@ -152,13 +151,27 @@ public class MyFragment extends BaseFragment {
 
                 startActivity(new Intent(getActivity(), AboutMaiDongActivity.class));
                 break;
+            case R.id.fragment_my_mydevice:
+
+                startActivity(new Intent(getActivity(), MyDevicesActivity.class));
+                break;
             case R.id.fragment_my_health:
                 startActivity(new Intent(getActivity(), HealthDatumActivity.class));
                 break;
             case R.id.fragment_my_updateversion:
 
                 if (isupdate) {
-                    showUpdateDialog();
+                   /* UpadteApp upadteApp = new UpadteApp(getActivity(), version, true, new UpadteApp.UpdateResult() {
+                        @Override
+                        public void onSuccess() {
+                        }
+                        @Override
+                        public void onError() {
+                        }
+                    });*/
+                    Intent intent = new Intent(getActivity(), UpdateService.class);
+                    intent.putExtra("apkUrl", version.DownloadUrl);
+                    getActivity().startService(intent);
                 } else {
                     Toast.makeText(getActivity(), "没有新版本可更新", Toast.LENGTH_SHORT).show();
                 }
@@ -180,151 +193,6 @@ public class MyFragment extends BaseFragment {
 
         }
     }
-
-    /**
-     * 弹出升级对话框
-     */
-    private void showUpdateDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("最新版本:" + version.VersionName);
-
-
-        String[] Description = version.Description.split(";");
-        String description = "";
-        for (int i = 0; i < Description.length; i++) {
-            description += Description[i] + ";\n";
-        }
-
-
-        builder.setMessage(description);
-        builder.setPositiveButton("立即更新",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 开始更新
-//                        System.out.println("开始下载apk");
-                        downloaddialog();
-                        downloadFile(version.DownloadUrl);
-                    }
-                });
-
-        builder.setNegativeButton("以后再说",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }
-        );
-
-        builder.show();
-    }
-
-    /**
-     * 下载apk
-     */
-    private AlertDialog dialog;//下载的对话框
-    private SeekBar progressBar;//下载进度条
-    private TextView downtext;//下载进度条
-    HttpManager httpManager;
-
-    protected void downloaddialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        dialog = builder.create();
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_download, null);
-        progressBar = (SeekBar) view.findViewById(R.id.dialog_download_progress);
-        downtext = (TextView) view.findViewById(R.id.dialog_download_tv);
-        TextView dialog_download_Description = (TextView) view.findViewById(R.id.dialog_download_Description);
-        TextView dialog_download_versionname = (TextView) view.findViewById(R.id.dialog_download_versionname);
-
-        String[] Description = version.Description.split(";");
-        String description = "";
-        for (int i = 0; i < Description.length; i++) {
-            description += Description[i] + ";\n";
-        }
-
-
-        dialog_download_Description.setText(description);
-        dialog_download_versionname.setText(version.VersionName);
-        Button cancel = (Button) view.findViewById(R.id.dialog_download__cancel);
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                if (httpManager != null) {
-                }
-
-            }
-        });
-        dialog.setView(view, 20, 20, 20, 50);
-        dialog.setCanceledOnTouchOutside(false);//点击边界取消
-        dialog.show();
-
-
-    }
-
-    private void downloadFile(final String url) {
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(getActivity(), "sdcard不存在!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // 文件在sdcard的路径
-        File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/apk/" + new Date().getTime() + "Version");
-        if (!tempfile.exists()) {
-            tempfile.mkdirs();
-        }
-        String path = tempfile.getPath();
-        RequestParams requestParams = new RequestParams(url);
-        requestParams.setSaveFilePath(path);
-        httpManager = x.http();
-        httpManager.get(requestParams, new Callback.ProgressCallback<File>() {
-            @Override
-            public void onWaiting() {
-            }
-
-            @Override
-            public void onStarted() {
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isDownloading) {
-                int percent = (int) (current * 100 / total);
-//                System.out.println("下载进度:" + percent + "%");
-                downtext.setText("正在下载，已完成:" + percent + "%");// 更新下载进度
-                progressBar.setMax((int) (total / 1000));
-                progressBar.setProgress((int) (current / 1000));
-            }
-
-            @Override
-            public void onSuccess(File result) {
-                dialog.cancel();
-                Toast.makeText(getActivity(), "下载成功", Toast.LENGTH_SHORT).show();
-                VersonUtils.installApk(result, getActivity());// 安装apk
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                dialog.cancel();
-                ex.printStackTrace();
-                Toast.makeText(getActivity(), "下载失败，请检查网络和SD卡", Toast.LENGTH_SHORT).show();
-                return;
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                //getRegistrationId();
-                dialog.cancel();
-            }
-
-            @Override
-            public void onFinished() {
-                dialog.cancel();
-            }
-        });
-    }
-
     private void getTotalTimeRequest() {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetTotalTimeRequest");
 

@@ -29,7 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.headlth.management.R;
-import com.headlth.management.acs.App;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.datepickerview.TimePickerView;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.entity.User;
@@ -134,10 +134,10 @@ public class CompleteInformationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         activity = this;
-        setDate();
+        initialize();
     }
 
-    private void setDate() {
+    private void initialize() {
         Intent intent = getIntent();
         String flag = intent.getStringExtra("flag");//有初始信息传过来（三方账号登录和我的界面修改资料）
         if (flag.equals("yes")) {
@@ -292,7 +292,6 @@ public class CompleteInformationActivity extends BaseActivity {
                     } else {
                         if (ismy) {
                             next();
-
                         } else {
 
                             if (nameIsExist) {
@@ -593,7 +592,6 @@ public class CompleteInformationActivity extends BaseActivity {
         params.addBodyParameter("Height", userInformation.getHeight());
         params.addBodyParameter("Gender", userInformation.getGender());
         params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
-        ;
         Log.i("userInformationSSS", "" + path.length());
         if (path.length() != 0) {//从我的界面过来 而且头像没更改//        二次压缩
             String pictime = System.currentTimeMillis() + "";

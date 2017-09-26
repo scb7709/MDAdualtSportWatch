@@ -27,6 +27,7 @@ public class UserLogin implements Serializable {
     public String Gender;
     public String Birthday;
     public String  Height;
+    public String MACAddress;
     public String Weight;
     public String ImgUrl;
     public String Status;
@@ -35,8 +36,9 @@ public class UserLogin implements Serializable {
     public String IsError;
     public String ErrMsg;
     public String ErrCode;
-
+    public String MAC;
     public String ResultJWT;
+
 
 
     @Override

@@ -1,10 +1,7 @@
 package com.headlth.management.activity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.ReplyAdapter;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.entity.Comment;
@@ -42,9 +40,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by abc on 2016/8/29.

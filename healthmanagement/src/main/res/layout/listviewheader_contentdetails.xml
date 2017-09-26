@@ -85,17 +85,13 @@
     </LinearLayout>
 
 
-    <com.headlth.management.myview.MGridView
+    <com.headlth.management.myview.MyRecyclerViewGridView
         android:id="@+id/contentdetails_Scrollgridview"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:numColumns="3"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp"></com.headlth.management.myview.MGridView>
+        android:verticalSpacing="5dp"></com.headlth.management.myview.MyRecyclerViewGridView>
 
     <LinearLayout
         android:layout_width="match_parent"

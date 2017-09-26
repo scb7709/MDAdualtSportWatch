@@ -21,6 +21,7 @@ import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.chatpay.PayResult;
 import com.headlth.management.entity.ChatPay;
 import com.headlth.management.entity.CircleList;
@@ -104,7 +105,6 @@ public class PayActivity extends BaseActivity {
 
         }
 
-        ;
     };
     private Runnable payRunnable = new Runnable() {
         @Override
@@ -128,10 +128,10 @@ public class PayActivity extends BaseActivity {
         api = WXAPIFactory.createWXAPI(PayActivity.this, Constant.CHAT_ID);
         api.registerApp(Constant.CHAT_ID);
         intent = getIntent();
-        init();
+        initialize();
     }
 
-    private void init() {
+    private void initialize() {
         OrderNo = intent.getStringExtra("OrderNO");
         PlanNameID = intent.getStringExtra("PlanNameID");
 

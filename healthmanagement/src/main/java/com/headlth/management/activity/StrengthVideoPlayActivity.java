@@ -48,7 +48,6 @@ import com.headlth.management.utils.ShareUitls;
 
 import com.umeng.message.PushAgent;
 
-;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -125,7 +124,10 @@ public class StrengthVideoPlayActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        initliaize();
+    }
 
+    private void initliaize() {
         activity = this;
         PushAgent.getInstance(this).onAppStart();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -138,7 +140,7 @@ public class StrengthVideoPlayActivity extends Activity {
         //   intentRecever=  new Intent("ActivityToServiceReceiver");
         startService(intentService);//开启服务用于全程检测
 
-        SDPATH=Environment.getExternalStorageDirectory().getAbsolutePath()+ "/maidong/maidongvideo/maidongvideo" + Stage;
+        SDPATH= Environment.getExternalStorageDirectory().getAbsolutePath()+ "/maidong/maidongvideo/maidongvideo" + Stage;
 
         list = FileViewer.getListFiles(SDPATH, "maid", true);
 
@@ -158,7 +160,7 @@ public class StrengthVideoPlayActivity extends Activity {
         initDialog();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         time = format.format(new Date());
-      // point=video.getActionList().size()-1;//测试用
+        // point=video.getActionList().size()-1;//测试用
         //ShareUitls.putString(getApplicationContext(), "CurrentPosition", "2000000000");
         setListener();
         // showDialog(true);
@@ -410,7 +412,7 @@ public class StrengthVideoPlayActivity extends Activity {
             @Override
             public void onScreenOff() {
                 if (!isflag3) {
-                    CurrentPosition = (int) videoView.getCurrentPosition();
+                    CurrentPosition = videoView.getCurrentPosition();
                     // ShareUitls.putString(getApplicationContext(), "CurrentPosition", CurrentPosition+ "");
                     if (videoView.isPlaying()) {
                         videoView.pause();
@@ -508,7 +510,7 @@ public class StrengthVideoPlayActivity extends Activity {
                         videoView.pause();
                         Log.i("PPPPPAAA准备播放", point + "");
                     }
-                    totalTime = (int) mp.getDuration();
+                    totalTime = mp.getDuration();
                     Log.i("PPPPPP准备播放1AAAA", totalTime + "");
 
                     // videoView.seekTo((int) CurrentPosition);
@@ -593,11 +595,11 @@ public class StrengthVideoPlayActivity extends Activity {
                 //  return;
             }
             if (videoView.isPlaying()) {//正在播放视频时更新计时数据
-                totalTime = (int) videoView.getDuration();
+                totalTime = videoView.getDuration();
                 Message message = Message.obtain();
                 //  Log.i("SSSSSSSSSSS", "SSSSS线程SHUNHUAN内部");
                 message.what = 1;
-                message.arg1 = (int) videoView.getCurrentPosition();
+                message.arg1 = videoView.getCurrentPosition();
                 message.arg2 = (int) totalTime;
                 handler.sendMessage(message);
             }
@@ -642,7 +644,7 @@ public class StrengthVideoPlayActivity extends Activity {
         super.onPause();
         if (!isflag3) {
             isOnprase = true;
-            CurrentPosition = (int) videoView.getCurrentPosition();
+            CurrentPosition = videoView.getCurrentPosition();
             //ShareUitls.putString(getApplicationContext(), "CurrentPosition", CurrentPosition + "");
             if (videoView.isPlaying()) {
                 videoView.pause();

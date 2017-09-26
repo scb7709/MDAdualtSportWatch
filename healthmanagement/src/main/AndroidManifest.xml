@@ -12,11 +12,27 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+
+
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.GRT_TASKS" />
+
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--6.0以后蓝牙新权限-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
+    <!--6.0支持BLE-->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <uses-permission android:name="com.huawei.launcher2.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.mediatek.launcherplus.permission.WRITE_SETTINGS" />
@@ -29,7 +45,6 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <uses-permission android:name="android.permission.READ_LOGS" />
@@ -37,12 +52,27 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
+    <!-- 二维码扫描-->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
     <application
         android:name=".acs.App"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:persistent="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/MyAppTheme">
         <activity
             android:name=".TEXT"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
@@ -50,11 +80,10 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <!--HomeActivity-->
+        <!--HomeActivity  Theme.NoTitleBar.Fullscreen-->
         <activity
             android:name=".activity.HomeActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
+            android:launchMode="standard"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
             <intent-filter>
@@ -86,32 +115,44 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.headlth.management.scan.Search"
-            android:screenOrientation="portrait" />
 
         <activity
-            android:name=".movelistview.SimpleActivity2"
+            android:name="com.headlth.management.activity.SearchBlueActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.headlth.management.activity.ConnectBlueActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyBlue.WatchBlueTestActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".activity.WebAboutUsActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.CalendarActivity"
             android:screenOrientation="portrait">
 
+
         </activity>
-        <activity
-            android:name=".activity.CalendarActivityCalendar"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activity.AerobicSportActivity"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+            android:name=".activity.NewAerobicSportActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.WatchSportSummaryActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+
         <activity
             android:name=".activity.StrengthSportSummarizeActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".activity.WBEntryActivity"
@@ -123,8 +164,6 @@
         </activity>
 
 
-
-
         <activity
             android:name=".activity.Target"
             android:screenOrientation="portrait" />
@@ -133,9 +172,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.tijianBaoGao"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.OldMessageActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -158,13 +194,20 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+
+        <activity
+            android:name=".activity.LookBigImageActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
             android:name=".activity.XinlvTu"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ShareActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShareNewActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.ShareImageHandleActivity"
             android:screenOrientation="portrait" />
@@ -230,7 +273,7 @@
             android:name=".activity.Login"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:theme="@style/MyAppTheme" />
         <activity
             android:name=".activity.FindPassWordActivity"
             android:launchMode="singleTop"
@@ -289,18 +332,36 @@
             android:screenOrientation="portrait">
 
         </activity>
+
         <activity
             android:name=".activity.PrescriptionDetailsActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.OtherActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
 
-        </activity>
         <activity
             android:name=".activity.AboutUsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
         </activity>
+        <activity
+            android:name=".activity.MyDevicesActivity"
+
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="photopicker.PhotoPreviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PreviewTheme" />
+        <activity
+            android:name="photopicker.PhotoPickerActivity"
+
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".activity.AboutMaiDongActivity"
@@ -308,6 +369,15 @@
             android:screenOrientation="portrait">
 
         </activity>
+        <!--二维码-->
+        <activity
+            android:name="zxing.activity.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="zxing.activity.ResultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
 
 
         <activity android:name="com.umeng.fb.ConversationActivity" />
@@ -336,6 +406,13 @@
         </activity>
         <!-- 鑷姩涓婁紶鏈嶅姟 -->
         <service android:name=".service.UpHistoryDataService">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.UpdateService">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -389,14 +466,6 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
-        <activity
-            android:name="io.vov.vitamio.activity.InitActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-
-
         <!--支付宝支付-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -408,6 +477,8 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"></activity>
+
+
     </application>
 
 </manifest>

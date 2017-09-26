@@ -1,6 +1,5 @@
 package com.headlth.management.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,7 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.headlth.management.R;
-import com.umeng.analytics.MobclickAgent;
+import com.headlth.management.acs.BaseActivity;
 
 
 public class WebAboutUsActivity extends BaseActivity {

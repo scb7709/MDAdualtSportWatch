@@ -1,23 +1,18 @@
 package com.headlth.management.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.QuestionnaireAdapter;
-import com.headlth.management.entity.PrescriptionDetails;
 import com.headlth.management.entity.PrescriptionJson;
 import com.headlth.management.entity.QuestionnaireGson;
 import com.headlth.management.utils.Constant;
@@ -34,9 +29,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by abc on 2016/9/25.
@@ -71,9 +64,13 @@ public class  QuestionnaireActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//获取拍照权限
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-        }*/
+        initialize();
+    }
+
+    private void initialize() {
+    /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//获取拍照权限
+         requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+     }*/
 
         x.view().inject(this);
 
@@ -84,22 +81,22 @@ public class  QuestionnaireActivity extends BaseActivity {
         UID = ShareUitls.getString(QuestionnaireActivity.this, "UID", "");
         flag=getIntent().getStringExtra("flag");
 
-      if(flag.equals("all")){//首次开具处方 打全部题
-          prescription = (PrescriptionJson.PrescriptionClass) getIntent().getSerializableExtra("prescription");
-          QuestionnaireID=prescription.QuestionnaireID;
-          PlanNameID =prescription.PlanNameID;;
-    //      PAY=getIntent().getStringExtra("PAY");
-      }else {//进阶  答部分题
-          QuestionnaireID =getIntent().getStringExtra("QuestionnaireID");
-          PlanNameID =getIntent().getStringExtra("PlanNameID");
+        if(flag.equals("all")){//首次开具处方 打全部题
+            prescription = (PrescriptionJson.PrescriptionClass) getIntent().getSerializableExtra("prescription");
+            QuestionnaireID=prescription.QuestionnaireID;
+            PlanNameID =prescription.PlanNameID;
+            //      PAY=getIntent().getStringExtra("PAY");
+        }else {//进阶  答部分题
+            QuestionnaireID =getIntent().getStringExtra("QuestionnaireID");
+            PlanNameID =getIntent().getStringExtra("PlanNameID");
 
-      }
+        }
 
 
         getQuestion();
     }
 
-    private void getQuestion() {
+    private void getQuestion() {//获取问卷
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetNewQuestionnaireRequest");
         params.addBodyParameter("QuestionnaireID",QuestionnaireID);

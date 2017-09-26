@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.chufang.fittimeFragment;
 import com.headlth.management.chufang.rateFragment;
 import com.headlth.management.chufang.strongFragment;

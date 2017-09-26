@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -26,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.utils.ImageProcessingUtils;
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -122,11 +122,9 @@ public class GetHeartActivity extends BaseActivity {
     private static final int[] averageArray = new int[averageArraySize];
 
 
-    public static enum TYPE {
+    public enum TYPE {
         GREEN, RED
     }
-
-    ;
 
     private static TYPE currentType = TYPE.GREEN;
 
@@ -306,8 +304,6 @@ Log.i("DDDDDDDDD","cccc");
         timer.cancel();
         super.onDestroy();
     }
-
-    ;
 
 
     protected XYMultipleSeriesRenderer buildRenderer(int color, PointStyle style, boolean fill) {

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.headlth.management.R;
 import com.headlth.management.activity.ShareActivity;
 
+import com.headlth.management.activity.ShareNewActivity;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 
@@ -83,7 +84,7 @@ public class Share {
 
     public void QQshare(boolean qqflag) {
         Log.i("sssssssssssQQQQQQ",ImageUrl);
-        ;//qqflag  选择分享到QQ好友还是QQ空间： false 好友  true 空间
+        //qqflag  选择分享到QQ好友还是QQ空间： false 好友  true 空间
         // 第一个参数就是上面所说的申请的APPID，第二个是全局的Context上下文，这句话实现了调用QQ登录
         mTencent = Tencent.createInstance(QQ_ID, Activity);
         final Bundle params = new Bundle();
@@ -214,7 +215,7 @@ public class Share {
 
                 if (bitmap != null) {
                     ImageUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-                    Intent intent = new Intent(activity, ShareActivity.class);
+                    Intent intent = new Intent(activity, ShareNewActivity.class);
                     intent.putExtra("pictime", ImageUrl);
                     intent.putExtra("share", "first");
                     activity.startActivity(intent);

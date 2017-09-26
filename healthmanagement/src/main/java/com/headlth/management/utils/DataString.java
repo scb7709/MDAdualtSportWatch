@@ -82,8 +82,7 @@ public class DataString {
     //static  int  interval[6];
     public static String showTime(String time)  {
         Log.i("WWWWW",""+time);
-        ;
-       /* int  interval[]=new int [6];
+        /* int  interval[]=new int [6];
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String today = format.format(new Date());
         String old[] = filterUnNumber(time).split("-");
@@ -223,4 +222,8 @@ public class DataString {
     private static long toYears(long date) {
         return toMonths(date) / 365L;
     }
+
+
+
+
 }

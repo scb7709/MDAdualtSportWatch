@@ -4,64 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <include
         layout="@layout/view_publicctitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"></include>
 
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/activity_myshare_SwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-
-        <com.headlth.management.myview.PullToRefreshLayout
-            android:id="@+id/activity_myshare_refresh_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include layout="@layout/refresh_head" />
-            <!-- 支持所有实现Pullable接口的View -->
-
-            <com.headlth.management.myview.PullableListView
-
-                android:id="@+id/activity_myshare_listview"
-                android:layout_width="match_parent"
-
-                android:layout_height="match_parent"
-                android:divider="@color/gray"
-                android:dividerHeight="1dp" />
-
-            <include layout="@layout/load_more" />
-
-        </com.headlth.management.myview.PullToRefreshLayout>
-
-        <RelativeLayout
-            android:id="@+id/activity_myshare_nodata"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_myshare_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:cacheColorHint="@null"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-            <ImageView
-                android:id="@+id/ImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/nodata"
+    <RelativeLayout
+        android:id="@+id/activity_myshare_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-                />
+        <ImageView
+            android:id="@+id/ImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/nodata"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-                android:text="暂无数据"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-        </RelativeLayout>
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:text="暂无数据"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </RelativeLayout>
 </LinearLayout>

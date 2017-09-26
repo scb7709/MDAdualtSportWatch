@@ -20,13 +20,8 @@ import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.headlth.management.R;
-import com.headlth.management.activity.AdvancedPrescriptionActivity;
-import com.headlth.management.activity.BaseActivity;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.activity.Login;
-import com.headlth.management.activity.MainActivity;
-import com.headlth.management.activity.PrescriptionDetailsActivity;
-import com.headlth.management.activity.QuestionnaireActivity;
-import com.headlth.management.activity.QuestionnaireResultActivity;
 import com.headlth.management.chatpay.PayResult;
 import com.headlth.management.entity.ChatPay;
 import com.headlth.management.entity.CircleList;
@@ -112,7 +107,6 @@ public class PayActivity extends BaseActivity {
 
         }
 
-        ;
     };
     private Runnable payRunnable = new Runnable() {
         @Override

@@ -10,16 +10,43 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"></include>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:src="@mipmap/icon_doctorprompt" />
 
-    <ListView
-        android:id="@+id/activity_messagedetials_listview"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.headlth.management.myview.CarouselView
+            android:id="@+id/activity_messagedetials_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:visibility="gone"></com.headlth.management.myview.CarouselView>
+
+        <ImageView
+            android:id="@+id/activity_messagedetials_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+
+    <!-- <android.support.v4.widget.SwipeRefreshLayout
+         android:id="@+id/activity_messagedetials_SwipeRefreshLayout"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginTop="25dp">-->
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_messagedetials_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="25dp"></ListView>
+        android:cacheColorHint="@null"
+        android:background="#f5f5f5"
+        android:scrollbars="vertical" />
+    <!-- </android.support.v4.widget.SwipeRefreshLayout>-->
+
 </LinearLayout>

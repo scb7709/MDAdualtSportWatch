@@ -14,7 +14,7 @@ import java.util.UUID;
 
 /**
  * Created by steven on 9/3/13.
- * Modified by olli on 3/28/2014.
+ * Modified by olli on 3/28/2014
  */
 public abstract class BleSensor<T> {
     private final static String TAG = BleSensor.class.getSimpleName();

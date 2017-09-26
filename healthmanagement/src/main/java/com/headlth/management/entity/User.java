@@ -1,7 +1,11 @@
 package com.headlth.management.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by abc on 2016/10/17.
@@ -13,10 +17,19 @@ public class User  implements Serializable {
     private String sinaOpenID;
     private String chatOpenID;
     private String QQOpenID;
+
    // private String QQOpenID;
 
     private String loginFlag;
     public UserInformation userInformation;
+
+    public String getPWD() {
+        return PWD;
+    }
+
+    public void setPWD(String PWD) {
+        this.PWD = PWD;
+    }
 
     public User() {
     }
@@ -121,9 +134,57 @@ public class User  implements Serializable {
         private String Gender;
         private String Birthday;
         private String File;//头像
+        private String MAC;
+
+        private String HRrest;
+        private String WatchDuration;
+        private String UBound;
+        private String LBound;
+
+
        // private String [] Illness;//坏习惯
        // private String [] Badhabit;//疾病
 
+
+        public String getUBound() {
+            return UBound;
+        }
+
+        public void setUBound(String UBound) {
+            this.UBound = UBound;
+        }
+
+        public String getLBound() {
+            return LBound;
+        }
+
+        public void setLBound(String LBound) {
+            this.LBound = LBound;
+        }
+
+        public String getWatchDuration() {
+            return WatchDuration;
+        }
+
+        public void setWatchDuration(String watchDuration) {
+            WatchDuration = watchDuration;
+        }
+
+        public String getHRrest() {
+            return HRrest;
+        }
+
+        public void setHRrest(String HRrest) {
+            this.HRrest = HRrest;
+        }
+
+        public String getMAC() {
+            return MAC;
+        }
+
+        public void setMAC(String MAC) {
+            this.MAC = MAC;
+        }
 
         public UserInformation(){}
         public UserInformation(String nickName, String weight, String height, String gender, String birthday, String file) {
@@ -225,5 +286,42 @@ public class User  implements Serializable {
         }
 
     }
+    //由出生日期获得年龄
+    public static int getAge(String birth) {
+        int age=0;
+        SimpleDateFormat sdf ;
+        if(birth.contains("/")){
+            sdf = new SimpleDateFormat("yyyy/MM/dd");
+        }else {
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
+        }
+        Date birthDay= null;
+        try {
+            birthDay = sdf.parse(birth);
+            Calendar cal = Calendar.getInstance();
+            int yearNow = cal.get(Calendar.YEAR);
+            int monthNow = cal.get(Calendar.MONTH);
+            int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+            cal.setTime(birthDay);
+            int yearBirth = cal.get(Calendar.YEAR);
+            int monthBirth = cal.get(Calendar.MONTH);
+            int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
+            age = yearNow - yearBirth;
+            if (monthNow <= monthBirth) {
+                if (monthNow == monthBirth) {
+                    if (dayOfMonthNow < dayOfMonthBirth) age--;
+                }else{
+                    age--;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+
+
+
+
+        return age;
+    }
 }

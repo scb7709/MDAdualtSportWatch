@@ -3,10 +3,13 @@ package com.headlth.management.wxapi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
 
+import com.headlth.management.TEXT;
 import com.headlth.management.activity.Login;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.ShareUitls;
@@ -77,7 +80,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     Toast.makeText(WXEntryActivity.this, "微信授权已取消", Toast.LENGTH_LONG).show();
                 }
                 Login.waitDialog.ShowDialog(false);
-                ;
                 finish();
                 break;
             default:
@@ -88,7 +90,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                 }
                 Login.waitDialog.ShowDialog(false);
-                ;
                 finish();
                 break;
         }
@@ -119,7 +120,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                         } catch (JSONException e) {
                             Login.waitDialog.ShowDialog(false);
-                            ;
                             e.printStackTrace();
                         }
                     }
@@ -127,7 +127,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     @Override
                     public void onErrorResponse(Throwable errorint) {
                         Login.waitDialog.ShowDialog(false);
-                        ;
                         Toast.makeText(WXEntryActivity.this, "getAccess_token shibai", Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -141,7 +140,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     @Override
                     public void onResponse(String response) {
                         Login.waitDialog.ShowDialog(false);
-                        ;
                         //  Toast.makeText(WXEntryActivity.this,response, Toast.LENGTH_LONG).show();
                      /*   Intent intent = new Intent(WXEntryActivity.this, CompleteInformationActivity.class);
                        intent.putExtra("headimgurl",jsonObject.getString("headimgurl"));
@@ -180,7 +178,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                             map.put("headimgurl", jsonObject.getString("headimgurl"));
                             map.put("nickname", jsonObject.getString("nickname"));
                             map.put("sex", jsonObject.getString("sex"));
-                            HttpUtils.getInstance(WXEntryActivity.this).otherRegister(map, "LoginActivity");
+                            HttpUtils.getInstance(WXEntryActivity.this).otherRegister(map,"LoginActivity");
 
 
                             // startActivity(intent);
@@ -210,9 +208,30 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         params.addBodyParameter("ThirdPartyCode", ThirdPartyCode);
         params.addBodyParameter("UID",ShareUitls.getString(WXEntryActivity.this, "UID", "") + "");
         params.addBodyParameter("ResultJWT",ShareUitls.getString(WXEntryActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));;
-        HttpUtils.getInstance(WXEntryActivity.this).Bound(params);
-        finish();
+        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
+        // startActivity(new Intent(WXEntryActivity.this, TEXT.class).putExtra("jsonObject1", ThirdPartyCode + "   "+ShareUitls.getString(WXEntryActivity.this, "UID", "")));
+
+        HttpUtils.getInstance(WXEntryActivity.this).Bound(params,boundhandler);
+
     }
+    Handler boundhandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    Toast.makeText(WXEntryActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(WXEntryActivity.this, "该账户已被其他账户绑定", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(WXEntryActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            finish();
+        }
+
+    };
 
 }

@@ -1,0 +1,684 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    xmlns:seekcircle="http://schemas.android.com/apk/res-auto"
+    xmlns:test="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/pane"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--以上是数据统计部分-->
+            <RelativeLayout
+                android:id="@+id/relativeLayout3"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffad00">
+
+                <RelativeLayout
+                    android:id="@+id/btback"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignBottom="@+id/today"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:onClick="back">
+
+                    <Button
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/icon_back"
+                        android:clickable="false"
+                        android:textColor="#fafafa"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/statechange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="运动中"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+                <RelativeLayout
+                    android:id="@+id/share"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="2dp"
+                    android:onClick="back"
+                    android:visibility="gone">
+
+                    <Button
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/share"
+                        android:clickable="false"
+                        android:textColor="#fafafa"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/app">
+
+                    <View
+                        android:id="@+id/activity_aerobicsport_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:background="#FFB90F"
+                        android:visibility="visible"></View>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/showcur"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_below="@+id/relativeLayout3"
+                android:background="@drawable/bg_home">
+
+
+                <FrameLayout
+                    android:id="@+id/frameLayout7"
+                    android:layout_width="150dp"
+                    android:layout_height="170dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="15dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp">
+
+                        <RelativeLayout
+                            android:id="@+id/preround"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true">
+
+                            <com.headlth.management.circle.RoundProgressBar
+                                android:id="@+id/roundProgressBar2"
+                                android:layout_width="140dip"
+                                android:layout_height="140dip"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android_custom:roundColor="#ffc331"
+                                android_custom:roundProgressColor="#7ed321"
+                                android_custom:roundWidth="3dp"
+                                android_custom:textColor="#000000"
+                                android_custom:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textView36"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:text="准备运动"
+                                android:textColor="#a17300"
+                                android:textSize="12dp" />
+
+                            <LinearLayout
+                                android:id="@+id/linearLayout5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/pretime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:textColor="#3c3c3c"
+                                    android:textSize="32dp" />
+
+                                <TextView
+                                    android:id="@+id/maxTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/90&quot;"
+                                    android:textColor="#3c3c3c"
+                                    android:textSize="18dp" />
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/youxiaohuan"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:visibility="invisible">
+
+                            <com.headlth.management.circle.smallSeekCircle
+                                android:id="@+id/smallseekCircle"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="false"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                seekcircle:max="100"
+                                seekcircle:min="0"
+                                seekcircle:progress="0" />
+
+                            <TextView
+                                android:id="@+id/textView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_gravity="center_horizontal|top"
+                                android:layout_marginTop="20dp"
+                                android:text="有效运动"
+                                android:textColor="#836313"
+                                android:textSize="12dp" />
+
+                            <TextView
+                                android:id="@+id/home_my_effective_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:text="- -"
+                                android:textColor="#000000"
+                                android:textSize="32dp" />
+
+                            <TextView
+                                android:id="@+id/activity_aerobicsport_Target"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+id/smallseekCircle"
+                                android:layout_centerHorizontal="true"
+                                android:layout_gravity="center_horizontal|bottom"
+                                android:layout_marginBottom="20dp"
+                                android:textColor="#836313"
+                                android:textSize="12dp" />
+
+
+                        </RelativeLayout>
+                    </FrameLayout>
+                </FrameLayout>
+
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="3dp"
+                    android:layout_height="135dp"
+
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#ffb809" />
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="170dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/titlemark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:text="   当前心率   "
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#836313"
+                        android:textSize="12dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/imageView2"
+                            android:layout_width="37dp"
+                            android:layout_height="14dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/img_heart_beat_l" />
+
+                        <TextView
+                            android:id="@+id/ValidTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="- -"
+                            android:textColor="#000000"
+                            android:textSize="32dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="37dp"
+                            android:layout_height="14dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/img_heart_beat_r" />
+                    </RelativeLayout>
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp">
+                        <!--FFb809-->
+                        <TextView
+                            android:id="@+id/activity_aerobicsportmyblue_width"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_gravity="bottom"
+                            android:background="#FFb809" />
+
+                        <TextView
+                            android:id="@+id/activity_aerobicsportmyblue_width_left"
+                            android:layout_width="30dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="bottom|left" />
+
+                        <TextView
+                            android:id="@+id/activity_aerobicsportmyblue_width_right"
+                            android:layout_width="30dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="bottom|right" />
+
+                        <TextView
+                            android:id="@+id/effect"
+                            android:layout_width="90dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:background="#ffffff"
+                            android:text="" />
+
+                        <ImageView
+                            android:id="@+id/move"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|bottom"
+                            android:layout_marginBottom="6dp"
+                            android:src="@mipmap/move"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/zhubutishentip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|top"
+                            android:textColor="#a17300"
+
+                            android:textSize="12dp" />
+                    </FrameLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/LBound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="20dp"
+                            android:text="100" />
+
+                        <View
+                            android:layout_width="90dp"
+                            android:layout_height="1dp"
+                            android:layout_centerHorizontal="true"></View>
+
+                        <TextView
+                            android:id="@+id/UBound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:text="200" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/stepTimeTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="24dp"
+                    android:text="00：00：00" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/shishixinlv250"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/showcur"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="实时心率图"
+                    android:textColor="#808080"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="2dp"
+                    android:background="#e8e8e8"></View>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/showdata"
+                android:layout_width="match_parent"
+                android:layout_height="207dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/shishixinlv250">
+
+                <tech.linjiang.suitlines.SuitLines
+                    android:id="@+id/activity_aerobicsport_heartrate_drawline"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="2dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/drawline"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:weightSum="1">
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginLeft="5dp"
+                            android:text="200"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="2dp"
+                            android:background="#e8e8e8"></View>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="14dp"
+                            android:layout_marginTop="10dp"
+                            android:text="高强度运动"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="7dp"
+                            android:text="150"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="2dp"
+                            android:background="#e8e8e8"></View>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="14dp"
+                            android:layout_marginTop="10dp"
+                            android:text="中强度运动"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginLeft="5dp"
+                            android:text="100"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="2dp"
+                            android:background="#e8e8e8"></View>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="14dp"
+                            android:layout_marginTop="10dp"
+                            android:text="低强度运动"
+                            android:textColor="#808080"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="7dp"
+                            android:text="50"
+                            android:textColor="#999999"
+                            android:textSize="12dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="2dp"
+                            android:background="#e8e8e8"></View>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </FrameLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/activity_aerobicsport_controller"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_below="@+id/showdata"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/white">
+
+
+                <Button
+                    android:id="@+id/bt_controller"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="30dp"
+
+                    android:background="@drawable/btn"
+                    android:text="跳过热身" />
+
+                <ImageButton
+                    android:id="@+id/im_lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:src="@drawable/openlock" />
+
+
+                <Button
+                    android:id="@+id/bt_stop"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/btn"
+                    android:text="结束" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textView5222"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignEnd="@+id/re"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/re" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/lock_relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="滑动解锁"
+            android:textSize="25sp" />
+
+        <com.headlth.management.myview.SlideUnlockView
+            android:id="@+id/slideUnlockView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            test:slideUnlockBackgroundResource="@drawable/jiesuo_bg"
+            test:slideUnlockBlockResource="@drawable/jiesuo_button" />
+
+    </RelativeLayout>
+
+    <!--  <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_alignParentBottom="true"
+          android:layout_height="100dp" >
+
+          <com.headlth.management.myview.ChartView
+              android:id="@+id/activity_aerobicsport_chart"
+              android:layout_width="match_parent"
+              android:layout_height="100dp"
+              android:layout_gravity="center" />
+      </FrameLayout>-->
+</RelativeLayout>

@@ -70,7 +70,7 @@ public class BleService extends Service {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-
+            Log.i("myblue",status+" 连接状态  "+newState);
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
@@ -94,11 +94,9 @@ public class BleService extends Service {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-
+            Log.i("myblue", "发现服务" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-            } else {
-//                Log.w(TAG, "onServicesDiscovered received: " + status);
             }
         }
 
@@ -121,8 +119,7 @@ public class BleService extends Service {
         }
 
         @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt,
-                                            BluetoothGattCharacteristic characteristic) {
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
 
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
@@ -144,7 +141,6 @@ public class BleService extends Service {
             sensor.onCharacteristicChanged(characteristic);
             final String text = sensor.getDataString();
             intent.putExtra(EXTRA_TEXT, text);
-            sendBroadcast(intent);
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -218,12 +214,8 @@ public class BleService extends Service {
         }
 
         adapter = bluetoothManager.getAdapter();
-        if (adapter == null) {
-//            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-            return false;
-        }
+        return adapter != null;
 
-        return true;
     }
 
     /**

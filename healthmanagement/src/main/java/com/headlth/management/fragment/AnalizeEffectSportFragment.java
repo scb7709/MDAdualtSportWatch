@@ -187,21 +187,6 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                         }
                         linearParamsall.height = gap * (target / 60) / (fenmu / 60 + 10); // 当控件的高强制设成365象素
                         btalls.get(i).setLayoutParams(linearParamsall);
-                     /*   FrameLayout.LayoutParams linearParamsshow = (FrameLayout.LayoutParams) shows.get(i).getLayoutParams();
-
-
-
-                        // 取控件aaa当前的布局参数
-                  *//*      if(Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())>target){
-                            Log.e("ssss","dfafasfasf");
-                            linearParamsshow.height = gap * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime()) / 60) / (fenmu / 60 + 10); // 当控件的高强制设成365象素
-                        }else{
-                            linearParamsshow.height = gap * (target / 60) / (fenmu / 60+10); // 当控件的高强制设成365象素
-                        }*//*
-                        linearParamsshow.height = gap * (target / 60) / (fenmu / 60+10); // 当控件的高强制设成365象素
-                        shows.get(i).setLayoutParams(linearParamsall);*/
-
-
                         FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) bts.get(i).getLayoutParams();
                         // 取控件aaa当前的布局参数
                         linearParams.height = gap * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime()) / 60) / (fenmu / 60 + 10); // 当控件的高强制设成365象素
@@ -266,20 +251,6 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
             canvas.drawText(data.getTotal(), x, y - 50, paint);
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
             canvas.drawBitmap(bitmap, x + zhouyi.getWidth() / 4, y - 45, paint);
-         /*   canvas.drawBitmap(drawableToBitamp(getResources().getDrawable(R.drawable.btn_date_active)), x, y - 10, paint);*/
-
-         /*   drawImage(canvas, drawableToBitamp(getResources().getDrawable(R.drawable.icon_triangle_orange)),x+4,y-50,
-           40, 40,100,100);*/
-/*
-            Path path = new Path();
-            path.moveTo(x, y);
-            path.lineTo(x + 100, y + 50);
-          *//*  PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
-            paint.setPathEffect(effects);*//*
-            canvas.drawPath(path, paint);*/
-
-
-          /*  canvas.restore();*/
         }
     }
 

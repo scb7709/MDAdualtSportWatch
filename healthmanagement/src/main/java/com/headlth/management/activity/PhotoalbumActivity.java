@@ -3,10 +3,10 @@ package com.headlth.management.activity;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.GridView;
 
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.ImageBucketAdapter;
 import com.headlth.management.entity.ImageBucket;
 import com.headlth.management.utils.AlbumHelper;

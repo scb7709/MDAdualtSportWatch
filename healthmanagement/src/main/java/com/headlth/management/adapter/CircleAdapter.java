@@ -43,6 +43,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.headlth.management.R;
 import com.headlth.management.activity.ContentDetailsActivity;
+import com.headlth.management.activity.LookBigImageActivity;
 import com.headlth.management.entity.Circle;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.BottomMenuDialog;
@@ -50,6 +51,7 @@ import com.headlth.management.myview.MGridView;
 import com.headlth.management.myview.RoundImageView;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.DataString;
+import com.headlth.management.utils.FormatCurrentData;
 import com.headlth.management.utils.GetWindowSize;
 import com.headlth.management.utils.ScreenShot;
 import com.headlth.management.utils.ShareUitls;
@@ -138,7 +140,7 @@ if(circle.getContentText().length()>=150){
     holder.listview_maidongcircle_text_all.setVisibility(View.GONE);
 }
 
-        holder.listview_maidongcircle_time.setText(DataString.showTime(circle.getCreateTime()));
+        holder.listview_maidongcircle_time.setText(FormatCurrentData.getTimeRange(circle.getCreateTime()));
         if (circle.getCommentCount() == 0) {
             holder.listview_maidongcircle_comment_count.setText("评论");
             holder. listview_maidongcircle_reply_ImageView.setImageResource(R.mipmap.icon_no_reply);
@@ -300,7 +302,13 @@ if(circle.getContentText().length()>=150){
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickPicChangeBig(position, arg);
+                    Intent intent = new Intent(activity, LookBigImageActivity.class);
+                    //intent.putExtra("cicle",list);
+                    intent.putExtra("cicle", (Serializable) list);
+                    intent.putExtra("arg", arg);
+                    intent.putExtra("position", position);
+                    activity.startActivity(intent);
+                   // clickPicChangeBig(position, arg);
                 }
             });
 

@@ -61,7 +61,7 @@ public class HeightChooseDialog extends Dialog {
                 weight_data2.add(Constant.WEIGHT2[i]);
             }
             temp_weight1 = weight_data1.get(weight_data1.size() / 2);
-           // temp_weight2 = weight_data2.get(weight_data2.size() / 2);
+            // temp_weight2 = weight_data2.get(weight_data2.size() / 2);
 
 
         }
@@ -97,7 +97,7 @@ public class HeightChooseDialog extends Dialog {
             return this;
         }
 
-        public HeightChooseDialog create(final boolean flag, final TextView textView,final String old) {
+        public HeightChooseDialog create(final boolean flag, final TextView textView, final String old) {
             final HeightChooseDialog dialog = new HeightChooseDialog(p.context, shadow ? R.style.Theme_Light_NoTitle_Dialog : R.style.Theme_Light_NoTitle_NoShadow_Dialog);
             Window window = dialog.getWindow();
             window.setWindowAnimations(R.style.Animation_Bottom_Rising);
@@ -109,7 +109,7 @@ public class HeightChooseDialog extends Dialog {
             window.setAttributes(lp);
             window.setGravity(Gravity.BOTTOM);
 
-           // View view = LayoutInflater.from(p.context).inflate(R.layout.dialog_weight_pick, null);
+            // View view = LayoutInflater.from(p.context).inflate(R.layout.dialog_weight_pick, null);
             View height_view = LayoutInflater.from(p.context).inflate(R.layout.dialog_weight_pick, null);
 
             Button btnCancel = (Button) height_view.findViewById(R.id.btnCancel);
@@ -117,21 +117,56 @@ public class HeightChooseDialog extends Dialog {
             TextView tvTitle = (TextView) height_view.findViewById(R.id.tvTitle);
             PickerView height_PickerView = (PickerView) height_view.findViewById(R.id.dialog_height_pick_pickerview);
             PickerView weight2_PickerView = (PickerView) height_view.findViewById(R.id.dialog_weight_pick_pickerview);
+            MyToash.Log(old);
             if (flag) {
                 tvTitle.setText("身高");
-              // textView.setText("165");
+                // textView.setText("165");
                 weight2_PickerView.setVisibility(View.GONE);
-                height_PickerView.setData(height_data,65);
+                int initialize = 0;
+                for (int i = 0; i < height_data.size(); i++) {
+                    if (old.equals(height_data.get(i))) {
+                        initialize = i;
+                        break;
+                    }
+                }
+                height_PickerView.setData(height_data, initialize == 0 ? 65 : initialize);
             } else {
                 tvTitle.setText("体重");
-              //textView.setText( "45");
+                //textView.setText( "45");
                 weight2_PickerView.setVisibility(View.VISIBLE);
-                height_PickerView.setData(weight_data1,15);
-                weight2_PickerView.setData(weight_data2,0);
+                int initialize1 = 0;
+                int initialize2 = 0;
+               // String[] sold ={"0","0"};
+
+                String[]   sold = old.split("\\.");
+
+               /* if(old.contains(".")) {
+                    sold = old.split("\\.");
+                }else {
+                    sold[0]=old;
+                }*/
+                for (int i = 0; i < weight_data1.size(); i++) {
+                    if (sold[0].equals(weight_data1.get(i))) {
+                        initialize1 = i;
+                        break;
+                    }
+                }
+                if(sold.length==2) {
+                    for (int i = 0; i < weight_data2.size(); i++) {
+                        if (("." + sold[1]).equals(weight_data2.get(i))) {
+                            initialize2 = i;
+                            break;
+                        }
+                    }
+                }
+                height_PickerView.setData(weight_data1, initialize1 == 0 ? 15 : initialize1);
+                weight2_PickerView.setData(weight_data2,initialize2);
             }
             ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    temp_weight1 = "";
+                    temp_weight2 = "";
                     dialog.dismiss();
                 }
             });
@@ -139,9 +174,11 @@ public class HeightChooseDialog extends Dialog {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(flag){
+                    temp_weight1 = "";
+                    temp_weight2 = "";
+                    if (flag) {
                         textView.setText(old);
-                    }else {
+                    } else {
                         textView.setText(old);
                     }
 
@@ -162,8 +199,12 @@ public class HeightChooseDialog extends Dialog {
             weight2_PickerView.setOnSelectListener(new PickerView.onSelectListener() {
                 @Override
                 public void onSelect(String text) {
-                    temp_weight2 = text;
-                    textView.setText(temp_weight1 + temp_weight2 );
+                    if(text.equals(".0")){
+                        temp_weight2="";
+                    }else {
+                        temp_weight2 =text;
+                    }
+                    textView.setText(temp_weight1 + temp_weight2);
                 }
             });
             dialog.setContentView(height_view);

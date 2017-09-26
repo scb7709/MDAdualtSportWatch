@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.headlth.management.R;
-import com.headlth.management.entity.chufangCallBack;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.newChuFangCallback;
 import com.headlth.management.entity.tiJianCallBack;
 import com.headlth.management.fragment.GerenXinXi;
@@ -30,8 +30,6 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @ContentView(R.layout.activity_main3)
 public class tijianBaoGao extends BaseActivity {
@@ -165,10 +163,6 @@ public class tijianBaoGao extends BaseActivity {
         chankanchufang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
-                //旧的
-                go2("", "");*/
-                //新的
                 newChuFang();
             }
         });
@@ -213,11 +207,6 @@ public class tijianBaoGao extends BaseActivity {
 
         );
     }
-
-
-
-    //http://www.ssp365.com:8066/ MdMobileService.ashx?do= PostPrescriptionRequest
-    chufangCallBack chufang = null;
     Gson g = new Gson();
 
 

@@ -1,23 +1,16 @@
 package com.headlth.management.adapter;
 
-import android.Manifest;
 import android.app.Activity;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
@@ -32,15 +25,14 @@ import com.google.gson.Gson;
 import com.headlth.management.R;
 
 import com.headlth.management.activity.AdvancedPrescriptionActivity;
-import com.headlth.management.activity.GetHeartActivity;
 import com.headlth.management.activity.PrescriptionDetailsActivity;
 import com.headlth.management.activity.QuestionnaireActivity;
 import com.headlth.management.activity.QuestionnaireResultActivity;
-import com.headlth.management.entity.PrescriptionDetails;
 import com.headlth.management.entity.QuestionaireResultJson;
 import com.headlth.management.entity.QuestionnaireGson;
 import com.headlth.management.myview.ClearEditText;
 
+import com.headlth.management.myview.PubLicDialog;
 import com.headlth.management.myview.SubscriptImageView;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
@@ -56,9 +48,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -166,6 +156,8 @@ public class QuestionnaireAdapter extends BaseAdapter {
             } else {*/
             holder.listview_questionnaire_getheart_layout.setVisibility(View.GONE);
             holder.listview_questionnaire_noheart.setVisibility(View.VISIBLE);
+
+
             // }
 
             holder.listview_questionnaire_commit.setVisibility(View.GONE);
@@ -212,16 +204,9 @@ public class QuestionnaireAdapter extends BaseAdapter {
                                 if (questionnaire.QuestionTypeID.equals("1")) {
                                     for (int j = 0; j < questionnaire.QuestionAnswer.size(); j++) {
 
-                                        if (list.get(j).Subscript == imageView.Subscript) {
-                                            questionnaire.QuestionAnswer.get(j).Selected = true;
-                                            //  list.get(j).setImageResource(R.mipmap.button_choose_active);
-
-                                        } else {
-                                            questionnaire.QuestionAnswer.get(j).Selected = false;
-                                            //  list.get(j).setImageResource(R.mipmap.button_choose_negative);
-
-                                            ;
-                                        }
+                                        //  list.get(j).setImageResource(R.mipmap.button_choose_active);
+//  list.get(j).setImageResource(R.mipmap.button_choose_negative);
+                                        questionnaire.QuestionAnswer.get(j).Selected = list.get(j).Subscript == imageView.Subscript;
 
 
                                     }
@@ -429,6 +414,7 @@ public class QuestionnaireAdapter extends BaseAdapter {
         Button ok = (Button) view.findViewById(R.id.dialog_questionnaiersetuseranswer_ok);
         TextView question = (TextView) view.findViewById(R.id.dialog_questionnaiersetuseranswer_title);
         final EditText editText = (EditText) view.findViewById(R.id.dialog_questionnaiersetuseranswer_edittext);
+        editText.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         question.setText(questionnaire.QuestionTitle + "?");
         String name = questionnaire.CompletionAnswer;
         if (name!=null&&name.length() != 0) {
@@ -546,24 +532,18 @@ public class QuestionnaireAdapter extends BaseAdapter {
      * 弹出高危提示对话框
      */
     private void showUpdateDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("提示:");
-        builder.setMessage(message);
-        builder.setPositiveButton("我已知晓",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        QuestionnaireActivity.activity.finish();
-                        if (AdvancedPrescriptionActivity.activity != null) {
-                            AdvancedPrescriptionActivity.activity.finish();
-                        }
-                        if (PrescriptionDetailsActivity.activity != null) {
-                            PrescriptionDetailsActivity.activity.finish();
-                        }
-
-                    }
-                });
-        builder.setCancelable(false);
-        builder.show();
+        PubLicDialog.showNotDialog(activity, new String[]{"提示:", message, "我已知晓"}, new PubLicDialog.PubLicDialogOnClickListener() {
+            @Override
+            public void setPositiveButton() {
+                QuestionnaireActivity.activity.finish();
+                if (AdvancedPrescriptionActivity.activity != null) {
+                    AdvancedPrescriptionActivity.activity.finish();
+                }
+                if (PrescriptionDetailsActivity.activity != null) {
+                    PrescriptionDetailsActivity.activity.finish();
+                }
+            }
+        });
     }
 }
 //

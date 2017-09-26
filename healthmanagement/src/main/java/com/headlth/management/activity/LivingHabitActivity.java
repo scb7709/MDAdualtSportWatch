@@ -10,20 +10,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.headlth.management.R;
-import com.headlth.management.acs.App;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.LivingHabitAdapter;
-import com.headlth.management.entity.CircleList;
 import com.headlth.management.entity.LivingHabitJson;
 import com.headlth.management.entity.User;
 import com.headlth.management.utils.Bimp;
@@ -74,6 +70,10 @@ public class LivingHabitActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        initialize();
+    }
+
+    private void initialize() {
         view_publictitle_title.setText("身体和生活习惯信息");
         activity = this;
         initDialog();
@@ -165,7 +165,6 @@ public class LivingHabitActivity extends BaseActivity {
         params.addBodyParameter("Height", userInformation.getHeight());
         params.addBodyParameter("Gender", userInformation.getGender());
         params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
-        ;
         params.addBodyParameter("Illness", tempDiseaseContent.toString());
         params.addBodyParameter("Badhabit", tempHabitContent.toString());
 

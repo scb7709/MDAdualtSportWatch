@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#FF7F00">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/watch_bangding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="绑定"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/watch_canclebangding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="解除"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/Personal_information_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="信息同步"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/name_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="姓名同步1"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+            <Button
+                android:id="@+id/name_synchronization2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="姓名同步2"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+            <Button
+                android:id="@+id/time_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="时间同步"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/weather_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="天气同步"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/temperaturee_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="气温同步"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/sportparameter_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="运动参数设置"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/samplingparameter_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="采样参数设置"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#912CEE">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/Summary_of_the_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="运动总结"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/Single_motion_results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="单次结果"
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/The_current_campaign_details_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时时数据"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/original_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="原始数据"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/Current_exercise_real_time_location_heart_rate_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时时心率"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/Historical_static_heart_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="历史心率"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/blood_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="血压"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/sleep_synchronization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="睡眠数据"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/GetWatchSportState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="运动状态"
+
+                android:textSize="@dimen/watchbluetest_size" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"></View>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="left"
+            android:text="数据展示区" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"></View>
+
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:text="开始" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"></View>
+
+        <Button
+            android:id="@+id/pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:text="暂停" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"></View>
+
+        <Button
+            android:id="@+id/recover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:text="恢复" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"></View>
+
+        <Button
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:text="停止" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"></View>
+    </LinearLayout>
+
+
+</LinearLayout>

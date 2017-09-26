@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.PrescriptionJson;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;

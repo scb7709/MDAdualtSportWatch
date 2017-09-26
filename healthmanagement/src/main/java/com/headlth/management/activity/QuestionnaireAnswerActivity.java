@@ -1,20 +1,16 @@
 package com.headlth.management.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.QuestionnaireAnswerAdapter;
-import com.headlth.management.entity.AccountManagerJson;
-import com.headlth.management.entity.AdvancedPrescription;
 import com.headlth.management.entity.QuestionnaireAnswerGson;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;

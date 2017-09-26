@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/head"
+        layout="@layout/view_publicctitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></include>
+
+    <TextView
+        android:id="@+id/activity_connectblue_remind0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="提示：请打开腕表和手机蓝牙,确保腕表于APP连接"
+        android:textColor="#666666" />
+
+    <TextView
+        android:id="@+id/activity_connectblue_remind"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:gravity="left"
+        android:text=""
+        android:textColor="#666666" />
+
+    <TextView
+        android:id="@+id/activity_connectblue_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=""></TextView>
+</RelativeLayout>

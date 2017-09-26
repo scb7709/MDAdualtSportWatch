@@ -145,7 +145,7 @@ public class HomeActivity extends Activity {
         x.view().inject(this);
 
 
-/*gggg
+/*测试
         long sdsize[] = FileViewer.getSDSpace(HomeActivity.this);
         Log.e("aaaaaaaaaccc", sdsize[0] + "" + sdsize[1] + "'  ");*/
         activity = this;
@@ -796,7 +796,7 @@ public class HomeActivity extends Activity {
      * 下载apk
      */
     private PopupWindow popupWindow;
-    ;//下载的对话框
+    //下载的对话框
     private SeekBar progressBar;//下载进度条
     private TextView downtext;//下载进度条
     HttpManager httpManager;

@@ -1,6 +1,4 @@
 package com.headlth.management.fragment;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,13 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.headlth.management.R;
 import com.headlth.management.activity.ContentDetailsActivity;
-import com.headlth.management.activity.ShareActivity;
+import com.headlth.management.activity.ShareNewActivity;
 import com.headlth.management.adapter.CircleRecyclerViewAdapter;
 import com.headlth.management.entity.Circle;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.EndLessOnScrollListener;
+import com.headlth.management.myview.MyItemAnimator;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ImageUtil;
@@ -67,11 +67,13 @@ public class NewMaidongCircleFragment extends BaseFragment {
     private String userIDFlag = "0";
     private int flag;
     private String UserID;
+    private String UID;
     Gson gson;
     private BottomMenuDialog bottomMenuDialog;
 
     private TopRightMenu mTopRightMenu;  //点击加号的弹框
     LinearLayoutManager linearLayoutManager;
+    boolean IS_ContentDetailsActivity;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -81,10 +83,12 @@ public class NewMaidongCircleFragment extends BaseFragment {
                 CircleList.getInstance().commentlist.clear();
                 Intent intent = new Intent(getActivity(), ContentDetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("circle", (Serializable) CircleList.getInstance().circlelist.get(position));
+                bundle.putSerializable("circle", CircleList.getInstance().circlelist.get(position));
                 bundle.putString("position", "" + position);
+                bundle.putString("flag", "NewMaidongCircleFragment");
                 intent.putExtras(bundle);
                 startActivity(intent);
+                IS_ContentDetailsActivity = true;
 
             } else {
 
@@ -102,7 +106,6 @@ public class NewMaidongCircleFragment extends BaseFragment {
                                 }
                             }).create();
                     bottomMenuDialog.show();
-                    ;
                 }
 
             }
@@ -123,6 +126,11 @@ public class NewMaidongCircleFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initialize();
+
+    }
+
+    private void initialize() {
         gson = new Gson();
         UserID = ShareUitls.getString(getActivity(), "UID", "0");
         share = (RelativeLayout) getActivity().findViewById(R.id.main_share);
@@ -130,11 +138,16 @@ public class NewMaidongCircleFragment extends BaseFragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
         frgment_maidongcircle_recyclerView.setLayoutManager(linearLayoutManager);
+        frgment_maidongcircle_recyclerView.setItemAnimator(new MyItemAnimator());
+     /*
+        ((SimpleItemAnimator)frgment_maidongcircle_recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);*/
 
+
+        //frgment_maidongcircle_recyclerView.getItemAnimator().setChangeDuration(0);
         long circleOldTime = Long.parseLong(ShareUitls.getString(getActivity(), "circleOldTime", "0"));
         long circleNewTime = new Date().getTime();
-        ShareUitls.putString(getActivity(), "circleOldTime", circleNewTime + "");
         if (circleNewTime - circleOldTime >= 30 * 60000) {
+            ShareUitls.putString(getActivity(), "circleOldTime", circleNewTime + "");
             CircleList.getInstance().circlelist.clear();
             CircleList.getInstance().commentlist.clear();
             CircleList.getInstance().replylist.clear();
@@ -143,8 +156,7 @@ public class NewMaidongCircleFragment extends BaseFragment {
             //b;清理磁盘缓存
         }
 
-        circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
-
+       circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler,false);
         frgment_maidongcircle_SwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -161,6 +173,7 @@ public class NewMaidongCircleFragment extends BaseFragment {
 
                         getAllContent(7);
                     }
+
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
@@ -188,34 +201,18 @@ public class NewMaidongCircleFragment extends BaseFragment {
 
         );
         if (CircleList.getInstance().circlelist.size() == 0) {
-            ShareUitls.getString(getActivity(), "circlelastOffset", "0");
-            ShareUitls.getString(getActivity(), "circlelastPosition", "0");
+            ShareUitls.putString(getActivity(), "circlelastOffset", "0");
+            ShareUitls.putString(getActivity(), "circlelastPosition", "0");
             maidongcircle_nodata.setVisibility(View.VISIBLE);
             getAllContent(0);
 
         } else {
             maidongcircle_nodata.setVisibility(View.GONE);
-
             int lastOffset = Integer.parseInt(ShareUitls.getString(getActivity(), "circlelastOffset", "0"));
             int lastPosition = Integer.parseInt(ShareUitls.getString(getActivity(), "circlelastPosition", "0"));
-
             if (frgment_maidongcircle_recyclerView.getLayoutManager() != null && lastPosition >= 0) {
                 ((LinearLayoutManager) frgment_maidongcircle_recyclerView.getLayoutManager()).scrollToPositionWithOffset(lastPosition, lastOffset);
             }
-
-           /* int position = Integer.parseInt(ShareUitls.getString(getActivity(), "circleListviewPosition", "0"));
-
-            int firstItem = linearLayoutManager.findFirstVisibleItemPosition();
-            int lastItem = linearLayoutManager.findLastVisibleItemPosition();
-            if (position <= firstItem) {
-                frgment_maidongcircle_recyclerView.scrollToPosition(position);
-            } else if (position <= lastItem) {
-                int top = frgment_maidongcircle_recyclerView.getChildAt(position - firstItem).getTop();
-                frgment_maidongcircle_recyclerView.scrollBy(0, top);
-            } else {
-                frgment_maidongcircle_recyclerView.scrollToPosition(position);
-            }*/
-
 
         }
         share.setOnClickListener(new View.OnClickListener() {
@@ -236,7 +233,8 @@ public class NewMaidongCircleFragment extends BaseFragment {
                             public void onMenuItemClick(int position) {
                                 switch (position) {
                                     case 0:
-                                        Intent intent = new Intent(getActivity(), ShareActivity.class);
+                                        Log.i("mybule", "  ShareNewActivity");
+                                        Intent intent = new Intent(getActivity(), ShareNewActivity.class);
                                         intent.putExtra("pictime", "");
                                         intent.putExtra("share", "first");
                                         startActivityForResult(intent, 147);
@@ -262,9 +260,8 @@ public class NewMaidongCircleFragment extends BaseFragment {
 
 
         });
-        circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
+       // circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
         frgment_maidongcircle_recyclerView.setAdapter(circleRecyclerViewAdapter);
-
     }
 
     //MdMobileService.ashx?do=PostShareUpdateRequest。 UserID:用户ID，ContentID：删除的帖子ID，CommentID:删除的评论ID（如果删除的是帖子则此项为0）,ReplyID(为0）
@@ -339,7 +336,7 @@ public class NewMaidongCircleFragment extends BaseFragment {
         params.addBodyParameter("flag", flag + "");
 
         Log.i("onResponse  ", flag + "");
-        HttpUtils.getInstance(getActivity()).sendRequestRequestParams("正在加载请稍后...", params, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(getActivity()).sendRequestRequestParams("加载中...", params, true, new HttpUtils.ResponseListener() {
 
 //   //请求：MdMobileService.ashx?do=GetShareContentRequest。   参数：AuthorUserID:（作者的UserID，0为所有）,
                     // ContentID:（分享ID，仍然是上拉时传入当页最后一个ContentID，下拉时传入当页第一个ContentID），MyUserID: (本人的UserID），flag:(7为上拉，8为下拉）
@@ -356,38 +353,24 @@ public class NewMaidongCircleFragment extends BaseFragment {
                                 if (flag == 8) {
                                     Log.i("AAAAAAAAA11  ", response);
                                     CircleList.getInstance().circlelist.addAll(0, shareContentList.ShareContentList);
-
+                                    circleRecyclerViewAdapter.notifyItemRangeInserted(0, shareContentList.ShareContentList.size());
                                 } else if (flag == 7) {
-                                    if (CircleList.getInstance().circlelist.size() == 0) {
-                                        CircleList.getInstance().circlelist.addAll(0, shareContentList.ShareContentList);
-                                    } else {
-                                        CircleList.getInstance().circlelist.addAll(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList);
-                                    }
+                                   CircleList.getInstance().circlelist.addAll(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList);
+                                    circleRecyclerViewAdapter.notifyItemRangeInserted(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList.size());
+
                                 } else {
                                     Log.i("AAAAAAAAA22  ", response);
                                     CircleList.getInstance().circlelist.addAll(0, shareContentList.ShareContentList);
+                                    circleRecyclerViewAdapter.notifyItemRangeInserted(0, shareContentList.ShareContentList.size());
                                 }
 
-                                if (flag == 0) {
-                                    circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
-                                    frgment_maidongcircle_recyclerView.setAdapter(circleRecyclerViewAdapter);
-                                } else {
-                                    if (flag == 8) {
-                                        Log.i("AAAAAAAAA33ss  ", flag + "");
-                                        circleRecyclerViewAdapter.notifyItemRangeInserted(0, shareContentList.ShareContentList.size());
-                                    } else {
-                                        Log.i("AAAAAAAAA33ss  ", flag + "");
-                                        circleRecyclerViewAdapter.notifyItemRangeInserted(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList.size());
-                                    }
-
-                                    Log.i("AAAAAAAAA33  ", response);
-                                   /* if (CircleList.getInstance().circlelist.size() != 0) {
-                                        circleRecyclerViewAdapter.notifyDataSetChanged();
-                                    }*/
-
-                                }
+                            } else {
+                                Toast.makeText(getActivity(), "没有更多了", Toast.LENGTH_SHORT).show();
                             }
 
+                        }else {
+
+                            Toast.makeText(getActivity(), "没有更多了", Toast.LENGTH_SHORT).show();
                         }
                         if (CircleList.getInstance().circlelist.size() == 0) {
                             frgment_maidongcircle_recyclerView.setVisibility(View.GONE);
@@ -397,23 +380,12 @@ public class NewMaidongCircleFragment extends BaseFragment {
                             maidongcircle_nodata.setVisibility(View.GONE);
                         }
                         if (flag == 8) {
-                            ((LinearLayoutManager) frgment_maidongcircle_recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
                             frgment_maidongcircle_SwipeRefreshLayout.setRefreshing(false);
-                            ;
-                        }else if (flag == 7){
+                            ((LinearLayoutManager) frgment_maidongcircle_recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
+
+                        } else if (flag == 7) {
                             frgment_maidongcircle_SwipeRefreshLayout.setRefreshing(false);
                         }
-
-                     /*   try {
-                            if (flag == 8) {
-                                frgment_maidongcircle_recyclerView.setRefreshComplete();
-                                ;
-                            } else if (flag == 7) {
-                                frgment_maidongcircle_recyclerView.setLoadMoreComplete();
-                                ;
-                            }
-                        } catch (Exception N) {
-                        }*/
 
                     }
 
@@ -443,7 +415,10 @@ public class NewMaidongCircleFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.i("mmmmmmain", "mmmmmmain");
-        circleRecyclerViewAdapter.notifyDataSetChanged();
+        if (IS_ContentDetailsActivity) {
+            circleRecyclerViewAdapter.notifyDataSetChanged();
+            IS_ContentDetailsActivity = false;
+        }
     }
 
     private void sendReply() {
@@ -454,11 +429,6 @@ public class NewMaidongCircleFragment extends BaseFragment {
     class ShareContentList {
         String Status;
         List<Circle> ShareContentList;
-    }
-
-    public int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 
     @Override

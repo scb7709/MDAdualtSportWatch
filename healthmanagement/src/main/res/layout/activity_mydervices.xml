@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/view_publicctitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></include>
+
+    <LinearLayout
+        android:id="@+id/activity_mydevice_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/icon_watch" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="迈动智能腕表"
+                android:textColor="#4d4d4d"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/activity_mydevice_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:text="未连接"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"></View>
+
+        <Button
+            android:id="@+id/activity_mydevice_bangding"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_mydevice_nobangding"
+            android:clickable="false"
+            android:text="去绑定"
+            android:textColor="#ffac04" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"></View>
+
+    <Button
+        android:id="@+id/activity_mydevice_MACNULL"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="账户蓝牙地址制空" />
+</LinearLayout>

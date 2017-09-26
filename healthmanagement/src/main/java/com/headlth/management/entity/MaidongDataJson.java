@@ -16,7 +16,7 @@ public class MaidongDataJson implements Serializable{
     public String ErrCode;
 
   //  public String  UserIndexList;
-    public UserIndexList UserIndexListV2_9;
+    public UserIndexList UserIndexList;
 
     @Override
     public String toString() {
@@ -27,7 +27,7 @@ public class MaidongDataJson implements Serializable{
                 ", IsError='" + IsError + '\'' +
                 ", ErrMsg='" + ErrMsg + '\'' +
                 ", ErrCode='" + ErrCode + '\'' +
-                ", UserIndexList=" + UserIndexListV2_9 +
+                ", UserIndexList=" + UserIndexList +
                 '}';
     }
 
@@ -61,8 +61,11 @@ public class MaidongDataJson implements Serializable{
         public String IsSportStart;
         public int SportFinishedDays;
         public int  PowerFinishedDays;
+
+
         public String IsShowTodayPowerTrainPlan;
         public String IsShowTodayScore;
+        public int  NumberNotRead;
 
         @Override
         public String toString() {
@@ -94,6 +97,7 @@ public class MaidongDataJson implements Serializable{
                     ", PowerFinishedDays=" + PowerFinishedDays +
                     ", IsShowTodayPowerTrainPlan='" + IsShowTodayPowerTrainPlan + '\'' +
                     ", IsShowTodayScore='" + IsShowTodayScore + '\'' +
+                    ", NumberNotRead=" + NumberNotRead +
                     '}';
         }
     }

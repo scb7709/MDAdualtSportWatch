@@ -1,17 +1,21 @@
 package com.headlth.management.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -36,7 +40,7 @@ public class BoundPhoneActivity extends BaseActivity {
     @ViewInject(R.id.view_publictitle_title)
     private TextView view_publictitle_title;
     @ViewInject(R.id.view_publictitle_back)
-    private Button view_publictitle_back;
+    private RelativeLayout view_publictitle_back;
 
     @ViewInject(R.id.activity_boundphone_commit)
     private Button activity_boundphone_commit;
@@ -49,31 +53,44 @@ public class BoundPhoneActivity extends BaseActivity {
     TimeCount time = new TimeCount(60000, 1000);
 
     private String verify_code = "";
+    private Map<String, String> map = new HashMap<String, String>();
 
+    private String phone, pwd;
+    private String flag;//是三方验证登录的还是手机号登录的
+    private String FlagActivity;//是那个界面过来的
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        init();
+        initialize();
 
     }
 
-    private void init() {
+    private void initialize() {
+        Intent intent = getIntent();
+        flag = intent.getStringExtra("flag");
+        FlagActivity = intent.getStringExtra("FlagActivity");
+        Log.i("FlagActivity",FlagActivity);
+        if (flag.equals("other")) {
+            map = (Map<String, String>) (getIntent().getSerializableExtra("map"));
+        } else {
+            phone = intent.getStringExtra("phone");
+            pwd = intent.getStringExtra("pwd");
+        }
         view_publictitle_title.setText("绑定手机号");
-        view_publictitle_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
     }
 
     @Event(value = {R.id.view_publictitle_back, R.id.activity_boundphone_comfire, R.id.activity_boundphone_commit})
     private void getEvent(View view) {
         switch (view.getId()) {
-
             case R.id.view_publictitle_back:
+                Log.i("FlagActivityt",FlagActivity);
+                if(FlagActivity.equals("HomeActivity")) {
+                    Log.i("FlagActivitytr",FlagActivity);
+                    Intent intent = new Intent(BoundPhoneActivity.this, Login.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 finish();
                 time.cancel();
                 break;
@@ -115,7 +132,7 @@ public class BoundPhoneActivity extends BaseActivity {
        /* params.addBodyParameter("ResultJWT",ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
         params.addBodyParameter("UID",ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));*/
         params.addBodyParameter("Mobile", phone);
-        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("正在获取手机验证码,请稍后...", params,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("正在获取手机验证码,请稍后...", params, true, new HttpUtils.ResponseListener() {
 
                     @Override
                     public void onResponse(String response) {
@@ -123,21 +140,21 @@ public class BoundPhoneActivity extends BaseActivity {
                         Log.e("getSMSjson", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String IsSuccess = jsonObject.getString("IsSuccess");
-                            if (IsSuccess.equals("true")) {
-                                String Status = jsonObject.getString("Status");
 
+                            String IsSuccess = jsonObject.getString("IsSuccess");
+                            String Status = jsonObject.getString("Status");
+                            if (IsSuccess.equals("true")) {
                                 verify_code = Status;
                                 ShareUitls.putString(BoundPhoneActivity.this, "SMSTIME", new Date().getTime() + "");
                                 Toast.makeText(BoundPhoneActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
-
                             } else {
-                                Toast.makeText(BoundPhoneActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
+                                if (Status.equals("3")) {
+                                    Toast.makeText(BoundPhoneActivity.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(BoundPhoneActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
-
-
                         } catch (JSONException e) {
-
                             e.printStackTrace();
                         }
                     }
@@ -186,6 +203,7 @@ public class BoundPhoneActivity extends BaseActivity {
         if (phone.length() != 0) {
             if (verify_code.length() != 0) {
                 if (verifycode.length() != 0) {
+                    //verify_code
                     if (verifycode.equals(verify_code)) {
                         long OLDSMSTIME = Long.parseLong(ShareUitls.getString(BoundPhoneActivity.this, "SMSTIME", 0 + ""));
                         if (OLDSMSTIME != 0) {
@@ -219,12 +237,12 @@ public class BoundPhoneActivity extends BaseActivity {
 
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=CheckExistRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));
         params.addBodyParameter("Mobile", phone);
 
         params.addBodyParameter("NickName", "0");
-        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("", params,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         activity_boundphone_commit.setClickable(true);
@@ -266,12 +284,11 @@ public class BoundPhoneActivity extends BaseActivity {
     private void BoundPhone(final String phone) {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserMobileBindingRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));
         params.addBodyParameter("Mobile", phone);
-
         params.addBodyParameter("Pwd", "123456");
-        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("", params,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         try {
@@ -279,7 +296,12 @@ public class BoundPhoneActivity extends BaseActivity {
                             String Status = jsonObject.getString("Status");
                             if (Status.equals("2")) {
                                 Toast.makeText(BoundPhoneActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
-                                finish();
+
+                                if (flag.equals("other")) {
+                                    HttpUtils.getInstance(BoundPhoneActivity.this).otherRegister(map,"BoundPhoneActivity");
+                                } else {
+                                    Login.phoneLogin(BoundPhoneActivity.this, phone, pwd,"BoundPhoneActivity");
+                                }
                             } else if (Status.equals("1")) {
                                 Toast.makeText(BoundPhoneActivity.this, "该手机号已被其他账户绑定", Toast.LENGTH_SHORT).show();
                             } else {
@@ -301,5 +323,21 @@ public class BoundPhoneActivity extends BaseActivity {
                 }
 
         );
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)//主要是对这个函数的复写
+    {
+        // TODO Auto-generated method stub
+
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
+            if(FlagActivity.equals("HomeActivity")) {
+                Intent intent = new Intent(BoundPhoneActivity.this, Login.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

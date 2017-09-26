@@ -1,6 +1,5 @@
 package com.headlth.management.blue.demo;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,7 +11,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.headlth.management.activity.BaseActivity;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.blue.BleService;
 import com.headlth.management.blue.sensor.BleSensor;
 import com.headlth.management.blue.sensor.BleSensors;

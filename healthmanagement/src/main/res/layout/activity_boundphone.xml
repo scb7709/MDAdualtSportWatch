@@ -55,7 +55,7 @@
                 android:background="@color/white"
                 android:clickable="false"
                 android:text="获取验证码"
-                android:textColor="#999999"
+                android:textColor="#ffac04"
                 android:textSize="15dp"
                 />
         </LinearLayout>

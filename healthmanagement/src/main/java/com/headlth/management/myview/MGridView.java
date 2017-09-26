@@ -10,7 +10,7 @@ import android.widget.GridView;
  */
 public class MGridView extends GridView {
 
-    public boolean hasScrollBar = true;
+
 
     /**
      * @param context
@@ -26,7 +26,7 @@ public class MGridView extends GridView {
     public MGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
+    public boolean hasScrollBar = true;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -38,6 +38,8 @@ public class MGridView extends GridView {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
+
+
 
     public interface OnTouchInvalidPositionListener {
 
@@ -60,17 +62,9 @@ public class MGridView extends GridView {
             return super.onTouchEvent(event);
 
         }
-
         if (!isEnabled()) {
-
-// A disabled view that is clickable still consumes the touch
-
-// events, it just doesn't respond to them.
-
             return isClickable() || isLongClickable();
-
         }
-
         final int motionPosition = pointToPosition((int) event.getX(), (int) event.getY());
 
         if (motionPosition == INVALID_POSITION) {

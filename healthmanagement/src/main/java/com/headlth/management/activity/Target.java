@@ -1,6 +1,5 @@
 package com.headlth.management.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +8,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.chufang.targetItemAdapter;
 import com.headlth.management.entity.chufangCallBack;
-import com.umeng.analytics.MobclickAgent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -22,7 +21,7 @@ import org.xutils.x;
  * Created by Administrator on 2016/4/25.
  */
 @ContentView(R.layout.newhucfangtarget)
-public class Target extends BaseActivity{
+public class Target extends BaseActivity {
 
     @ViewInject(R.id.view_publictitle_title)
     private TextView view_publictitle_title;

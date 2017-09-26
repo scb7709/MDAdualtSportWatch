@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.AccountManagerJson;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.sina.AccessTokenKeeper;
@@ -84,19 +85,20 @@ public class AccountManageActivity extends BaseActivity {
     private AccountManagerJson accountManagerJson;
     public static com.headlth.management.clenderutil.WaitDialog waitDialog;
     public static Activity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         x.view().inject(this);
         UID = ShareUitls.getString(AccountManageActivity.this, "UID", "0");
-        activity=this;
-       // Toast.makeText(AccountManageActivity.this,UID,Toast.LENGTH_LONG).show();
-        init();
+        activity = this;
+        // Toast.makeText(AccountManageActivity.this,UID,Toast.LENGTH_LONG).show();
+        initialize();
 
     }
 
-    private void init() {
+    private void initialize() {
         view_publictitle_title.setText("账户管理");
         waitDialog = new com.headlth.management.clenderutil.WaitDialog(AccountManageActivity.this);
         initializeOtherLogin();
@@ -117,7 +119,9 @@ public class AccountManageActivity extends BaseActivity {
                 break;
             case R.id.activity_accountmanage_phone:
                 if (accountManagerJson != null && accountManagerJson.MobileBinding.equals("false")) {
-                    startActivity(new Intent(AccountManageActivity.this, BoundPhoneActivity.class));
+
+
+                    startActivity(new Intent(AccountManageActivity.this, BoundPhoneActivity.class).putExtra("FlagActivity","AccountManageActivity"));
                 }
 
                 break;
@@ -137,9 +141,8 @@ public class AccountManageActivity extends BaseActivity {
                 }
                 break;
             case R.id.activity_accountmanage_exit:
-                Intent i = new Intent(AccountManageActivity.this, Login.class);
-                startActivity(i);
-                if(MainActivity.Activity!=null){
+
+             /*   if (MainActivity.Activity != null) {
                     MainActivity.Activity.finish();
                 }
                 //清除所有文件数据
@@ -148,8 +151,12 @@ public class AccountManageActivity extends BaseActivity {
                 CircleList.getInstance().circlelist.clear();
                 CircleList.getInstance().commentlist.clear();
                 CircleList.getInstance().replylist.clear();
-                Glide.get(this).clearMemory();
-                finish();
+                Glide.get(AccountManageActivity.this).clearMemory();
+                Intent i = new Intent(AccountManageActivity.this, Login.class);
+                startActivity(i);
+                finish();*/
+               exit();
+
                 break;
         }
     }
@@ -167,6 +174,12 @@ public class AccountManageActivity extends BaseActivity {
             waitDialog.setMessage("正在获取授权,请稍后...");
             waitDialog.ShowDialog(true);
             if (!mTencent.isSessionValid()) {
+                waitDialog.ShowDialog(true);
+                mTencent.login(AccountManageActivity.this, "all", BaseUiListener);
+
+            }else {
+                mTencent.logout(this);
+                waitDialog.ShowDialog(true);
                 mTencent.login(AccountManageActivity.this, "all", BaseUiListener);
             }
         } else {
@@ -181,8 +194,8 @@ public class AccountManageActivity extends BaseActivity {
     private void LoginChat() {
         ShareUitls.putLoginString(AccountManageActivity.this, "chatflag", "AccountManage");
         if (api.isWXAppInstalled()) {
-          ///  waitDialog.setMessage("正在获取授权,请稍后...");
-           // waitDialog.ShowDialog(true);
+            ///  waitDialog.setMessage("正在获取授权,请稍后...");
+            // waitDialog.ShowDialog(true);
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
             req.state = "wechat_sdk_demo_test";
@@ -209,14 +222,14 @@ public class AccountManageActivity extends BaseActivity {
             }
 
             public void onComplete(Object response) {
-               // startActivity(new Intent(AccountManageActivity.this, TEXT.class).putExtra("jsonObject1", response + "   QQ"));
+                // startActivity(new Intent(AccountManageActivity.this, TEXT.class).putExtra("jsonObject1", response + "   QQ"));
                 // Toast.makeText(getApplicationContext(), "QQ登录获取用户信息异常", Toast.LENGTH_SHORT).show();
                 waitDialog.ShowDialog(false);
                 try {
                     JSONObject jsonObject = (JSONObject) response;
                     final String openid = jsonObject.getString("openid");
+                   // startActivity(new Intent(AccountManageActivity.this, TEXT.class).putExtra("jsonObject1",openid));
                     Bound("2", openid);
-
                 } catch (JSONException e) {
 
                     e.printStackTrace();
@@ -327,7 +340,7 @@ public class AccountManageActivity extends BaseActivity {
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-               // startActivity(new Intent(AccountManageActivity.this, TEXT.class).putExtra("jsonObject1", msg.obj.toString() + "   sina"));
+                // startActivity(new Intent(AccountManageActivity.this, TEXT.class).putExtra("jsonObject1", msg.obj.toString() + "   sina"));
                 Bound("3", msg.obj.toString());
                 waitDialog.ShowDialog(false);
             }
@@ -350,13 +363,13 @@ public class AccountManageActivity extends BaseActivity {
     private void getRequest() {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetUserBindingListRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(AccountManageActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",UID);
-        HttpUtils.getInstance(AccountManageActivity.this).sendRequestRequestParams("", params,true, new HttpUtils.ResponseListener() {
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(AccountManageActivity.this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", UID);
+        HttpUtils.getInstance(AccountManageActivity.this).sendRequestRequestParams("  ", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.i("GGGGGGGGGGGG",response);
+                        Log.i("GGGGGGGGGGGG", response);
                         accountManagerJson = new Gson().fromJson(response, AccountManagerJson.class);
                         if (accountManagerJson.MobileBinding.equals("true")) {
                             activity_accountmanage_phone_is.setVisibility(View.GONE);
@@ -390,12 +403,12 @@ public class AccountManageActivity extends BaseActivity {
 
     private void Bound(String ThirdPartyID, String ThirdPartyCode) {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostThirdPartyBindingRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(AccountManageActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",UID);
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(AccountManageActivity.this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", UID);
         params.addBodyParameter("ThirdPartyID", ThirdPartyID);
         params.addBodyParameter("ThirdPartyCode", ThirdPartyCode);
-        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));;
-        HttpUtils.getInstance(AccountManageActivity.this).Bound(params);
+        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
+        HttpUtils.getInstance(AccountManageActivity.this).Bound(params, boundhandler);
     }
 
     @Override
@@ -404,4 +417,74 @@ public class AccountManageActivity extends BaseActivity {
         waitDialog.ShowDialog(false);
         getRequest();
     }
+
+
+    private void exit() {
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserExitRequest");
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(AccountManageActivity.this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", UID);
+        HttpUtils.getInstance(AccountManageActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("adsfdsgdfg", response);
+
+                        if (MainActivity.Activity != null) {
+                            MainActivity.Activity.finish();
+                        }
+                        //清除所有文件数据
+                        ShareUitls.cleanSharedPreference(AccountManageActivity.this);
+                        //清空圈子
+                        CircleList.getInstance().circlelist.clear();
+                        CircleList.getInstance().commentlist.clear();
+                        CircleList.getInstance().replylist.clear();
+                        Glide.get(AccountManageActivity.this).clearMemory();
+                        Intent i = new Intent(AccountManageActivity.this, Login.class);
+                        startActivity(i);
+                        finish();
+                    }
+
+                    @Override
+                    public void onErrorResponse(Throwable ex) {
+
+                        if (MainActivity.Activity != null) {
+                            MainActivity.Activity.finish();
+                        }
+                        //清除所有文件数据
+                        ShareUitls.cleanSharedPreference(AccountManageActivity.this);
+                        //清空圈子
+                        CircleList.getInstance().circlelist.clear();
+                        CircleList.getInstance().commentlist.clear();
+                        CircleList.getInstance().replylist.clear();
+                        Glide.get(AccountManageActivity.this).clearMemory();
+                        Intent i = new Intent(AccountManageActivity.this, Login.class);
+                        startActivity(i);
+                        finish();
+                        //Toast.makeText(AccountManageActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+        );
+
+    }
+
+    Handler boundhandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(AccountManageActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                    getRequest();
+                    break;
+                case 1:
+                    Toast.makeText(AccountManageActivity.this, "该账户已被其他账户绑定", Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(AccountManageActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+        }
+
+    };
 }

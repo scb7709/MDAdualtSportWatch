@@ -17,7 +17,9 @@ public class AdvancedPrescription implements Serializable{
     public String QuestionnaireID;
     public String PlanNameID;
     public String SpecialPrescription;
-    public String ResultJWT;
-
+  /*  public String HRrest;
+    public int WatchDuration;
+    public String UBound;
+    public String LBound;*/
 
 }

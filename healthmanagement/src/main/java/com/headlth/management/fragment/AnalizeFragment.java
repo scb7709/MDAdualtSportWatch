@@ -43,6 +43,11 @@ public class AnalizeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_analize, null);
+        initialize(view);
+        return view;
+    }
+
+    private void initialize(View view) {
         vPager = (ViewPager) view.findViewById(R.id.vPager);
         String year = DateUtil.getYear() + "-" + second(DateUtil.getMonth()) + "-" + second(DateUtil.getCurrentMonthDay());
         String anlysedata = ShareUitls.getString(getActivity(), "anlysedata", "");//
@@ -60,27 +65,21 @@ public class AnalizeFragment extends BaseFragment {
 
             fenxi(year, 0);
         }
-        return view;
     }
 
-    TextView today;
-    TextView first;
-    TextView second;
-    ImageButton bt_rili;
+    public TextView activity_main_title_left;
+
+    public TextView activity_main_title_center;
+
+    public TextView activity_main_title_right;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        today = (TextView) getActivity().findViewById(R.id.today);
-        first = (TextView) getActivity().findViewById(R.id.statechange);
-        second = (TextView) getActivity().findViewById(R.id.second);
+        activity_main_title_center = (TextView) getActivity().findViewById(R.id.activity_main_title_center);
+        activity_main_title_right = (TextView) getActivity().findViewById(R.id.activity_main_title_right);
+        activity_main_title_left = (TextView) getActivity().findViewById(R.id.activity_main_title_left);
 
-        today.setTextSize(17);
-        today.setTextColor(Color.parseColor("#3c3c3c"));
-        today.setText("有效运动");
-        first.setText("");
-        second.setTextSize(13);
-        second.setTextColor(Color.parseColor("#000000"));
-        second.setText("卡路里");
+
     }
 
    private anlyseCallBack anlyse;
@@ -101,34 +100,24 @@ public class AnalizeFragment extends BaseFragment {
         //跟换的画会有问题
         vPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(), fragmentsList));
       /*  mPager.setAdapter(new MyFragmentPagerAdapter(getFragmentManager(), fragmentsList));*/
-        vPager.setOnPageChangeListener(new MyOnPageChangeListener());
+        vPager.addOnPageChangeListener(new MyOnPageChangeListener());
         vPager.setOffscreenPageLimit(0);
         vPager.setCurrentItem(0);
     }
-    int i = 1;
     public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageSelected(int arg0) {
             Log.e("onPageSelected", arg0 + "");
-            if (i % 2 != 0) {
-                today.setTextSize(13);
-                today.setTextColor(Color.parseColor("#000000"));
-                today.setText("有效运动");
-                first.setText("");
-                second.setTextSize(17);
-                second.setTextColor(Color.parseColor("#3c3c3c"));
-                second.setText("卡路里");
-                i++;
+            if (arg0== 0) {
+                activity_main_title_left.setText("");
+                activity_main_title_center.setText("有效运动");
+                activity_main_title_right.setText("卡路里");
+
             } else {
-                today.setTextSize(17);
-                today.setTextColor(Color.parseColor("#3c3c3c"));
-                today.setText("有效运动");
-                first.setText("");
-                second.setTextSize(13);
-                second.setTextColor(Color.parseColor("#000000"));
-                second.setText("卡路里");
-                i++;
+                activity_main_title_left.setText("有效运动");
+                activity_main_title_center.setText("卡路里");
+                activity_main_title_right.setText("");
             }
         }
         @Override

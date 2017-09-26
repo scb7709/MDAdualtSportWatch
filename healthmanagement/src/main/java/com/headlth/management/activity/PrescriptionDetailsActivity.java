@@ -21,6 +21,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.PrescriptionDetails;
 import com.headlth.management.entity.PrescriptionJson;
 import com.headlth.management.myview.MGridView;
@@ -79,7 +80,7 @@ public class PrescriptionDetailsActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         prescriptionDetails = null;
-        setDataHttp();
+        getData();
     }
 
     private void setImages(List<PrescriptionDetails.ImgUrlListClass> ImgUrlList) {
@@ -87,7 +88,7 @@ public class PrescriptionDetailsActivity extends BaseActivity {
         activity_prescritiondetials_image_layout.setAdapter(adapter);
     }
 
-    private void setDataHttp() {
+    private void getData() {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetPlanDetailRequest");
         params.addBodyParameter("PlanNameID", prescription.PlanNameID);

@@ -16,7 +16,6 @@
 
 package com.headlth.management.blue;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -34,12 +33,11 @@ import android.widget.TextView;
 
 
 import com.headlth.management.R;
-import com.headlth.management.activity.BaseActivity;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.blue.adapters.BleServicesAdapter;
 import com.headlth.management.blue.sensor.BleHeartRateSensor;
 import com.headlth.management.blue.sensor.BleSensor;
 import com.headlth.management.blue.sensor.BleSensors;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 

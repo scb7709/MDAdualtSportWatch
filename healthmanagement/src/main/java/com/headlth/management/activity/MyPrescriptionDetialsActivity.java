@@ -3,13 +3,7 @@ package com.headlth.management.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -18,12 +12,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.adapter.MyPrescriptionDetialsAdapter;
 import com.headlth.management.entity.MyPrescriptionDetialsAdvise;
 import com.headlth.management.entity.MyPrescriptionDetialsData;
 import com.headlth.management.entity.MyPrescriptionJson;
 import com.headlth.management.entity.QuestionaireResultJson;
-import com.headlth.management.scan.Search;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -35,9 +29,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by abc on 2016/11/22.
@@ -80,10 +72,10 @@ public class MyPrescriptionDetialsActivity extends BaseActivity {
         x.view().inject(this);
         intent = getIntent();
         myPrescription = (MyPrescriptionJson.MyPrescription) intent.getSerializableExtra("MyPrescription");
-        init();
+        initialize();
     }
 
-    private void init() {
+    private void initialize() {
         view_publictitle_title.setText("运动计划详情");
         MyPrescriptionDetialsAdviseList = new ArrayList<>();
         MyPrescriptionDetialsDataList = new ArrayList<>();
@@ -104,12 +96,12 @@ public class MyPrescriptionDetialsActivity extends BaseActivity {
                 break;
         }
 
-        getQuestionnairResultHttp();
+        getMyPrescriptionDetialsData();
 
     }
 
 
-    private void getQuestionnairResultHttp() {
+    private void getMyPrescriptionDetialsData() {
         Log.i("XXXXXXXXXXXAAA", myPrescription.toString());
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetQuestionnaireRequest");
         params.addBodyParameter("UID",UID);

@@ -37,6 +37,20 @@ public class WaitDialog extends Dialog implements Serializable {
         tv.setText("加载中...");
     }
 
+    public WaitDialog(Context context, boolean flag) {
+        super(context);
+        if (waitDialog == null) {
+            waitDialog = new Dialog(context, R.style.progress_dialog);
+        }
+        waitDialog.setContentView(R.layout.dialog_wait);
+
+        waitDialog.setCanceledOnTouchOutside(false);
+        waitDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        tv = (TextView) waitDialog.findViewById(R.id.id_tv_loadingmsg);
+        waitDialog.setCancelable(flag);
+
+    }
+
     public WaitDialog(Context context, String string) {
         super(context);
         if (waitDialog == null) {
@@ -64,7 +78,11 @@ public class WaitDialog extends Dialog implements Serializable {
                 tv.setVisibility(View.GONE);
             }
         }
-        waitDialog.show();
+        try {
+            waitDialog.show();
+        } catch (Exception e) {
+        }
+
     }
 
     public void dismissDialog() {

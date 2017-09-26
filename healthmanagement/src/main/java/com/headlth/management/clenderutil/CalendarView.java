@@ -18,6 +18,9 @@ import com.headlth.management.entity.copy1;
 import com.headlth.management.entity.copy2;
 import com.headlth.management.utils.ShareUitls;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class CalendarView extends View {
@@ -36,8 +39,11 @@ public class CalendarView extends View {
     private static CustomDate mShowDate;//自定义的日期  包括year month day
     private CallBack mCallBack;//回调
     private int touchSlop;
-    private int Width=20;
+    private int Width = 20;
     private Context context;
+    private List<Integer> SSSportDay;
+    private int SSSportDaySize;
+    private Calendar calendar;
 
     public interface CallBack {
 
@@ -60,6 +66,7 @@ public class CalendarView extends View {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
+
     private WaitDialog waitDialog;
 
     private void showDialog(boolean isShow) {
@@ -90,9 +97,12 @@ public class CalendarView extends View {
         init(context);
     }
 
-    public CalendarView(Context context, CallBack mCallBack) {
+    public CalendarView(Context context, Calendar calendar , List<Integer> SSSportDay, CallBack mCallBack) {
         super(context);
         this.mCallBack = mCallBack;
+        this.SSSportDay = SSSportDay;
+        SSSportDaySize = SSSportDay.size();
+        this.calendar = calendar;
         init(context);
     }
 
@@ -109,7 +119,7 @@ public class CalendarView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         this.context = context;
        /* mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);*/
-        mCirclePaint = new Paint((int) 1);
+        mCirclePaint = new Paint(1);
         mCirclePaint.setStyle(Paint.Style.FILL);
         mCirclePaint.setAntiAlias(true);
         mCirclePaint.setColor(Color.parseColor("#ffad00"));
@@ -119,7 +129,7 @@ public class CalendarView extends View {
     }
 
     private void initDate() {
-        mShowDate = new CustomDate(context);
+        mShowDate = new CustomDate(calendar);
         fillDate();
     }
 
@@ -211,9 +221,9 @@ public class CalendarView extends View {
         // 绘制一个单元格 如果颜色需要自定义可以修改
         Boolean noData = true;
 
-        private boolean isToday(String year,String month,String day) {//判断当前天是否被点击过
+        private boolean isToday(String year, String month, String day) {//判断当前天是否被点击过
             String str = ShareUitls.getString(context, "CLICKDADE", "");
-          // Log.i("CCCCCCCCCC11", str + "  " + getString(year+"") + " " + getString(month +"")+ " " + getString(day+""));
+            // Log.i("CCCCCCCCCC11", str + "  " + getString(year+"") + " " + getString(month +"")+ " " + getString(day+""));
             if (str.equals("")) {
                 return false;
             } else {
@@ -221,14 +231,8 @@ public class CalendarView extends View {
                     // Log.i("CCCCCCCCCC22", str.substring(0, 4));
                     if (str.substring(5, 7).equals(getString(month + ""))) {
                         //  Log.i("CCCCCCCCCC33", str.substring(5, 7));
-                        if (str.substring(8, 10).equals(getString(day + ""))) {
-                       //   Log.i("CCCCCCCCCC44", str.substring(8, 10));
-
-                            return true;
-
-                        } else {
-                            return false;
-                        }
+                        //   Log.i("CCCCCCCCCC44", str.substring(8, 10));
+                        return str.substring(8, 10).equals(getString(day + ""));
 
                     } else {
                         return false;
@@ -249,12 +253,12 @@ public class CalendarView extends View {
 
         public void drawSelf(Canvas canvas) {
             String day = date.day + "";
-            Log.i("CCCCCCCCCC22",  "  " + getString(date.year+"") + " " + getString(date.month +"")+ " " + getString(date.day+""));
+            Log.i("CCCCCCCCCC22", "  " + getString(date.year + "") + " " + getString(date.month + "") + " " + getString(date.day + ""));
             switch (state) {
                 case CURRENT_MONTH_DAY:
                     //当前正常状态
                     //字体颜色
-                    if (!isToday(getString(date.year+""),getString(date.month+""),getString(date.day+""))) {
+                    if (!isToday(getString(date.year + ""), getString(date.month + ""), getString(date.day + ""))) {
 
 
                         //内环圆
@@ -268,9 +272,8 @@ public class CalendarView extends View {
                         //画内环圆字体    空白圆的数字
 
 
-
                         //画外环圆 空白圆的外环圆
-                        mCirclePaint2 = new Paint((int) 2);
+                        mCirclePaint2 = new Paint(2);
                         mCirclePaint2.setStyle(Paint.Style.STROKE);
                         mCirclePaint2.setAntiAlias(true);
                         mCirclePaint2.setColor(Color.parseColor("#c7c7c7"));
@@ -299,11 +302,11 @@ public class CalendarView extends View {
 
 
                         mCirclePaint.setColor(Color.parseColor("#c7c7c7"));
-                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3+px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3+px2dip(context,Width)),
+                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3 + px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3 + px2dip(context, Width)),
 
-                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3-px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3-px2dip(context,Width)));
+                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3 - px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3 - px2dip(context, Width)));
                         canvas.drawArc(rect1, //弧线所使用的矩形区域大小
                                 -90,  //开始角度
                                 360, //扫过的角度
@@ -323,8 +326,8 @@ public class CalendarView extends View {
                     mTextPaint.setColor(Color.parseColor("#ffff00"));
                     break;
                 case SPORT_DAY://有氧运动
-                    if (!isToday(getString(date.year+""),getString(date.month+""),getString(date.day+""))) {
-                        Log.i("yyyyyyyyyyyy", this.date.day+"");
+                    if (!isToday(getString(date.year + ""), getString(date.month + ""), getString(date.day + ""))) {
+                        Log.i("yyyyyyyyyyyy", this.date.day + "");
 
                         mCirclePaint.setColor(Color.parseColor("#FFFDB300"));
                         canvas.drawCircle((float) (mCellSpace * (i + 0.5)),
@@ -350,22 +353,16 @@ public class CalendarView extends View {
 
 
                         mCirclePaint.setColor(Color.parseColor("#FFFDB300"));
-                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3+px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3+px2dip(context,Width)),
+                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3 + px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3 + px2dip(context, Width)),
 
-                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3-px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3-px2dip(context,Width)));
+                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3 - px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3 - px2dip(context, Width)));
                         canvas.drawArc(rect1, //弧线所使用的矩形区域大小
                                 -90,  //开始角度
                                 360, //扫过的角度
                                 false, //是否使用中心
                                 mCirclePaint);
-
-
-
-
-
-
 
 
                     }
@@ -378,8 +375,8 @@ public class CalendarView extends View {
 
 
                 case STRENGTH_DAY://力量运动
-                    if (!isToday(getString(date.year+""),getString(date.month+""),getString(date.day+""))) {
-                        Log.i("tttttttttttt否 liiangl", this.date.day+"");
+                    if (!isToday(getString(date.year + ""), getString(date.month + ""), getString(date.day + ""))) {
+                        Log.i("tttttttttttt否 liiangl", this.date.day + "");
                         mCirclePaint.setColor(Color.parseColor("#FF956A3D"));
                         canvas.drawCircle((float) (mCellSpace * (i + 0.5)),
                                 (float) ((j + 0.5) * mCellSpace), mCellSpace / 3,
@@ -403,13 +400,12 @@ public class CalendarView extends View {
                         DrawWhiteRing(canvas);
 
 
-
                         mCirclePaint.setColor(Color.parseColor("#FF956A3D"));
-                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3+px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3+px2dip(context,Width)),
+                        RectF rect1 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3 + px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3 + px2dip(context, Width)),
 
-                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3-px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3-px2dip(context,Width)));
+                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3 - px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3 - px2dip(context, Width)));
                         canvas.drawArc(rect1, //弧线所使用的矩形区域大小
                                 -90,  //开始角度
                                 360, //扫过的角度
@@ -424,7 +420,7 @@ public class CalendarView extends View {
 
                     break;
                 case BOTH_DAY://力量和有氧都有
-                    if (!isToday(getString(date.year+""),getString(date.month+""),getString(date.day+""))) {
+                    if (!isToday(getString(date.year + ""), getString(date.month + ""), getString(date.day + ""))) {
                         Log.i("tttttttttttt否 liliang", "ttttt");
 
                         mCirclePaint.setColor(Color.parseColor("#FF956A3D"));
@@ -466,10 +462,10 @@ public class CalendarView extends View {
                         DrawWhiteRing(canvas);
 
                         mCirclePaint.setColor(Color.parseColor("#FF956A3D"));
-                        RectF rect2 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3+px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3+px2dip(context,Width)),
-                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3-px2dip(context,Width)),
-                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3-px2dip(context,Width)));
+                        RectF rect2 = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3 + px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace - mCellSpace / 3 + px2dip(context, Width)),
+                                (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3 - px2dip(context, Width)),
+                                (float) ((j + 0.5) * mCellSpace + mCellSpace / 3 - px2dip(context, Width)));
                         canvas.drawArc(rect2, //弧线所使用的矩形区域大小
                                 -90,  //开始角度
                                 180, //扫过的角度
@@ -481,11 +477,6 @@ public class CalendarView extends View {
                                 180, //扫过的角度
                                 true, //是否使用中心
                                 mCirclePaint);
-
-
-
-
-
 
 
                     }
@@ -512,10 +503,10 @@ public class CalendarView extends View {
 
         private void DrawWhiteRing(Canvas canvas) {
             mCirclePaint.setColor(Color.WHITE);
-            RectF rect = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3+px2dip(context,Width/2)),
-                    (float) ((j + 0.5) * mCellSpace - mCellSpace / 3+px2dip(context,Width/2)),
-                    (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3-px2dip(context,Width/2)),
-                    (float) ((j + 0.5) * mCellSpace + mCellSpace / 3-px2dip(context,Width/2)));
+            RectF rect = new RectF((float) ((mCellSpace * (i + 0.5)) - mCellSpace / 3 + px2dip(context, Width / 2)),
+                    (float) ((j + 0.5) * mCellSpace - mCellSpace / 3 + px2dip(context, Width / 2)),
+                    (float) ((mCellSpace * (i + 0.5)) + mCellSpace / 3 - px2dip(context, Width / 2)),
+                    (float) ((j + 0.5) * mCellSpace + mCellSpace / 3 - px2dip(context, Width / 2)));
             canvas.drawArc(rect, //弧线所使用的矩形区域大小
                     -90,  //开始角度
                     360, //扫过的角度
@@ -530,7 +521,7 @@ public class CalendarView extends View {
      *         当前月日期，过去的月的日期，下个月的日期，有氧运动日期，力量运动日期，有氧和力量都有的日期
      */
     enum State {
-        CURRENT_MONTH_DAY, PAST_MONTH_DAY, NEXT_MONTH_DAY, SPORT_DAY, STRENGTH_DAY, BOTH_DAY;
+        CURRENT_MONTH_DAY, PAST_MONTH_DAY, NEXT_MONTH_DAY, SPORT_DAY, STRENGTH_DAY, BOTH_DAY
     }
 
     /**
@@ -562,11 +553,11 @@ public class CalendarView extends View {
         int currentMonthDays = DateUtil.getMonthDays(mShowDate.year, mShowDate.month);
         int firstDayWeek = DateUtil.getWeekDayFromDate(mShowDate.year, mShowDate.month);
 
-        //   Log.e("llll", "fillMonthDate" + copy.getInstance().SSSportDay.toString() + "----" + currentMonthDays);
+     /*   //   Log.e("llll", "fillMonthDate" + copy.getInstance().SSSportDay.toString() + "----" + currentMonthDays);
         boolean isCurrentMonth = false;
         if (DateUtil.isCurrentMonth(mShowDate)) {
             isCurrentMonth = true;
-        }
+        }*/
         int day = 0;
 
         for (int j = 0; j < TOTAL_ROW; j++) {
@@ -575,6 +566,9 @@ public class CalendarView extends View {
                 int postion = i + j * TOTAL_COL;
                 if (postion >= firstDayWeek && postion < firstDayWeek + currentMonthDays) {
                     day++;
+                    if (day > SSSportDaySize) {
+                        return;
+                    }
                     CustomDate date = CustomDate.modifiDayForObject(mShowDate, day);
                     String yearmonth = date.getYear() + "-" + getNum(date.getMonth()) + "-" + getNum(date.getDay());
                     if (mapSport != null && mapSport.get(yearmonth) != null) {
@@ -583,21 +577,17 @@ public class CalendarView extends View {
                         rows[j].cells[i] = new Cell(date, State.SPORT_DAY, i, j);
                         continue;
                     }
-                    if (copy1.getInstance().SSSportDay.get(day - 1) == 1) {
-
+                    if (SSSportDay.get(day - 1) == 1) {
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.SPORT_DAY, i, j);
 
                         continue;
-                    }
-                    if (copy1.getInstance().SSSportDay.get(day - 1) == 2) {
+                    } else if (SSSportDay.get(day - 1) == 2) {
 
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.STRENGTH_DAY, i, j);
-
                         continue;
-                    }
-                    if (copy1.getInstance().SSSportDay.get(day - 1) == 3) {
+                    } else if (SSSportDay.get(day - 1) == 3) {
 
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.BOTH_DAY, i, j);

@@ -21,17 +21,40 @@ public class ShareUitls {
         e.putString(key, msg);
         e.commit();
     }
+
     public static String getAdvancedPrescriptionString(Context c, String key, String d) {
         SharedPreferences sp = c.getSharedPreferences("advancedprescription.xml", Context.MODE_PRIVATE);
         return sp.getString(key, d);
     }
+
     public static void putString(Context c, String key, String msg) {
         SharedPreferences sp = c.getSharedPreferences("aa.xml", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
         e.putString(key, msg);
         e.commit();
     }
+    public static void putWATCHSPORTString(Context c, String key, String msg) {
+        SharedPreferences sp = c.getSharedPreferences("WATCHSPORT.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString(key, msg);
+        e.commit();
+    }
+    public static String getWATCHSPORTSString(Context c, String key, String d) {
+        SharedPreferences sp = c.getSharedPreferences("WATCHSPORT.xml", Context.MODE_PRIVATE);
+        return sp.getString(key, d);
+    }
 
+    public static void putToken(Context c, String key, String msg) {
+        SharedPreferences sp = c.getSharedPreferences("token.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString(key, msg);
+        e.commit();
+    }
+
+    public static String getToken(Context c, String key, String d) {
+        SharedPreferences sp = c.getSharedPreferences("token.xml", Context.MODE_PRIVATE);
+        return sp.getString(key, d);
+    }
 
     public static void putLoginString(Context c, String key, String msg) {
         SharedPreferences sp = c.getSharedPreferences("login.xml", Context.MODE_PRIVATE);
@@ -67,6 +90,23 @@ public class ShareUitls {
     public static String getStrengthString(Context c, String key, String d) {
         SharedPreferences sp = c.getSharedPreferences("strength.xml", Context.MODE_PRIVATE);
         return sp.getString(key, d);
+    }
+    public static void putWatchSportData(Context c, String key, String msg) {
+        SharedPreferences sp = c.getSharedPreferences("WatchSport.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString(key, msg);
+        e.commit();
+    }
+
+    public static String getWatchSportData(Context c, String key, String d) {
+        SharedPreferences sp = c.getSharedPreferences("WatchSport.xml", Context.MODE_PRIVATE);
+        return sp.getString(key, d);
+    }
+    public static void cleanWatchSportData(Context c) {
+        SharedPreferences sp = c.getSharedPreferences("WatchSport.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
     }
 
     public static String getString(Context c, String key, String d) {
@@ -124,6 +164,9 @@ public class ShareUitls {
             if (user.getUserInformation().getBirthday() != null) {
                 e.putString("Birthday", user.getUserInformation().getBirthday());
             }
+            if (user.getUserInformation().getMAC() != null) {
+                e.putString("MAC", user.getUserInformation().getMAC());
+            }
             if (user.getUserInformation().getFile() != null) {
                 e.putString("File", user.getUserInformation().getFile());
             }
@@ -153,10 +196,36 @@ public class ShareUitls {
 
         e.commit();
     }
+
     public static void putUserInformationFile(Context c, String URL) {
         SharedPreferences sp = c.getSharedPreferences("user.xml", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
-       e.putString("File", URL);
+        e.putString("File", URL);
+
+        e.commit();
+    }
+
+    public static void putUserInformationMac(Context c, String MAC) {
+        SharedPreferences sp = c.getSharedPreferences("user.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString("MAC", MAC);
+
+        e.commit();
+    }
+
+    public static String getUserInformationMac(Context c) {
+        SharedPreferences sp = c.getSharedPreferences("user.xml", Context.MODE_PRIVATE);
+        return sp.getString("MAC", "");
+    }
+
+    public static void putUserInformationWatch(Context c, String HRrest,String WatchDuration,String UBound,String LBound) {//保存腕表运动需要同步的四个参数
+        SharedPreferences sp = c.getSharedPreferences("user.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString("HRrest", HRrest);
+        e.putString("WatchDuration", WatchDuration);
+        e.putString("UBound", UBound);
+        e.putString("LBound", LBound);
+
 
         e.commit();
     }
@@ -182,7 +251,11 @@ public class ShareUitls {
             userInformation.setGender(sp.getString("Gender", ""));
             userInformation.setBirthday(sp.getString("Birthday", ""));
             userInformation.setFile(sp.getString("File", ""));
-
+            userInformation.setMAC(sp.getString("MAC", ""));
+            userInformation.setHRrest(sp.getString("HRrest", "75"));
+            userInformation.setWatchDuration(sp.getString("WatchDuration", ""+(19 * 60)));
+            userInformation.setUBound(sp.getString("UBound", "100"));
+            userInformation.setLBound(sp.getString("LBound", "120"));
             user.setUID(sp.getString("UID", ""));
             user.setPhone(sp.getString("phone", ""));
             user.setPwd(sp.getString("PWD", ""));
@@ -204,9 +277,10 @@ public class ShareUitls {
         context.getSharedPreferences("sport.xml", Context.MODE_PRIVATE).edit().clear().commit();
         context.getSharedPreferences("strength.xml", Context.MODE_PRIVATE).edit().clear().commit();
         context.getSharedPreferences("login.xml", Context.MODE_PRIVATE).edit().clear().commit();
-        putString(context,"questionnaire","1");//设置首页刷新
-        putString(context,"maidong","1");//设置首页刷新
-        putString(context,"analize","1");//分析重新刷新
+        context.getSharedPreferences("WatchSport.xml", Context.MODE_PRIVATE).edit().clear().commit();
+        putString(context, "questionnaire", "1");//设置首页刷新
+        putString(context, "maidong", "1");//设置首页刷新
+        putString(context, "analize", "1");//分析重新刷新
         // deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/shared_prefs"));
     }
 

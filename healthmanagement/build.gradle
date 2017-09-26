@@ -10,12 +10,12 @@ android {
     defaultConfig {
         applicationId "com.headlth.management"
         minSdkVersion 18
-        versionCode 19
-        versionName "2.9.2"
+        versionCode 23
+        versionName "2.9.6"
         multiDexEnabled true
 
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips" ,"arm64-v8a", "x86_64", "mips64"
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips", "arm64-v8a", "x86_64", "mips64"
         }
 
     }
@@ -43,13 +43,16 @@ android {
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.jakewharton:butterknife:5.1.1'
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile files('libs/gson-2.2.4.jar')
-    compile 'com.umeng.analytics:analytics:latest.integration'
+    //  compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/android-async-http-1.4.7.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/com.umeng.fb.5.4.0.jar')
@@ -70,5 +73,12 @@ dependencies {
     compile files('libs/bugly_crash_release.jar')
     compile project(':Pushlib')
     compile project(':toprightmenu')
+    compile 'com.android.support:support-v4:25.3.1'
+    compile project(':heartimage')
+    compile project(':MPChartLib')
+    compile 'com.android.support:design:25.3.1'
+    compile files('libs/zxing.jar')
+    compile files('libs/umeng-analytics-v6.1.2.jar')
 }
 
+/*repositories { flatDir { dirs 'aars' } }*/

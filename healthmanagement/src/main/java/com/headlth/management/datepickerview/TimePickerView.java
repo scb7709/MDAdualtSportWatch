@@ -14,7 +14,6 @@ import java.util.Date;
 
 
 /**
- * Created by Sai on 15/11/22.
  */
 public class TimePickerView extends BasePickerView implements View.OnClickListener
 {
@@ -150,7 +149,7 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
 
 	public interface OnTimeSelectListener
 	{
-		public void onTimeSelect(Date date);
+		void onTimeSelect(Date date);
 	}
 
 	public void setOnTimeSelectListener(OnTimeSelectListener timeSelectListener)

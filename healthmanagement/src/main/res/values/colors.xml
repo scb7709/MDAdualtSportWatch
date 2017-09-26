@@ -2,9 +2,12 @@
 <resources>
 
     <color name="transparent">#00000000</color>
+    <color name="app">#ffac04</color>
+    <color name="bangding">#bfbfbf</color>
     <color name="AdadultFragmentStartSportDalog_liliang">#FDAC00</color>
     <color name="black">#000000</color>
     <color name="lowyellow">#fdc80e</color>
+    <color name="title">#FF7F00</color>
     <color name="strength_videoplay_background">#c9d2c5</color>
 
     <color name="activity_bg">@color/white</color>
@@ -41,4 +44,12 @@
     <color name="pickerview_wheelview_textcolor_divider">#d5d5d5</color>
     <!--覆盖颜色-->
     <color name="bgColor_overlay">#60000000</color>
+
+
+    <color name="photopicker_background">#181819</color>
+    <color name="action_text_color_normal" >#cfcfcf</color>
+    <color name="action_text_color_pressed" >#353535</color>
+    <color name="action_text_color_enabled" >#818585</color>
+
+
 </resources>

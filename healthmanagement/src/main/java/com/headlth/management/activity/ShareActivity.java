@@ -42,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.headlth.management.R;
 import com.headlth.management.ShareImageUtils.ImageModel;
 import com.headlth.management.ShareImageUtils.Utils;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.MGridView;
@@ -112,6 +113,10 @@ public class ShareActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        initialize();
+    }
+
+    private void initialize() {
         activity = this;
         mImageList = Utils.getImages(this);
         intent = getIntent();
@@ -331,113 +336,104 @@ public class ShareActivity extends BaseActivity {
 
             case R.id.share_send:
 
-                if (share_shareText.getText().toString().length() == 0 && Bimp.getInstance().bmp.size() == 0) {
-                    Toast.makeText(ShareActivity.this, "还未添加任何内容", Toast.LENGTH_LONG).show();
-                } else {
-                    waitDialog.setMessage("正在分享,请稍后...");
-                    waitDialog.showDailog();
-                    RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
-                    if (share_shareText.getText().toString().length() == 0) {
-                        params.addBodyParameter("ShareContent", " ");
-                    } else {
-                        params.addBodyParameter("ShareContent", share_shareText.getText().toString());
-                    }
-                    params.addBodyParameter("UID", ShareUitls.getString(getApplicationContext(), "UID", "null"));
-                    params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
-                    params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));;
+                share();
+                break;
+        }
+    }
 
-                    int i = 0;
-                    for (String file : Bimp.getInstance().url) {
-                        params.addBodyParameter("file" + (i++), new File(file), "image/png");
-                        Log.i("QQQQQQQQQ", "" + file);
-                    }
+    private void share() {
+        if (share_shareText.getText().toString().length() == 0 && Bimp.getInstance().bmp.size() == 0) {
+            Toast.makeText(ShareActivity.this, "还未添加任何内容", Toast.LENGTH_LONG).show();
+        } else {
+            waitDialog.setMessage("正在分享,请稍后...");
+            waitDialog.showDailog();
+            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
+            if (share_shareText.getText().toString().length() == 0) {
+                params.addBodyParameter("ShareContent", " ");
+            } else {
+                params.addBodyParameter("ShareContent", share_shareText.getText().toString());
+            }
+            params.addBodyParameter("UID", ShareUitls.getString(getApplicationContext(), "UID", "null"));
+            params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+            params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
 
-                    //设置断点续传
-                    params.setMultipart(true);
-                    Callback.Cancelable cancelable = x.http().post(params,
-                            new Callback.CommonCallback<String>() {
-                                @Override
-                                public void onSuccess(String result) {
+            int i = 0;
+            for (String file : Bimp.getInstance().url) {
+                params.addBodyParameter("file" + (i++), new File(file), "image/png");
+                Log.i("QQQQQQQQQ", "" + file);
+            }
 
-
-                                    Log.i("QQQQQQQQQonSuccess", "" + result.toString());
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(result.toString());
-
-
-                                        if (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600") || jsonObject.getString("ErrCode").equals("602")) {
-                                            if(jsonObject.getString("ErrCode").equals("601")){
-                                                Toast.makeText(ShareActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
-                                            }else {
-                                                Toast.makeText(ShareActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
-                                            }
-                                            Intent i = new Intent(ShareActivity.this, Login.class);
-                                            ShareActivity.this.startActivity(i);
-/*
-                                            if(MainActivity.Activity!=null){
-                                                MainActivity.Activity.finish();
-                                            }
-
-                                            if (StrengthSportSummarizeActivity.activity != null) {
-                                                StrengthSportSummarizeActivity.activity.finish();
-                                            }*/
-                                            //清除所有文件数据
-                                            ShareUitls.cleanSharedPreference(ShareActivity.this);
+            //设置断点续传
+            params.setMultipart(true);
+            Callback.Cancelable cancelable = x.http().post(params,
+                    new Callback.CommonCallback<String>() {
+                        @Override
+                        public void onSuccess(String result) {
 
 
-
-                                            //清空圈子
-                                            CircleList.getInstance().circlelist.clear();
-                                            CircleList.getInstance().commentlist.clear();
-                                            CircleList.getInstance().replylist.clear();
-                                            finish();
-                                            return;
-                                        } else {
-
-                                            if (jsonObject.getString("IsSuccess").equals("true")) {
-                                                setResult(258);
-                                                finish();
-                                                Toast.makeText(ShareActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
+                            Log.i("QQQQQQQQQonSuccess", "" + result.toString());
+                            try {
+                                JSONObject jsonObject = new JSONObject(result.toString());
 
 
-                                            } else {
-                                                Toast.makeText(ShareActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                if (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600") || jsonObject.getString("ErrCode").equals("602")) {
+                                    if(jsonObject.getString("ErrCode").equals("601")){
+                                        Toast.makeText(ShareActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
+                                    }else {
+                                        Toast.makeText(ShareActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
                                     }
-                                    waitDialog.dismissDialog();
-                                }
+                                    Intent i = new Intent(ShareActivity.this, Login.class);
+                                    ShareActivity.this.startActivity(i);
+                                    ShareUitls.cleanSharedPreference(ShareActivity.this);
+                                    CircleList.getInstance().circlelist.clear();
+                                    CircleList.getInstance().commentlist.clear();
+                                    CircleList.getInstance().replylist.clear();
+                                    finish();
+                                    return;
+                                } else {
 
-                                @Override
-                                public void onError(Throwable ex, boolean isOnCallback) {
-                                    //Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                                    if (ex instanceof HttpException) { // 网络错误
-                                        Toast.makeText(ShareActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                                    if (jsonObject.getString("IsSuccess").equals("true")) {
+                                        setResult(258);
+                                        finish();
+                                        Toast.makeText(ShareActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
 
-                                    } else { // 其他错误
+
+                                    } else {
                                         Toast.makeText(ShareActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                                     }
-                                    waitDialog.dismissDialog();
+
                                 }
 
-                                @Override
-                                public void onCancelled(CancelledException cex) {
-                                    Log.i("QQQQQQQQQoonCancelled", "");
-                                    waitDialog.dismissDialog();
-                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            waitDialog.dismissDialog();
+                        }
 
-                                @Override
-                                public void onFinished() {
-                                    Log.i("QQQQQQQQonFinished", "");
-                                    waitDialog.dismissDialog();
-                                }
-                            });
-                }
-                break;
+                        @Override
+                        public void onError(Throwable ex, boolean isOnCallback) {
+                            //Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            if (ex instanceof HttpException) { // 网络错误
+                                Toast.makeText(ShareActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+
+                            } else { // 其他错误
+                                Toast.makeText(ShareActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+                            }
+                            waitDialog.dismissDialog();
+                        }
+
+                        @Override
+                        public void onCancelled(CancelledException cex) {
+                            Log.i("QQQQQQQQQoonCancelled", "");
+                            waitDialog.dismissDialog();
+                        }
+
+                        @Override
+                        public void onFinished() {
+                            Log.i("QQQQQQQQonFinished", "");
+                            waitDialog.dismissDialog();
+                        }
+                    });
         }
     }
 

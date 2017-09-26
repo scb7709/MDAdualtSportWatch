@@ -1,8 +1,6 @@
 package com.headlth.management.activity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +23,7 @@ import com.headlth.management.R;
 import com.headlth.management.ShareImageUtils.ImageModel;
 import com.headlth.management.ShareImageUtils.ImageWork;
 import com.headlth.management.ShareImageUtils.Utils;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.utils.Bimp;
 
 
@@ -34,7 +32,6 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by abc on 2016/9/5.
@@ -166,7 +163,7 @@ public class ShareImageHandleActivity extends BaseActivity {
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
             final ViewHolder viewHolder;
-            final ImageModel imageModel = (ImageModel) getItem(i);
+            final ImageModel imageModel = getItem(i);
             final String path = imageModel.getPath();
             final boolean checked = imageModel.getIsChecked();
             if (view == null) {

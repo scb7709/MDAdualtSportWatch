@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -34,8 +36,7 @@ public class ScreenShot {
 
 // 获取屏幕长和高
         int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-        int height = activity.getWindowManager().getDefaultDisplay()
-                .getHeight();
+        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
 // 去掉标题栏
 // Bitmap b = Bitmap.createBitmap(b1, 0, 25, 320, 455);
         Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
@@ -52,7 +53,9 @@ public class ScreenShot {
             // Toast.makeText(this, "sdcard不存在!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        if (bitmap==null||activity==null) {
+            return;
+        }
         // 文件在sdcard的路径
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image");
         if (!file.exists()) {
@@ -80,4 +83,22 @@ public class ScreenShot {
             e.printStackTrace();
         }
     }
+
+    public static int getwidthPixels(Activity activity) {
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        return dm.widthPixels;
+    }
+    public static int getheightPixels(Activity activity) {
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        return dm.heightPixels;
+    }
+
 }

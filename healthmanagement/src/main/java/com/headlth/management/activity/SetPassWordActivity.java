@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.headlth.management.R;
 import com.headlth.management.acs.App;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.User;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.Encryption;
@@ -43,8 +44,6 @@ public class SetPassWordActivity extends BaseActivity {
     private TextView view_publictitle_title;
     @ViewInject(R.id.view_publictitle_back)
     private RelativeLayout view_publictitle_back;
-
-
 
 
     @ViewInject(R.id.activity_setpassword_reminder)
@@ -78,6 +77,11 @@ public class SetPassWordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialize();
+
+    }
+
+    private void initialize() {
         x.view().inject(this);
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
@@ -85,7 +89,6 @@ public class SetPassWordActivity extends BaseActivity {
         //verify_code="1234";
         phone = intent.getStringExtra("phone");
         setDate();
-
     }
 
     private void setDate() {
@@ -98,7 +101,7 @@ public class SetPassWordActivity extends BaseActivity {
             activity_setpasswordet_et_pwd_layout.setVisibility(View.GONE);
             activity_setpasswordet_et_pwd_line.setVisibility(View.GONE);
             activity_setpasswordet_bt_commit.setText("下一步");
-        }else {
+        } else {
 
             view_publictitle_title.setText("重置密码");
         }
@@ -144,7 +147,7 @@ public class SetPassWordActivity extends BaseActivity {
             long OLDSMSTIME = Long.parseLong(ShareUitls.getString(SetPassWordActivity.this, "SMSTIME", 0 + ""));
             if (OLDSMSTIME != 0) {
                 long NOWSMSTIME = new Date().getTime();
-                if ((double)((NOWSMSTIME - OLDSMSTIME) / 60000) <= 15) {
+                if ((double) ((NOWSMSTIME - OLDSMSTIME) / 60000) <= 15) {
                     if (password.length() >= 6 && password_again.length() >= 6) {
                         if (password.equals(password_again)) {
                             updatePassWordHttp(phone, password);
@@ -189,7 +192,7 @@ public class SetPassWordActivity extends BaseActivity {
             long OLDSMSTIME = Long.parseLong(ShareUitls.getString(SetPassWordActivity.this, "SMSTIME", 0 + ""));
             if (OLDSMSTIME != 0) {
                 long NOWSMSTIME = new Date().getTime();
-                if ((double)((NOWSMSTIME - OLDSMSTIME) / 60000) <= 15) {
+                if ((double) ((NOWSMSTIME - OLDSMSTIME) / 60000) <= 15) {
 
                     if (password.length() >= 6) {
 
@@ -198,10 +201,10 @@ public class SetPassWordActivity extends BaseActivity {
                     } else {
                         Toast.makeText(SetPassWordActivity.this, "密码至少6位", Toast.LENGTH_LONG).show();
                     }
-                }else {
+                } else {
                     Toast.makeText(SetPassWordActivity.this, "验证码已经失效,请重新获取", Toast.LENGTH_LONG).show();
                 }
-            }else {
+            } else {
 
                 if (password.length() >= 6) {
 
@@ -246,9 +249,9 @@ public class SetPassWordActivity extends BaseActivity {
     private void updatePassWordHttp(final String phone, final String PWD) {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserPasswordRequest");
-        params.addBodyParameter("Mobile",phone);
+        params.addBodyParameter("Mobile", phone);
         params.addBodyParameter("NewPwd", Encryption.decode(Encryption.encodeByMD5(PWD).toString()));
-        HttpUtils.getInstance(this).sendRequestRequestParams("", params,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("json", response);
@@ -291,9 +294,9 @@ public class SetPassWordActivity extends BaseActivity {
 
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserRegisterRequest");
-        params.addBodyParameter("Mobile",phone);
+        params.addBodyParameter("Mobile", phone);
         params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5(PWD).toString()));
-        HttpUtils.getInstance(this).sendRequestRequestParams("", params,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("json", response);
@@ -303,7 +306,6 @@ public class SetPassWordActivity extends BaseActivity {
                             String UID = jsonObject.getString("Status");
                             if (UID.equals("0")) {
                                 Toast.makeText(SetPassWordActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
-
                             } else if (UID.equals("2")) {
                                 Toast.makeText(SetPassWordActivity.this, "手机号已存在", Toast.LENGTH_SHORT).show();
                             } else {
@@ -319,13 +321,12 @@ public class SetPassWordActivity extends BaseActivity {
                                 user.setPwd(PWD);
                                 ShareUitls.putUser(SetPassWordActivity.this, user);
                                 Intent intent = new Intent(SetPassWordActivity.this, CompleteInformationActivity.class);
-                                intent.putExtra("flag","no");
+                                intent.putExtra("flag", "no");
                                 startActivity(intent);
 
-                                String token = ShareUitls.getString(SetPassWordActivity.this, "token", "");//发送设备ID 给后台 用于推送
-                                if (token.length() != 0) {
-                                    HomeActivity. upToken(token, SetPassWordActivity.this);
-                                }
+
+                                HomeActivity.upToken(SetPassWordActivity.this);
+
                                 finish();
 
                             }
@@ -358,16 +359,22 @@ public class SetPassWordActivity extends BaseActivity {
                         Log.e("getSMSjson", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String  IsSuccess = jsonObject.getString("IsSuccess");
-                            if(IsSuccess.equals("true")){
-                                String   Status = jsonObject.getString("Status");
+                            String IsSuccess = jsonObject.getString("IsSuccess");
+                            String Status = jsonObject.getString("Status");
+                            if (IsSuccess.equals("true")) {
+
+
                                 activity_setpassword_reminder.setText("验证码已经发送到 " + phone);
                                 verify_code = Status;
                                 ShareUitls.putString(SetPassWordActivity.this, "SMSTIME", new Date().getTime() + "");
                                 Toast.makeText(SetPassWordActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
 
-                            }else {
-                                Toast.makeText(SetPassWordActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (Status.equals("3")) {
+                                    Toast.makeText(SetPassWordActivity.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(SetPassWordActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
 

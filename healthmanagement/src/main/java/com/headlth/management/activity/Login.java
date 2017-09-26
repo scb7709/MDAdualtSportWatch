@@ -3,6 +3,7 @@ package com.headlth.management.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.headlth.management.R;
 import com.headlth.management.acs.App;
+import com.headlth.management.entity.PublicDataClass;
 import com.headlth.management.entity.User;
 import com.headlth.management.entity.UserLogin;
 import com.headlth.management.sina.UsersAPI;
@@ -30,6 +33,7 @@ import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.Share;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.HttpUtils;
+import com.headlth.management.utils.VersonUtils;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.sina.weibo.sdk.auth.AuthInfo;
@@ -61,6 +65,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,7 +76,7 @@ import java.util.Map;
  * Created by Administrator on 2016/3/11.
  */
 @ContentView(R.layout.activity_login)
-public class Login extends Activity {
+public class Login extends OriginalActivity {
     @ViewInject(R.id.login_imageView)
     private ImageView login_imageView;
 
@@ -111,7 +116,6 @@ public class Login extends Activity {
 
     private App app;
     String url;
-    ;
     String token;
     private boolean loginOrregister;//点击的是注册还是登录  默认登录（false）
     public static com.headlth.management.clenderutil.WaitDialog waitDialog;
@@ -122,6 +126,10 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialize();
+    }
+
+    private void initialize() {
         x.view().inject(this);
         activity = this;
         PushAgent.getInstance(this).onAppStart();
@@ -131,10 +139,8 @@ public class Login extends Activity {
      /*   if (InternetUtils.internet2(this)) {
 
         }*/
-        try {//低版本找不到SO文件
-            initializeOtherLogin();
-        } catch (Exception e) {
-        }
+
+        initializeOtherLogin();
         waitDialog = new com.headlth.management.clenderutil.WaitDialog(Login.this);
         url = Constant.BASE_URL;
         Log.e("urllll", url + "logurllll");
@@ -145,8 +151,6 @@ public class Login extends Activity {
             et_phone.setText(user.getPhone());
             et_pwd.setText(user.getPwd());
         }
-
-
     }
 
     @Override
@@ -160,7 +164,7 @@ public class Login extends Activity {
         if (et_phone.getText().toString().trim().length() == 0 || et_pwd.getText().toString().trim().length() == 0) {
             Toast.makeText(getApplicationContext(), "帐号或密码不能为空", Toast.LENGTH_SHORT).show();
         } else {
-            phoneLogin(et_phone.getText().toString().trim(), et_pwd.getText().toString().trim());
+            phoneLogin(Login.this, et_phone.getText().toString().trim(), et_pwd.getText().toString().trim(), "LoginActivity");
         }
     }
 
@@ -184,91 +188,107 @@ public class Login extends Activity {
             }
         }
     }
-
-    /*  "UserID": "4",
-       "Mobile": "13811381138",
-               "NickName": "802280000",
-               "Gender": "2",
-               "Birthday": "1990/7/25 0:00:00",
-               "Height": "163",
-               "Weight": "65",
-               "ImgUrl": "",
-               "Status": 2,
-               "Message": "登录成功，该用户有处方",
-               "IsSuccess": true,
-               "IsError": false,
-               "ErrMsg": null,
-               "ErrCode": null*/
-    private void phoneLogin(final String phone, final String pwd) {
-
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest");
-        params.addBodyParameter("Mobile", phone);
+    static int  countm;
+    public static void phoneLogin(final Activity activity, final String phone, final String pwd, final String FlagActivity) {
+     //   String version = VersonUtils.getVersionName(activity);//http://192.168.1.250:8082/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.5
+        //Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v" + version
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.6");
+        params.addBodyParameter("Mobile",phone);
         params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
-        HttpUtils.getInstance(Login.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, true, new HttpUtils.ResponseListener() {
+
+        //params.addBodyParameter("VersionNum", version);
+      //  Log.i("myblue",params.getUri()+"   "+version+"  "+Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
+        HttpUtils.getInstance(activity).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        String token = ShareUitls.getString(getApplicationContext(), "token", "");
-                        Log.i("AAAAAAAAAphoneLogin", response);
-                        UserLogin userLogin = g.fromJson(response.toString(), UserLogin.class);
+                        Log.i("myblue", (++countm)+"    "+response);
+
+                        UserLogin userLogin = new Gson().fromJson(response.toString(), UserLogin.class);
                         Intent i = new Intent();
                         User user = new User();
                         String IsSuccess = userLogin.IsSuccess;
                         if (IsSuccess.equals("true")) {
-                            ShareUitls.putString(Login.this, "ResultJWT", userLogin.ResultJWT);//请求头
-
+                            ShareUitls.putString(activity, "ResultJWT", userLogin.ResultJWT);//请求头
                             String Status = userLogin.Status;
                             switch (Status) {
+                                case "5":
+                                    ShareUitls.putString(activity, "ResultJWT", userLogin.ResultJWT);//请求头
+                                    ShareUitls.putString(activity, "UID", userLogin.UserID);
+                                    Toast.makeText(activity, "请验证手机号", Toast.LENGTH_SHORT).show();
+                                    i.setClass(activity, BoundPhoneActivity.class);
+                                    i.putExtra("phone", phone);
+                                    i.putExtra("pwd", pwd);
+                                    i.putExtra("FlagActivity", FlagActivity);
+                                    i.putExtra("flag", "phone");
+                                    activity.startActivity(i);
+                                    if (HomeActivity.activity != null) {
+                                        HomeActivity.activity.finish();
+                                    }
+                                    break;
                                 case "1":
-                                    Toast.makeText(Login.this, "请完善个人信息", Toast.LENGTH_SHORT).show();
-                                    i.setClass(Login.this, CompleteInformationActivity.class);
-                                    ShareUitls.putString(Login.this, "UID", userLogin.UserID);
-                                    ShareUitls.putLoginString(Login.this, "loginFlag", "0");
+                                    Toast.makeText(activity, "请完善个人信息", Toast.LENGTH_SHORT).show();
+                                    i.setClass(activity, CompleteInformationActivity.class);
+                                    ShareUitls.putString(activity, "UID", userLogin.UserID);
+                                    ShareUitls.putLoginString(activity, "loginFlag", "0");
                                     user.setUID(userLogin.UserID);
                                     user.setLoginFlag("0");
                                     user.setPhone(phone);
                                     user.setPwd(pwd);
-                                    ShareUitls.putUser(Login.this, user);
+                                    ShareUitls.putUser(activity, user);
                                     i.putExtra("flag", "no");
-
-                                    startActivity(i);
-
-                                    if (token.length() != 0) {
-                                        HomeActivity.upToken(token, Login.this);
+                                    activity.startActivity(i);
+                                    HomeActivity.upToken(activity);
+                                    if (HomeActivity.activity != null) {
+                                        HomeActivity.activity.finish();
+                                    }
+                                    if (Login.activity != null) {
+                                        Login.activity.finish();
                                     }
                                     break;
                                 case "2":
                                 case "3":
-
+                                    ShareUitls.putString(activity, "IsfLoginToMain", "true");
                                     if (MainActivity.Activity != null) {
                                         MainActivity.Activity.finish();
                                     }
-                                    i.setClass(Login.this, MainActivity.class);
-                                    ShareUitls.putString(Login.this, "UID", userLogin.UserID);
-                                    ShareUitls.putLoginString(Login.this, "loginFlag", "0");
+                                    i.setClass(activity, MainActivity.class);
+                                    ShareUitls.putString(activity, "UID", userLogin.UserID);
+                                    ShareUitls.putLoginString(activity, "loginFlag", "0");
                                     user.setUID(userLogin.UserID);
                                     user.setLoginFlag("0");
                                     user.setPhone(phone);
                                     user.setPwd(pwd);
+
+// userLogin.MACAddress
                                     User.UserInformation userInformation = user.getUserInformation();
                                     userInformation.setNickName(userLogin.NickName);
+                                    if(userLogin.MACAddress.length()==0){
+                                   //  userInformation.setMAC("D6:48:63:F7:97:79");  MAC =rawResult.getText().toUpperCase() ;
+                                      //  userInformation.setMAC("D9:77:33:18:EE:EF");
+                                      userInformation.setMAC(userLogin.MACAddress.toUpperCase());
+                                    }else {
+                                        userInformation.setMAC(userLogin.MACAddress.toUpperCase());
+                                      // userInformation.setMAC("D9:77:33:18:EE:EF");
+                                    }
                                     userInformation.setFile(userLogin.ImgUrl);
                                     userInformation.setGender(userLogin.Gender);
                                     userInformation.setWeight(userLogin.Weight);
                                     userInformation.setHeight(userLogin.Height);
                                     userInformation.setBirthday(userLogin.Birthday);
                                     user.setUserInformation(userInformation);
-                                    ShareUitls.putUser(Login.this, user);
-
-
-                                    if (token.length() != 0) {
-                                        HomeActivity.upToken(token, Login.this);//上传友盟token
+                                    ShareUitls.putUser(activity, user);
+                                    HomeActivity.upToken(activity);//上传友盟token
+                                    InternetUtils.internet2(activity);//检测并上传上次遗留数据
+                                    activity.startActivity(i);
+                                    if (HomeActivity.activity != null) {
+                                        HomeActivity.activity.finish();
                                     }
-                                    InternetUtils.internet2(Login.this);//检测并上传上次遗留数据
-                                    startActivity(i);
-                                    finish();
+                                    if (Login.activity != null) {
+                                        Login.activity.finish();
+                                    }
                                     break;
                                 case "0":
-                                    Toast.makeText(Login.this, "登录失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "登录失败", Toast.LENGTH_SHORT).show();
                                     break;
                                 case "4":
 
@@ -277,7 +297,15 @@ public class Login extends Activity {
                                     break;
                             }
                         } else {
-                            Toast.makeText(Login.this, "手机号或者密码错误", Toast.LENGTH_SHORT).show();
+                            if (FlagActivity.equals("HomeActivity")) {
+                                Toast.makeText(activity, "登录信息已过期,请重新登录", Toast.LENGTH_SHORT).show();
+                                i.setClass(activity, Login.class);
+                                activity.startActivity(i);
+                                activity.finish();
+
+                            } else {
+                                Toast.makeText(activity, "手机号或者密码错误", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -285,9 +313,13 @@ public class Login extends Activity {
                     public void onErrorResponse(Throwable ex) {
                         Log.i("AAAAAAAAA", "HOMEupToken");
 
-                        Toast.makeText(Login.this, "网络异常", Toast.LENGTH_SHORT).show();
-
-
+                        Toast.makeText(activity, "网络异常", Toast.LENGTH_SHORT).show();
+                        if (FlagActivity.equals("HomeActivity")) {
+                            Intent i = new Intent();
+                            i.setClass(activity, Login.class);
+                            activity.startActivity(i);
+                            activity.finish();
+                        }
                     }
                 }
         );
@@ -388,7 +420,7 @@ public class Login extends Activity {
             map.put("headimgurl", user.getUserInformation().getFile());
             map.put("nickname", user.getUserInformation().getNickName());
             map.put("sex", user.getUserInformation().getGender());
-            HttpUtils.getInstance(Login.this).otherRegister(map, "HomeActivity");
+            HttpUtils.getInstance(Login.this).otherRegister(map, "LoginActivity");
         } else {
             if (!api.isWXAppInstalled()) {
                 Toast.makeText(this, "未检测到微信客户端", Toast.LENGTH_SHORT).show();
@@ -419,18 +451,21 @@ public class Login extends Activity {
             map.put("headimgurl", user.getUserInformation().getFile());
             map.put("nickname", user.getUserInformation().getNickName());
             map.put("sex", user.getUserInformation().getGender());
-            HttpUtils.getInstance(Login.this).otherRegister(map, "HomeActivity");
+            HttpUtils.getInstance(Login.this).otherRegister(map, "LoginActivity");
         } else {
             if (Share.isQQInstalled(Login.this)) {
                 waitDialog.setMessage("正在获取授权,请稍后...");
-                waitDialog.ShowDialog(true);
+
                 if (!mTencent.isSessionValid()) {
-                   /* if(!ShareUitls.getString(Login.this,"QQopenid","").equals("")){
-                        mTencent.setOpenId(ShareUitls.getString(Login.this,"QQopenid",""));
-                        mTencent.setAccessToken(ShareUitls.getString(Login.this,"QQaccess_token",""),      ( (System.currentTimeMillis() + Long.parseLong(ShareUitls.getString(Login.this,"QQexpires_in","")) * 1000) + ""));
-                    }*/
+                    waitDialog.ShowDialog(true);
+                    mTencent.login(Login.this, "all", BaseUiListener);
+
+                } else {
+                    mTencent.logout(this);
+                    waitDialog.ShowDialog(true);
                     mTencent.login(Login.this, "all", BaseUiListener);
                 }
+
             } else {
                 Toast.makeText(Login.this, "未检测到QQ客户端", Toast.LENGTH_LONG).show();
                 return;
@@ -559,7 +594,7 @@ public class Login extends Activity {
             map.put("headimgurl", user.getUserInformation().getFile());
             map.put("nickname", user.getUserInformation().getNickName());
             map.put("sex", user.getUserInformation().getGender());
-            HttpUtils.getInstance(Login.this).otherRegister(map, "HomeActivity");
+            HttpUtils.getInstance(Login.this).otherRegister(map, "LoginActivity");
         } else {
 
             //  if (Share.isWeiboInstalled(Login.this)) {
@@ -737,17 +772,20 @@ public class Login extends Activity {
                             JSONObject jsonObject = new JSONObject(response);
 
                             String IsSuccess = jsonObject.getString("IsSuccess");
+                            String Status = jsonObject.getString("Status");
                             if (IsSuccess.equals("true")) {
-                                String Status = jsonObject.getString("Status");
                                 Intent intent = new Intent(Login.this, SetPassWordActivity.class);
                                 intent.putExtra("verify_code", Status);
                                 intent.putExtra("flag", "Register");
                                 intent.putExtra("phone", phone);
                                 ShareUitls.putString(Login.this, "SMSTIME", new Date().getTime() + "");
                                 startActivity(intent);
-
                             } else {
-                                Toast.makeText(Login.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
+                                if (Status.equals("3")) {
+                                    Toast.makeText(Login.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(Login.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

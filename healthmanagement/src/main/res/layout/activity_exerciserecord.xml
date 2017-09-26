@@ -27,8 +27,8 @@
             android:id="@+id/activity_exerciserecord_calendar"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginRight="5dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp"
             android:background="@drawable/icon_date" />
 
         <TextView
@@ -254,17 +254,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
-                            android:orientation="horizontal"
                             android:background="@drawable/exercise_frame"
-                            >
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/activity_exerciserecord_youyang_degree"
                                 android:layout_width="wrap_content"
                                 android:layout_height="15dp"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="5dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:text=""
                                 android:textColor="#ffac04"
@@ -403,19 +402,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
-                            android:orientation="horizontal"
                             android:background="@drawable/exercise_frame"
-                            >
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/activity_exerciserecord_strength_degree"
                                 android:layout_width="wrap_content"
                                 android:layout_height="15dp"
                                 android:layout_centerVertical="true"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:text=""
-                                android:layout_gravity="center_vertical"
                                 android:textColor="#ffac04"
                                 android:textSize="10dp" />
                         </LinearLayout>
@@ -545,17 +543,16 @@
                     android:id="@+id/drawline"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-
                     android:layout_alignParentStart="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:background="@color/black"
                     android:orientation="vertical"
                     android:weightSum="1">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="77dp"
-
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="50dp"></RelativeLayout>
@@ -596,7 +593,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_alignParentBottom="true"
-
                         android:background="@drawable/shap" />
                 </RelativeLayout>
 

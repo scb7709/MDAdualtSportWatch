@@ -85,9 +85,9 @@ public class BottomMenuDialog extends Dialog {
 
         public BottomMenuDialog create() {
             final BottomMenuDialog dialog = new BottomMenuDialog(p.context, shadow?R.style.Theme_Light_NoTitle_Dialog : R.style.Theme_Light_NoTitle_NoShadow_Dialog);
+
             Window window = dialog.getWindow();
             window.setWindowAnimations(R.style.Animation_Bottom_Rising);
-
             window.getDecorView().setPadding(0, 0, 0, 0);
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;

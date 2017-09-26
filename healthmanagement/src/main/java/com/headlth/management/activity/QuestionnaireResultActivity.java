@@ -7,7 +7,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.MaidongDataJson;
 import com.headlth.management.entity.PayOrderNumber;
 import com.headlth.management.entity.PrescriptionJson;
@@ -37,9 +37,6 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by abc on 2016/9/27.
@@ -83,11 +80,11 @@ public class QuestionnaireResultActivity extends BaseActivity {
         x.view().inject(this);
         view_publictitle_title.setText("问卷结果");
         activity = this;
-        init();
+        initialize();
 
     }
 
-    private void init() {
+    private void initialize() {
         intent = getIntent();
         UID = ShareUitls.getString(activity, "UID", "0");
         PAY = intent.getStringExtra("PAY");
@@ -99,6 +96,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
 
         Log.i("WWWWWWWWQQQ", PAY + "            " + QuestionnaireID + "            " + PlanNameID + "            " + UID);
         getQuestionnairResultHttp();
+        getMaidongFragmentData();//刷新首页
     }
 
     @Override
@@ -129,7 +127,6 @@ public class QuestionnaireResultActivity extends BaseActivity {
                 } else {
                     //  String    PowerFinishedCount=ShareUitls.getString(QuestionnaireResultActivity.this,"PowerFinishedCount","");
                     this.view = view;
-                    getData();
                 }
                 break;
 
@@ -264,7 +261,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
         int hei = d.getHeight();
         // flag=true;
         view = LayoutInflater.from(QuestionnaireResultActivity.this).inflate(R.layout.dialog_adadultfragmentstartsport2, null);
-        View view2 = (View) view.findViewById(R.id.AdadultFragmentStartSportDalog_view2);
+        View view2 = view.findViewById(R.id.AdadultFragmentStartSportDalog_view2);
         Button youyangSport = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_youyang);
         Button liliangSport = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_liliang);
 
@@ -343,31 +340,21 @@ public class QuestionnaireResultActivity extends BaseActivity {
     View view;
     private BottomMenuDialog bottomMenuDialog;
 
-    private void getData() {
-        String todaydata = ShareUitls.getString(QuestionnaireResultActivity.this, "todaydata", "{}");//
-        maidong = ShareUitls.getString(QuestionnaireResultActivity.this, "maidong", "0");//首页界面是否重新刷新 （是否答完题或者是否运动完有新数据）
-        MaidongDataJson maidongDataJson = null;
 
-        Log.i("XXXXAAXXXXXX", maidong + "       " + todaydata);
-        try {
-            maidongDataJson = g.fromJson(todaydata.toString(), MaidongDataJson.class);
-        } catch (Exception e) {
-        }
-
-        if (maidongDataJson == null || maidong.equals("1")) {
+    private void getMaidongFragmentData() {
+        String maidong = ShareUitls.getString(QuestionnaireResultActivity.this, "maidong", "1");//首页界面是否重新刷新 （是否答完题或者是否运动完有新数据）
+        if ( maidong.equals("1")) {
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ShareUitls.getString(QuestionnaireResultActivity.this, "ResultJWT", "0"));
             HttpUtils.getInstance(QuestionnaireResultActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(String response) {
-                            ShareUitls.putString(QuestionnaireResultActivity.this, "todaydata", response);//
-
                             Log.i("VVVVVVVVVaaa", "" + UID + "   " + response.toString());
                             MaidongDataJson maidongDataJson = g.fromJson(response.toString(), MaidongDataJson.class);
                             Log.i("VVVVVVVVVCCC", "" + maidongDataJson.toString());
-                            if (maidongDataJson != null && maidongDataJson.UserIndexListV2_9 != null) {
-                                setMaidongData(maidongDataJson);
+                            if (maidongDataJson != null && maidongDataJson.UserIndexList != null) {
+                                setMaidongData(maidongDataJson,response);
                             } else {
                                 Toast.makeText(QuestionnaireResultActivity.this, "数据异常", Toast.LENGTH_SHORT).show();
                             }
@@ -381,36 +368,30 @@ public class QuestionnaireResultActivity extends BaseActivity {
                     }
 
             );
-        } else {
-            setMaidongData(maidongDataJson);
         }
     }
 
 
-    private void setMaidongData(MaidongDataJson maidongDataJson) {
+    private void setMaidongData(MaidongDataJson maidongDataJson,String response) {
 
         if (maidongDataJson.Status == 1) {
-            MaidongDataJson.UserIndexList UserIndexList = maidongDataJson.UserIndexListV2_9;
+            MaidongDataJson.UserIndexList UserIndexList = maidongDataJson.UserIndexList;
             WebSiteSPStartMsg = UserIndexList.WebSiteSPStartMsg;
-            if (maidong.equals("1")) {
                 ShareUitls.putString(QuestionnaireResultActivity.this, "my", "1");//我界面是否需要刷新
                 ShareUitls.putString(QuestionnaireResultActivity.this, "SPID", UserIndexList.SPID + "");
-                // SPID = UserIndexList.SPID + "";
+            // SPID = UserIndexList.SPID + "";
                 ShareUitls.putString(QuestionnaireResultActivity.this, "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "PlanNameID", UserIndexList.PlanNameID + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "UBound", UserIndexList.UBound + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "LBound", UserIndexList.LBound + "");
-                ShareUitls.putString(QuestionnaireResultActivity.this, "Target", (UserIndexList.target / 60) + "");
+                ShareUitls.putString(QuestionnaireResultActivity.this, "Target", (UserIndexList.target) + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "IsPlay", UserIndexList.IsPlay + "");
-            }
+               ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
             if (UserIndexList.IsShowTodayPowerTrainPlan.equals("true")) {//
                 if (UserIndexList.IsPlay.equals("true")) {
                     IsStrengthStart = true;
                     try {
-                        //  String[] vlist = g.fromJson(UserIndexList.vlist, String[].class);
-                        if (maidong.equals("1")) {
-                            ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", UserIndexList.vlist.get(UserIndexList.PowerFinishedCount) + "");
-                        }
+                        ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", UserIndexList.vlist.get(UserIndexList.PowerFinishedCount) + "");
                     } catch (IndexOutOfBoundsException i) {
                         try {
                             ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", "1001");
@@ -428,7 +409,8 @@ public class QuestionnaireResultActivity extends BaseActivity {
             } else {
                 Toast.makeText(QuestionnaireResultActivity.this, "当前处方未开始", Toast.LENGTH_SHORT).show();
             }
-
+            ShareUitls.putString(QuestionnaireResultActivity.this, "todaydata", response);//
+            ShareUitls.putString(QuestionnaireResultActivity.this, "maidong", "0");
 
         }
 

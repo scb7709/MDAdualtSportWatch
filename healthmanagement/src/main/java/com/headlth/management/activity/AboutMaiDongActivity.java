@@ -6,11 +6,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.utils.FileViewer;
@@ -29,7 +29,7 @@ import java.io.File;
  * Created by abc on 2016/11/24.
  */
 
-@ContentView(R.layout.activity_aboutmaidong)//复用我的处方布局
+@ContentView(R.layout.activity_aboutmaidong)//关于迈动
 public class AboutMaiDongActivity extends BaseActivity {
     @ViewInject(R.id.view_publictitle_title)
     private TextView view_publictitle_title;
@@ -60,11 +60,11 @@ public class AboutMaiDongActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         SDPATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-        init();
+        initialize();
 
     }
 
-    private void init() {
+    private void initialize() {
         //version = ShareUitls.getVersion(this);;
         activity_aboutmaidong_versioncode.setText("当前版本: " + VersonUtils.getVersionName(AboutMaiDongActivity.this));
         view_publictitle_title.setText("关于迈动");
@@ -104,64 +104,68 @@ public class AboutMaiDongActivity extends BaseActivity {
                 agent.startFeedbackActivity();
                 break;
             case R.id.activity_aboutmaidong_clearcache:
-                if (TOTALcache != 0) {
-                    VIDEOcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/maidongvideo"));
-                    IMAGEcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/image"));
-                    APKcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/apk"));
-
-
-                    BottomMenuDialog.Builder builder=new BottomMenuDialog.Builder(AboutMaiDongActivity.this);
-                    if (VIDEOcache!=0) {
-                        builder. addMenu("清理缓存视频(" + FileViewer.getFormatSize(VIDEOcache) + ")", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                waitDialog.showDailog();
-                                FileViewer.deleteFolderFile(SDPATH + "/maidong/maidongvideo", true, handler);
-                            }
-                        });
-
-                    }
-                    if (IMAGEcache!=0) {
-                        builder  .addMenu("清理缓存图片(" + FileViewer.getFormatSize(IMAGEcache) + ")", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                waitDialog.showDailog();
-                                FileViewer.deleteFolderFile(SDPATH + "/maidong/image", true, handler);
-                            }
-                        });
-
-                    }
-                    if (APKcache!=0) {
-                        builder.addMenu("清理安装包(" + FileViewer.getFormatSize(APKcache) + ")", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                waitDialog.showDailog();
-                                FileViewer.deleteFolderFile(SDPATH + "/maidong/apk", true, handler);
-                            }
-                        });
-
-                    }
-                    builder.addMenu("全部清理", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ShareUitls.putString(AboutMaiDongActivity.this, "anlysedata", "");//分析界面数据
-                            ShareUitls.putString(AboutMaiDongActivity.this, "todaydata", "");//首页今日处方相关数据
-                            ShareUitls.putString(AboutMaiDongActivity.this, "prescriptionlist", "");//推荐处方列表
-                            ShareUitls.putString(AboutMaiDongActivity.this, "todayvideo", "");//今日视频数据
-                            ShareUitls.putString(AboutMaiDongActivity.this, "mydata", "");//我界面数据
-                            waitDialog.showDailog();
-                            FileViewer.deleteFolderFile(SDPATH + "/maidong", true, handler);
-                        }
-                    }).create();;
-
-                    bottomMenuDialog =builder.create();
-                    bottomMenuDialog.show();
-                }
+                clearcache();
                 ///
                 break;
             case R.id.activity_aboutmaidong_aboutus:
                 startActivity(new Intent(this, AboutUsActivity.class));
                 break;
+        }
+    }
+
+    private void clearcache() {
+        if (TOTALcache != 0) {
+            VIDEOcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/maidongvideo"));
+            IMAGEcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/image"));
+            APKcache = FileViewer.getFolderSize(new File(SDPATH + "/maidong/apk"));
+
+
+            BottomMenuDialog.Builder builder=new BottomMenuDialog.Builder(AboutMaiDongActivity.this);
+            if (VIDEOcache!=0) {
+                builder. addMenu("清理缓存视频(" + FileViewer.getFormatSize(VIDEOcache) + ")", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        waitDialog.showDailog();
+                        FileViewer.deleteFolderFile(SDPATH + "/maidong/maidongvideo", true, handler);
+                    }
+                });
+
+            }
+            if (IMAGEcache!=0) {
+                builder  .addMenu("清理缓存图片(" + FileViewer.getFormatSize(IMAGEcache) + ")", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        waitDialog.showDailog();
+                        FileViewer.deleteFolderFile(SDPATH + "/maidong/image", true, handler);
+                    }
+                });
+
+            }
+            if (APKcache!=0) {
+                builder.addMenu("清理安装包(" + FileViewer.getFormatSize(APKcache) + ")", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        waitDialog.showDailog();
+                        FileViewer.deleteFolderFile(SDPATH + "/maidong/apk", true, handler);
+                    }
+                });
+
+            }
+            builder.addMenu("全部清理", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareUitls.putString(AboutMaiDongActivity.this, "anlysedata", "");//分析界面数据
+                    ShareUitls.putString(AboutMaiDongActivity.this, "todaydata", "");//首页今日处方相关数据
+                    ShareUitls.putString(AboutMaiDongActivity.this, "prescriptionlist", "");//推荐处方列表
+                    ShareUitls.putString(AboutMaiDongActivity.this, "todayvideo", "");//今日视频数据
+                    ShareUitls.putString(AboutMaiDongActivity.this, "mydata", "");//我界面数据
+                    waitDialog.showDailog();
+                    FileViewer.deleteFolderFile(SDPATH + "/maidong", true, handler);
+                }
+            }).create();
+
+            bottomMenuDialog =builder.create();
+            bottomMenuDialog.show();
         }
     }
 

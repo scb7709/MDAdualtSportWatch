@@ -1,53 +1,44 @@
 package com.headlth.management.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.acs.MuchHeigthImangView;
 
 import com.headlth.management.entity.Video;
 
-import com.headlth.management.entity.anlyseCallBack;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.NumberProgressBar;
 import com.headlth.management.service.NetworkService;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.FileViewer;
 import com.headlth.management.utils.GetUtf8;
-import com.headlth.management.utils.ImageUtil;
 import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.HttpUtils;
 import com.squareup.picasso.Picasso;
 import com.umeng.message.PushAgent;
 
-import org.android.agoo.intent.IntentUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.HttpManager;
@@ -71,7 +62,7 @@ import java.util.Locale;
  * Created by abc on 2016/7/5.
  */
 @ContentView(R.layout.activity_strengthsport)
-public class StrengthSportActivity extends Activity {
+public class StrengthSportActivity extends BaseActivity {
 
     @ViewInject(R.id.view_publictitle_title)
     private TextView view_publictitle_title;
@@ -160,6 +151,10 @@ public class StrengthSportActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialize();
+    }
+
+    private void initialize() {
         x.view().inject(this);
         view_publictitle_title.setText("力量训练");
         PushAgent.getInstance(this).onAppStart();
@@ -478,7 +473,7 @@ public class StrengthSportActivity extends Activity {
 
            /* WindowManager m = getWindowManager();
             Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用*/
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams((int) (width / 4), 150);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width / 4, 150);
 
             video = g.fromJson(String.valueOf(new JSONObject(new JSONObject(response.toString()).getJSONObject("Video").toString())), Video.class);
             Stage = video.getStage();

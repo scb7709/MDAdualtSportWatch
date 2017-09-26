@@ -13,13 +13,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.logcallback;
 import com.headlth.management.entity.upCallBack;
 import com.headlth.management.utils.Constant;
@@ -30,12 +30,9 @@ import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.HttpUtils;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.WeiboMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.constant.WBConstants;
 
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -74,13 +71,17 @@ public class StrengthSportSummarizeActivity extends BaseActivity /*implements IW
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        initialize();
+
+    }
+
+    private void initialize() {
         mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constant.SINA_KEY);//注册微博分享SDK
         activity = this;
         initDialog(StrengthSportSummarizeActivity.this);
         intent = getIntent();
         setData();
         sendData();
-
     }
 
     private void setData() {

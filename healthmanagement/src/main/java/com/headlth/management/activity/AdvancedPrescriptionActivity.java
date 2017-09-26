@@ -3,48 +3,17 @@ package com.headlth.management.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.AccountManagerJson;
 import com.headlth.management.entity.AdvancedPrescription;
-import com.headlth.management.entity.CircleList;
-import com.headlth.management.scan.Search;
-import com.headlth.management.sina.AccessTokenKeeper;
-import com.headlth.management.sina.UsersAPI;
-import com.headlth.management.utils.Constant;
-import com.headlth.management.utils.HttpUtils;
-import com.headlth.management.utils.Share;
 import com.headlth.management.utils.ShareUitls;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
-import com.tencent.connect.common.Constants;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -90,11 +59,11 @@ public class AdvancedPrescriptionActivity extends BaseActivity {
         activity=this;
         UID = ShareUitls.getString(AdvancedPrescriptionActivity.this, "UID", "0");
         advancedPrescription=(AdvancedPrescription)getIntent().getSerializableExtra("advancedPrescription");
-        init();
+        initialize();
 
     }
 
-    private void init() {
+    private void initialize() {
         view_publictitle_title.setText("提示");
         activity_advancedprescription_text.setText(advancedPrescription.Message);
         if(advancedPrescription.Status.equals("600")){//进阶到第二阶段
@@ -129,11 +98,11 @@ public class AdvancedPrescriptionActivity extends BaseActivity {
             case R.id.activity_advancedprescription_Individualization://第三阶段
 
 
-               // finish();
+                // finish();
                 break;
             case R.id.activity_advancedprescription_current://第三阶段
                 if(advancedPrescription.Status.equals("600")){//进阶到第二阶段
-                    startActivity(new Intent(activity, Search.class));
+                    startActivity(new Intent(activity, SearchBlueActivity.class));
                 }
                 if(advancedPrescription.Status.equals("700")){
                     startActivity(new Intent(activity, RecommendPrescriptionListActivity.class));

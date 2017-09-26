@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -13,8 +12,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.R;
+import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.MyOrderJson;
 import com.headlth.management.fragment.PrescriptionFragment;
+import com.headlth.management.myview.NoPreloadViewPager;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -66,7 +67,7 @@ public class MyOrderActivity extends BaseActivity {
     @ViewInject(R.id.activity_myprescription_overline)
     private TextView activity_myprescription_overline;
     @ViewInject(R.id.activity_myprescription_ViewPager)
-    private ViewPager activity_myprescription_ViewPager;
+    private NoPreloadViewPager activity_myprescription_ViewPager;
 
 
     private List<Fragment> myOrderFragmentList;
@@ -84,6 +85,10 @@ public class MyOrderActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        initialize();
+    }
+
+    private void initialize() {
         view_publictitle_title.setText("我的订单");
         UID = ShareUitls.getString(MyOrderActivity.this, "UID", "");
         activity_myprescription_yetstarttext.setText("已支付");
@@ -115,8 +120,14 @@ public class MyOrderActivity extends BaseActivity {
         lineList.add(activity_myprescription_overline);
 
         myOrderFragmentList = new ArrayList<>();
+        myOrderFragmentList.add(new PrescriptionFragment(10));
+        myOrderFragmentList.add(new PrescriptionFragment( 1));
+        myOrderFragmentList.add(new PrescriptionFragment( 3));
+        myOrderFragmentList.add(new PrescriptionFragment( 8));
 
-        activity_myprescription_ViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPagerOrderAdapter = new ViewPagerOrderAdapter();
+        activity_myprescription_ViewPager.setAdapter(viewPagerOrderAdapter);
+        activity_myprescription_ViewPager.setOnPageChangeListener(new NoPreloadViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -132,14 +143,7 @@ public class MyOrderActivity extends BaseActivity {
 
             }
         });
-        myOrderFragmentList.add(new PrescriptionFragment(10));
-        myOrderFragmentList.add(new PrescriptionFragment( 1));
-        myOrderFragmentList.add(new PrescriptionFragment( 3));
-        myOrderFragmentList.add(new PrescriptionFragment( 8));
-
-        viewPagerOrderAdapter = new ViewPagerOrderAdapter();
-        activity_myprescription_ViewPager.setAdapter(viewPagerOrderAdapter);
-     //   getOrderRequest();
+     //  getOrderRequest();
     }
 
 

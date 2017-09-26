@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class CircleList {
     public List<Circle> circlelist=  new ArrayList<>();
+    public List<Circle> mycirclelist=  new ArrayList<>();
     public List<Circle> circlelistall=  new ArrayList<>();
     public List<Circle> circlelistmy=  new ArrayList<>();
     public List<Comment> commentlist=new ArrayList<>();

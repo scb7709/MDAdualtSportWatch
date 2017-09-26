@@ -22,14 +22,21 @@ public class MessageList {
                 '}';
     }
 
-    public class Message implements  Serializable {
+    public class Message implements Serializable {
         public int ID;
         public String Title;
         public String Content;
         public String CreateTime;
-        public String CreateMonth;
+        public String SendTime;
         public int MsgtypeId;
         public int MedictimeslotId;
+        public boolean isfirst;
+
+        public Message(String createTime, int msgtypeId, int medictimeslotId) {
+            CreateTime = createTime;
+            MsgtypeId = msgtypeId;
+            MedictimeslotId = medictimeslotId;
+        }
 
         @Override
         public String toString() {
@@ -38,7 +45,7 @@ public class MessageList {
                     ", Title='" + Title + '\'' +
                     ", Content='" + Content + '\'' +
                     ", CreateTime='" + CreateTime + '\'' +
-                    ", CreateMonth='" + CreateMonth + '\'' +
+                    ", CreateMonth='" + SendTime + '\'' +
                     ", MsgtypeId=" + MsgtypeId +
                     ", MedictimeslotId=" + MedictimeslotId +
                     '}';
