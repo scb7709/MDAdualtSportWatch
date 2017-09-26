@@ -3,7 +3,6 @@ package com.headlth.management.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,18 +39,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.headlth.management.MyBlue.MyBlueDataAnalysis;
-
 import com.headlth.management.MyBlue.MyBulePolorManager;
-import com.headlth.management.MyBlue.MyBuleSearchManager;
 import com.headlth.management.R;
-
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.circle.RoundProgressBar;
 import com.headlth.management.circle.smallProgressCircle;
 import com.headlth.management.entity.upCallBack;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.SlideUnlockView;
-
 import com.headlth.management.service.FakePlayerService;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.DiskBitmap;
@@ -93,7 +88,7 @@ import tech.linjiang.suitlines.Unit;
  * Created by Administrator on 2016/2/26.
  */
 @ContentView(R.layout.activity_aerobicsportmyblue)//
-public class NewAerobicSportActivity extends BaseActivity implements View.OnClickListener/*, IWeiboHandler.Response*/ {
+public class AerobicSportActivity extends BaseActivity implements View.OnClickListener/*, IWeiboHandler.Response*/ {
     @ViewInject(R.id.slideUnlockView)
     private SlideUnlockView slideUnlockView;
     private Vibrator vibrator;
@@ -221,7 +216,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
     };
 
     private void startBlue() {
-        myBuleConnectManager = MyBulePolorManager.getInstance(NewAerobicSportActivity.this, ADRS, new MyBulePolorManager.OnCharacteristicListener() {
+        myBuleConnectManager = MyBulePolorManager.getInstance(AerobicSportActivity.this, ADRS, new MyBulePolorManager.OnCharacteristicListener() {
             @Override
             public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic) {
                 //  Log.i("myblue", "数据通知");
@@ -359,7 +354,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
 
         MyToash.Log("startValue" + startValue + "  " + endtValue);
-        startService(new Intent(NewAerobicSportActivity.this, FakePlayerService.class).putExtra("flag", "sport"));
+        startService(new Intent(AerobicSportActivity.this, FakePlayerService.class).putExtra("flag", "sport"));
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//禁止自动息屏
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UploadTime = format.format(new Date());
@@ -370,7 +365,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         //初始化pop
         popWindow();
         //菊花等待可以单独提出来
-        initDialog(NewAerobicSportActivity.this);
+        initDialog(AerobicSportActivity.this);
         //滑动解锁
         setSildeLock();
         setPopWindow();
@@ -381,7 +376,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
     private void setPopWindow() {
         WindowManager m = getWindowManager();
-        View view = LayoutInflater.from(NewAerobicSportActivity.this).inflate(R.layout.dialog_fifteen_minutes, null);
+        View view = LayoutInflater.from(AerobicSportActivity.this).inflate(R.layout.dialog_fifteen_minutes, null);
         popupWindoww = new PopupWindow(view, ImageUtil.dp2px(this, 300), ImageUtil.dp2px(this, 100), true);
         popupWindoww.setOutsideTouchable(true);
     }
@@ -789,8 +784,6 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                     drawline.getLocationOnScreen(location666);
                     x0 = location666[0];
                     y0 = location666[1];
-                    //gap=ImageUtil.dp2px(NewAerobicSportActivity.this,200);//200 dp
-                    // width=drawline.getWidth();//屏幕宽度
 
                     gap = drawline.getBottom() - drawline.getTop();
                     width = drawline.getWidth();
@@ -925,7 +918,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                 youxiaohuan.setVisibility(View.VISIBLE);
             } else if (msg.what == 105) {
                 if (msg.arg1 == 1) {
-                    popupWindoww.showAtLocation(new View(NewAerobicSportActivity.this), Gravity.CENTER, 0, 0);
+                    popupWindoww.showAtLocation(new View(AerobicSportActivity.this), Gravity.CENTER, 0, 0);
                     // popupWindoww.update();
                 } else if (msg.arg1 >= 15 * 60) {
                     overTask();
@@ -960,7 +953,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
             unregisterReceiver(ServiceToActivityReceiver);
         } catch (Exception e) {
         }
-        stopService(new Intent(NewAerobicSportActivity.this, FakePlayerService.class));
+        stopService(new Intent(AerobicSportActivity.this, FakePlayerService.class));
         //按钮点击标志
         clicked = true;
         isUpdate = false;//数据正常上传过
@@ -1008,7 +1001,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         setHeartInage();//画出平均心率图
 
         if (mHeartArray.size() == 0) {
-            Toast.makeText(NewAerobicSportActivity.this, "本次没有效运动数据", Toast.LENGTH_LONG).show();
+            Toast.makeText(AerobicSportActivity.this, "本次没有效运动数据", Toast.LENGTH_LONG).show();
         } else {
             UpDate(UID, Data, "1", (mTotaltime / 1000), showTime);
         }
@@ -1147,7 +1140,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
     }
 
     public void showAlert(final Boolean tag, final String msg) {
-        dialog = new AlertDialog.Builder(NewAerobicSportActivity.this);
+        dialog = new AlertDialog.Builder(AerobicSportActivity.this);
         dialog.setMessage(msg + "？")//设置显示的内容
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
@@ -1172,7 +1165,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                                 unregisterReceiver(ServiceToActivityReceiver);
                             } catch (Exception e) {
                             }
-                            stopService(new Intent(NewAerobicSportActivity.this, FakePlayerService.class));
+                            stopService(new Intent(AerobicSportActivity.this, FakePlayerService.class));
                          /*   try {
                                 myBuleSerachManager.endSearch();
                                 myBuleSerachManager = null;
@@ -1187,7 +1180,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
     }
 
     public void showAlert1(final Boolean tag, final String msg) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(NewAerobicSportActivity.this);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(AerobicSportActivity.this);
         dialog.setMessage(msg + "？")//设置显示的内容
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
@@ -1219,8 +1212,8 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         share.setVisibility(View.VISIBLE);
         isOverSport = true;
         if (EveryVolidTime != 0) {
-            if (InternetUtils.internett(NewAerobicSportActivity.this)) {
-                initDialog(NewAerobicSportActivity.this);
+            if (InternetUtils.internett(AerobicSportActivity.this)) {
+                initDialog(AerobicSportActivity.this);
                 waitDialog.setMessage("正在上传,请稍后...");
                 waitDialog.showDailog();
                 // String url = Constant.BASE_URL + "/MdMobileService.ashx?do=PostWxPayRequest";
@@ -1237,8 +1230,8 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                                     + "&WatchType=" + URLEncoder.encode(WatchType, "UTF-8")
                                     + "&EveryTime=" + EveryTime
                                     + "&EveryVolidTime=" + EveryVolidTime
-                                    + "&ResultJWT=" + ShareUitls.getString(NewAerobicSportActivity.this, "ResultJWT", "0")
-                                    + "&VersionNum=" + VersonUtils.getVersionName(NewAerobicSportActivity.this);
+                                    + "&ResultJWT=" + ShareUitls.getString(AerobicSportActivity.this, "ResultJWT", "0")
+                                    + "&VersionNum=" + VersonUtils.getVersionName(AerobicSportActivity.this);
                             //建立连接
                             URL url = new URL(urlPath);
                             HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -1312,7 +1305,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                 }.start();
             } else {
                 saveNativeData(UID, Data, WatchType, EveryTime, EveryVolidTime);
-                Toast.makeText(NewAerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
+                Toast.makeText(AerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setMessage("当前无网络连接，是否前去设置网络？")//设置显示的内容
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -1342,8 +1335,8 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
             }
         } else {
-            ShareUitls.cleanString2(NewAerobicSportActivity.this);
-            Toast.makeText(NewAerobicSportActivity.this, "没有有效运动数据", Toast.LENGTH_LONG).show();
+            ShareUitls.cleanString2(AerobicSportActivity.this);
+            Toast.makeText(AerobicSportActivity.this, "没有有效运动数据", Toast.LENGTH_LONG).show();
 
         }
 
@@ -1365,17 +1358,17 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                 if (upBack.getErrCode() != null && (upBack.getErrCode().toString().equals("601") || upBack.getErrCode().toString().equals("600"))) {
 
                     if (upBack.getErrCode().toString().equals("601")) {
-                        Toast.makeText(NewAerobicSportActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AerobicSportActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(NewAerobicSportActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AerobicSportActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
                     }
                     saveNativeData(UID, Data, "1", (mTotaltime / 1000), showTime);
-                    stopService(new Intent(NewAerobicSportActivity.this, FakePlayerService.class));
-                    Intent i = new Intent(NewAerobicSportActivity.this, Login.class);
+                    stopService(new Intent(AerobicSportActivity.this, FakePlayerService.class));
+                    Intent i = new Intent(AerobicSportActivity.this, Login.class);
                     startActivity(i);
-                    ShareUitls.putString(NewAerobicSportActivity.this, "questionnaire", "1");//设置首页刷新
-                    ShareUitls.putString(NewAerobicSportActivity.this, "maidong", "1");//设置首页刷新
-                    ShareUitls.putString(NewAerobicSportActivity.this, "analize", "1");//分析重新刷新
+                    ShareUitls.putString(AerobicSportActivity.this, "questionnaire", "1");//设置首页刷新
+                    ShareUitls.putString(AerobicSportActivity.this, "maidong", "1");//设置首页刷新
+                    ShareUitls.putString(AerobicSportActivity.this, "analize", "1");//分析重新刷新
                   /*  if (MainActivity.Activity != null) {
                         MainActivity.Activity.finish();
                     }*/
@@ -1383,9 +1376,9 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
                 } else {
 
-                    ShareUitls.putString(NewAerobicSportActivity.this, "maidong", "1");//首页界面新刷新
-                    ShareUitls.putString(NewAerobicSportActivity.this, "analize", "1");//分析界面重新刷新
-                    ShareUitls.cleanString2(NewAerobicSportActivity.this);
+                    ShareUitls.putString(AerobicSportActivity.this, "maidong", "1");//首页界面新刷新
+                    ShareUitls.putString(AerobicSportActivity.this, "analize", "1");//分析界面重新刷新
+                    ShareUitls.cleanString2(AerobicSportActivity.this);
 
 
                     Log.i("AAOrderNO111aaAA", upBack.toString());
@@ -1416,12 +1409,12 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         Log.i("updateeeeeeeeee", "  UID=  " + UID + "    Data= " + Data + "  WatchType=  " + WatchType + "    EveryTime= " + EveryTime + "   EveryVolidTime= " + EveryVolidTime + "  ");
 
         if (EveryTime != 0) {
-            if (InternetUtils.internett(NewAerobicSportActivity.this)) {
+            if (InternetUtils.internett(AerobicSportActivity.this)) {
                 waitDialog.showDailog();
                 // ShareUitls.putString(getApplicationContext(), "hasNewDate", "1");
                 //在这里设置需要post的参数
                 RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostSportDataRequest");
-                params.addBodyParameter("ResultJWT", ShareUitls.getString(NewAerobicSportActivity.this, "ResultJWT", "0"));
+                params.addBodyParameter("ResultJWT", ShareUitls.getString(AerobicSportActivity.this, "ResultJWT", "0"));
                 params.addBodyParameter("UID", UID);
                 params.addBodyParameter("Data", Data);
                 params.addBodyParameter("WatchType", WatchType);
@@ -1429,7 +1422,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                 params.addBodyParameter("EveryVolidTime", EveryVolidTime + "");
                 params.addBodyParameter("UploadTime", UploadTime);
 
-                HttpUtils.getInstance(NewAerobicSportActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
+                HttpUtils.getInstance(AerobicSportActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
 
 
                             //  Log.e("update", Data + "Data" + WatchType + "WatchType" + EveryTime + "EveryTime" + EveryVolidTime + "EveryVolidTime");
@@ -1441,10 +1434,10 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
                             @Override
                             public void onResponse(String response) {
-                                ShareUitls.putString(NewAerobicSportActivity.this, "maidong", "1");//首页界面新刷新
-                                ShareUitls.putString(NewAerobicSportActivity.this, "analize", "1");//分析界面重新刷新
+                                ShareUitls.putString(AerobicSportActivity.this, "maidong", "1");//首页界面新刷新
+                                ShareUitls.putString(AerobicSportActivity.this, "analize", "1");//分析界面重新刷新
                                 waitDialog.dismissDialog();
-                                ShareUitls.cleanString2(NewAerobicSportActivity.this);
+                                ShareUitls.cleanString2(AerobicSportActivity.this);
                                 //{"Status":2,"Message":null,"IsSuccess":false,"IsError":true,"ErrMsg":"参数错误：SPID为空","ErrCode":"500"}
                                 Log.e("WWWWWWWW", response.toString());
                                 upBack = g.fromJson(response.toString(), upCallBack.class);
@@ -1470,7 +1463,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                 );
             } else {
                 saveNativeData(UID, Data, WatchType, EveryTime, EveryVolidTime);
-                Toast.makeText(NewAerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
+                Toast.makeText(AerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setMessage("当前无网络连接，是否前去设置网络？")//设置显示的内容
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -1500,8 +1493,8 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
             }
         } else {
-            ShareUitls.cleanString2(NewAerobicSportActivity.this);
-            Toast.makeText(NewAerobicSportActivity.this, "没有有效运动数据", Toast.LENGTH_LONG).show();
+            ShareUitls.cleanString2(AerobicSportActivity.this);
+            Toast.makeText(AerobicSportActivity.this, "没有有效运动数据", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1512,7 +1505,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
             if (InternetUtils.internett(this)) {
                 UpDate(UID, Data, "1", (mTotaltime / 1000), showTime);
             } else {
-                Toast.makeText(NewAerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
+                Toast.makeText(AerobicSportActivity.this, "当前无网络连接", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -1520,15 +1513,15 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
 
     //本地保存数据
     private void saveNativeData(String UID, String Data, String WatchType, int EveryTime, int EveryVolidTime) {
-        ShareUitls.cleanString2(NewAerobicSportActivity.this);
+        ShareUitls.cleanString2(AerobicSportActivity.this);
         Log.i("WWWWWWWWWW", "正在保存数据");
         // Toast.makeText(getApplicationContext(), "正在保存数据...", Toast.LENGTH_SHORT).show();
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "SportID", UID + "");
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "Data", Data + "");
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "WatchType", WatchType + "");
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "EveryTime", EveryTime + "");
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "EveryVolidTime", EveryVolidTime + "");
-        ShareUitls.putSportString(NewAerobicSportActivity.this, "UploadTime", UploadTime);
+        ShareUitls.putSportString(AerobicSportActivity.this, "SportID", UID + "");
+        ShareUitls.putSportString(AerobicSportActivity.this, "Data", Data + "");
+        ShareUitls.putSportString(AerobicSportActivity.this, "WatchType", WatchType + "");
+        ShareUitls.putSportString(AerobicSportActivity.this, "EveryTime", EveryTime + "");
+        ShareUitls.putSportString(AerobicSportActivity.this, "EveryVolidTime", EveryVolidTime + "");
+        ShareUitls.putSportString(AerobicSportActivity.this, "UploadTime", UploadTime);
         waitDialog.dismissDialog();
     }
 
@@ -1539,7 +1532,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         super.onResume();
         mOnpaused = false;
 
-        ShareUitls.putString(NewAerobicSportActivity.this, "AerobicSportActivityistop", "yes");//用来记录当前界面是否处于最前端  当处于最前端是  接收到友盟推送的消息 点击不进入 消息详情
+        ShareUitls.putString(AerobicSportActivity.this, "AerobicSportActivityistop", "yes");//用来记录当前界面是否处于最前端  当处于最前端是  接收到友盟推送的消息 点击不进入 消息详情
         Log.e("dadth", "onResume;;;");
         //添加动态折线
         if (d == null) {
@@ -1573,7 +1566,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ShareUitls.putString(NewAerobicSportActivity.this, "AerobicSportActivityistop", "");//用来记录当前界面是否处于最前端  当处于最前端是  接收到友盟推送的消息 点击不进入 消息详情
+        ShareUitls.putString(AerobicSportActivity.this, "AerobicSportActivityistop", "");//用来记录当前界面是否处于最前端  当处于最前端是  接收到友盟推送的消息 点击不进入 消息详情
         mOnpaused = true;
         stoped = true;
         S_TOTAL_SEC = 0;
@@ -1611,7 +1604,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
               /*  if (MainActivity.Activity != null) {
                     MainActivity.Activity.finish();
                 }*/
-                startActivity(new Intent(NewAerobicSportActivity.this, MainActivity.class));
+                startActivity(new Intent(AerobicSportActivity.this, MainActivity.class));
                 finish();
 
             }
@@ -1633,7 +1626,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Share.getInstance().showPopFormBottom(NewAerobicSportActivity.this, webHandler);
+                Share.getInstance().showPopFormBottom(AerobicSportActivity.this, webHandler);
             }
         });
 
@@ -1677,7 +1670,7 @@ public class NewAerobicSportActivity extends BaseActivity implements View.OnClic
                /* if (MainActivity.Activity != null) {
                     MainActivity.Activity.finish();
                 }*/
-                startActivity(new Intent(NewAerobicSportActivity.this, MainActivity.class));
+                startActivity(new Intent(AerobicSportActivity.this, MainActivity.class));
                 finish();
             } else {
                 if (con_state != -1) {

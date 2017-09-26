@@ -3,25 +3,27 @@
     android:id="@+id/AdadultFragmentStartSportDalog_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/start_sport_shape1"
+    android:orientation="vertical"
 
     >
+
     <View
-        android:id="@+id/AdadultFragmentStartSportDalog_view1"
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1.2" />
+
     <Button
         android:id="@+id/AdadultFragmentStartSportDalog_youyang"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_gravity="center"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_gravity="center"
         android:background="@drawable/start_sport_shape"
-        android:text="有氧运动"
         android:gravity="center"
+        android:text="有氧运动"
         android:textColor="@color/black"
         android:textSize="15sp" />
 
@@ -29,8 +31,23 @@
         android:id="@+id/AdadultFragmentStartSportDalog_view2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
+    <Button
+        android:id="@+id/AdadultFragmentStartSportDalog_liliang"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/start_sport_shape"
+        android:gravity="center"
+        android:text="力量训练"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
-
+    <View
+        android:id="@+id/AdadultFragmentStartSportDalog_view3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2" />
 </LinearLayout>

@@ -99,7 +99,7 @@ public class SearchBlueActivity extends BaseActivity {
                 myBuleSerachManager = null;
                 Intent intent = new Intent();
                 intent.putExtra("MAC", adrs);
-                intent.setClass(SearchBlueActivity.this, NewAerobicSportActivity.class);//por开始运动
+                intent.setClass(SearchBlueActivity.this, AerobicSportActivity.class);//por开始运动
                 startActivity(intent);
                 finish();
 

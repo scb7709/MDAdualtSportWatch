@@ -23,12 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.headlth.management.R;
-import com.headlth.management.activity.ShareActivity;
-
 import com.headlth.management.activity.ShareNewActivity;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.connect.share.QQShare;
@@ -36,9 +33,7 @@ import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXImageObject;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-
 import com.tencent.open.utils.Util;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;

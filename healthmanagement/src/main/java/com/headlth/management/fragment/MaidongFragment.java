@@ -715,7 +715,7 @@ public class MaidongFragment extends BaseFragment {
         // flag=true;
         hei *= 0.3;
         width *= 0.6;
-        view = LayoutInflater.from(activity).inflate(R.layout.dialog_adadultfragmentstartsport2, null);
+        view = LayoutInflater.from(activity).inflate(R.layout.dialog_adadultfragmentstartsport, null);
         Button polar = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_youyang);
         Button watch = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_liliang);
         polar.setText("Polar心率带");

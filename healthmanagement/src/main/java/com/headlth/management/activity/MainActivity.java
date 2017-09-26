@@ -26,17 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.headlth.management.MyBlue.MyBuleSearchManager;
 import com.headlth.management.MyBlue.MyBuleWatchManager;
 import com.headlth.management.MyBlue.MyWatchBlueHandler;
 import com.headlth.management.MyBlue.WatchBlueTestActivity;
 import com.headlth.management.R;
 import com.headlth.management.acs.App;
-import com.headlth.management.MyBlue.MyBuleSearchManager;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.fragment.AnalizeFragment;
+import com.headlth.management.fragment.MaidongCircleFragment;
 import com.headlth.management.fragment.MaidongFragment;
 import com.headlth.management.fragment.MyFragment;
-import com.headlth.management.fragment.NewMaidongCircleFragment;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.PubLicDialog;
 import com.headlth.management.utils.DataTransferUtils;
@@ -158,8 +158,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 activity_main_title_left.setText("");
                 activity_main_title_right.setText("");
                 main_messages.setVisibility(View.GONE);
-                //  changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
-                changeFragment(new NewMaidongCircleFragment(), "NewMaidongCircleFragment");
+                changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
                 break;
             case R.id.activity_main_my:
                 main_share.setVisibility(View.GONE);

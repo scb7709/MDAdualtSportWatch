@@ -140,7 +140,7 @@
         </activity>
 
         <activity
-            android:name=".activity.NewAerobicSportActivity"
+            android:name=".activity.AerobicSportActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
@@ -170,9 +170,6 @@
         <activity
             android:name=".activity.ChuFangDtail"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.tijianBaoGao"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.MessageActivity"
@@ -199,26 +196,10 @@
             android:name=".activity.LookBigImageActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".activity.XinlvTu"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ShareActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.ShareNewActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".activity.ShareImageHandleActivity"
-            android:screenOrientation="portrait" />
 
-
-        <activity
-            android:name=".activity.PhotoalbumActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ImageGridActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MyShareActivity"
             android:screenOrientation="portrait" />

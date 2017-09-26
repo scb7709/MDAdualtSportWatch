@@ -39,7 +39,7 @@ import tech.linjiang.suitlines.Unit;
 /**
  * Created by abc on 2016/9/25.
  */
-@ContentView(R.layout.activity_exerciserecordold)
+@ContentView(R.layout.activity_exerciserecord)
 public class ExerciseRecordActivity extends BaseActivity {
 
 

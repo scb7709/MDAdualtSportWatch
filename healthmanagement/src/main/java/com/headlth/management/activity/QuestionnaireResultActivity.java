@@ -260,7 +260,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
         Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
         int hei = d.getHeight();
         // flag=true;
-        view = LayoutInflater.from(QuestionnaireResultActivity.this).inflate(R.layout.dialog_adadultfragmentstartsport2, null);
+        view = LayoutInflater.from(QuestionnaireResultActivity.this).inflate(R.layout.dialog_adadultfragmentstartsport, null);
         View view2 = view.findViewById(R.id.AdadultFragmentStartSportDalog_view2);
         Button youyangSport = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_youyang);
         Button liliangSport = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_liliang);

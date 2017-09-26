@@ -13,7 +13,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.headlth.management.R;
-import com.headlth.management.activity.NewAerobicSportActivity;
+import com.headlth.management.activity.AerobicSportActivity;
 
 /**
  * Created by abc on 2016/7/20.
@@ -138,7 +138,7 @@ public class FakePlayerService extends Service {
 
     private void play() {
         Log.i("ffffffffffffffffff", "永不退出onStartCommand");
-        Intent i = new Intent(this, NewAerobicSportActivity.class);
+        Intent i = new Intent(this, AerobicSportActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
         Notification notification = new Notification.Builder(this)
@@ -174,10 +174,10 @@ public class FakePlayerService extends Service {
 
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
-                Intent LockIntent = new Intent(FakePlayerService.this, NewAerobicSportActivity.class);
+                Intent LockIntent = new Intent(FakePlayerService.this, AerobicSportActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 //  LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                NewAerobicSportActivity.activity.startActivity(LockIntent);
+                AerobicSportActivity.activity.startActivity(LockIntent);
             } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 //  Log.e(TAG, "screen off");
             }
