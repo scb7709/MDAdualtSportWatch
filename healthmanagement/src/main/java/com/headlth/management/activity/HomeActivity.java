@@ -1,16 +1,20 @@
 package com.headlth.management.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -37,8 +41,10 @@ import com.headlth.management.entity.UserLogin;
 import com.headlth.management.entity.VersionClass;
 import com.headlth.management.entity.logcallback;
 import com.headlth.management.entity.upTokenCallBack;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.NumberProgressBar;
 import com.headlth.management.utils.Constant;
+import com.headlth.management.utils.DataTransferUtils;
 import com.headlth.management.utils.Encryption;
 
 import com.headlth.management.utils.FileViewer;
@@ -46,8 +52,15 @@ import com.headlth.management.utils.ImageUtil;
 import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.HttpUtils;
+import com.headlth.management.utils.UpadteApp;
 import com.headlth.management.utils.VersonUtils;
 
+/*import com.huawei.hms.api.ConnectionResult;
+import com.huawei.hms.api.HuaweiApiClient;
+import com.huawei.hms.support.api.client.PendingResult;
+import com.huawei.hms.support.api.client.ResultCallback;
+import com.huawei.hms.support.api.push.HuaweiPush;
+import com.huawei.hms.support.api.push.TokenResult;*/
 import com.squareup.picasso.Picasso;
 
 import com.umeng.analytics.MobclickAgent;
@@ -69,6 +82,8 @@ import org.xutils.x;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +97,6 @@ import java.util.TimerTask;
 @ContentView(R.layout.activity_home)
 public class HomeActivity extends Activity {
     private PushAgent mPushAgent;
-    private logcallback log;
     private Gson g = new Gson();
     private String loginFlag;
     @ViewInject(R.id.homeactivity_ad_im)
@@ -105,10 +119,10 @@ public class HomeActivity extends Activity {
             Intent i = new Intent(HomeActivity.this, Login.class);
             switch (msg.what) {
                 case 0:
-                    login();
+                    login(HomeActivity.this, "HomeActivity");
                     break;
                 case 1:
-                    Toast.makeText(getApplicationContext(), "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
                     startActivity(i);
                     finish();
                     break;
@@ -142,32 +156,17 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
-
-
-/*测试
-        long sdsize[] = FileViewer.getSDSpace(HomeActivity.this);
-        Log.e("aaaaaaaaaccc", sdsize[0] + "" + sdsize[1] + "'  ");*/
-        activity = this;
-        ShareUitls.putString(activity, "questionnaire", "1");//首页界面推荐内容重新刷新 (打完题)
-        ShareUitls.putString(activity, "maidong", "1");//首页界面重新刷新 (新数据)
-        ShareUitls.putString(activity, "analize", "1");//分析重新刷新
-        ShareUitls.putString(activity, "todaydata", "{}");//
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        ShareUitls.putString(HomeActivity.this, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
-        ShareUitls.putString(getApplicationContext(), "TODAY", format.format(new Date()));//保存启动APP的时间 确保每天都重新登录过
-        mPushAgent = PushAgent.getInstance(this);
-        mPushAgent.onAppStart();
-        FeedbackAgent agent = new FeedbackAgent(this);//
-        agent.sync();
+        //  ShareUitls.putString(HomeActivity.this, "WATCHSPORT", "START");
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {//避免桌面点击本应用图标是再次打开APP
+            finish();
+            return;
+        }
+        initialize();
         if (InternetUtils.internet(this)) {//判断网络连接
-            //反馈消息提醒
-        /*推送*/
+            //  webTest();
             loginFlag = ShareUitls.getLoginString(getApplicationContext(), "loginFlag", "null");//获取登录方式 三方账户 和 迈动账户
             Log.e("loginFlag", loginFlag);
-            //  getRegistrationId();
-           checkVersion();//检查版本
-            //   phoneLogin(true);
+            checkVersion();//检查版本
         } else {
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -182,6 +181,48 @@ public class HomeActivity extends Activity {
         }
     }
 
+    private void initialize() {
+
+        //Log.i("xiaoming","fdsfdsf_fsdfdsdf_sdfdsf".split("_").length+"      "+"fdsfdsf_fsdfdsdf_sdfdsf_".split("_").length);
+/*List<int []> integerList=new ArrayList<>();
+        List<String> stringList=new ArrayList<>();
+        integerList.add(new int[]{1,0});
+        integerList.add(new int[]{3,0});
+        integerList.add(new int[]{-1,0});
+        stringList.add("08141500");
+        stringList.add("08141502");
+        stringList.add("08141501");
+        Collections.sort(stringList);
+        Collections.sort(integerList, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] ints, int[] t1) {
+                return ints[0] - t1[0];
+            }
+        });
+        for(int i=0;i<3;i++){
+            MyToash.Log(integerList.get(i)[0]+"   "+stringList.get(i));
+        }*/
+
+
+        x.view().inject(this);
+        // HMSPushInit(this);
+        activity = this;
+        ShareUitls.putString(activity, "questionnaire", "1");//控制首页界面推荐内容重新刷新
+        ShareUitls.putString(activity, "maidong", "1");//控制首页界面重新刷新
+        ShareUitls.putString(activity, "analize", "1");//控制分析重新刷新
+        ShareUitls.putString(activity, "todaydata", "{}");//
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        ShareUitls.putString(HomeActivity.this, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
+        // ShareUitls.putString(getApplicationContext(), "TODAY", format.format(new Date()));//保存启动APP的时间 确保每天都重新登录过
+
+        mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.onAppStart();
+        FeedbackAgent agent = new FeedbackAgent(this);//
+        agent.sync();
+
+
+    }
+
     private void setTimeTask() {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -190,22 +231,13 @@ public class HomeActivity extends Activity {
                 if (!loginFlag.equals("null")) {
                     handler.sendEmptyMessage(0);
                 } else {
-
-
                     handler.sendEmptyMessage(1);
-
-
                 }
                 Looper.loop();
             }
         }, 3000);//5000单位是毫秒=5秒
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     private void setTimeTaskLoadingPages() {
         Log.i("fffGAUNG", LoadingPagesUrl.toString());
@@ -353,219 +385,64 @@ public class HomeActivity extends Activity {
         MobclickAgent.onResume(this);
     }
 
-    private void login() {
-
-        if (loginFlag.equals("0")) {
-            phoneLogin();
-        } else {
-            Map<String, String> map = new HashMap<String, String>();
-            User user = ShareUitls.getUser(HomeActivity.this);
-            map.put("loginflag", loginFlag);
-            switch (loginFlag) {
-                case "1":
-                    map.put("openid", user.getChatOpenID());
-                    break;
-                case "2":
-                    map.put("openid", user.getQQOpenID());
-                    break;
-                case "3":
-                    map.put("openid", user.getSinaOpenID());
-                    break;
+    public static void login(Activity activity, String FlagActivity) {
+        String loginFlag = ShareUitls.getLoginString(activity, "loginFlag", "null");//获取登录方式 三方账户 和 迈动账户
+        if (!loginFlag.equals("null")) {
+            if (loginFlag.equals("0")) {
+                User user = ShareUitls.getUser(activity);
+                Login.phoneLogin(activity, user.getPhone(), user.getPwd(), FlagActivity);
+            } else {
+                Map<String, String> map = new HashMap<String, String>();
+                User user = ShareUitls.getUser(activity);
+                map.put("loginflag", loginFlag);
+                switch (loginFlag) {
+                    case "1":
+                        map.put("openid", user.getChatOpenID());
+                        break;
+                    case "2":
+                        map.put("openid", user.getQQOpenID());
+                        break;
+                    case "3":
+                        map.put("openid", user.getSinaOpenID());
+                        break;
+                }
+                map.put("headimgurl", user.getUserInformation().getFile());
+                map.put("nickname", user.getUserInformation().getNickName());
+                map.put("sex", user.getUserInformation().getGender());
+                HttpUtils.getInstance(activity).otherRegister(map, FlagActivity);
             }
-            map.put("headimgurl", user.getUserInformation().getFile());
-            map.put("nickname", user.getUserInformation().getNickName());
-            map.put("sex", user.getUserInformation().getGender());
-            HttpUtils.getInstance(HomeActivity.this).otherRegister(map, "HomeActivity");
+        } else {
+            Intent intent = new Intent(activity, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
         }
     }
 
-    private void phoneLogin() {
-        final User user = ShareUitls.getUser(HomeActivity.this);
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest");
-        params.addBodyParameter("Mobile", user.getPhone());
-        params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5(user.getPwd()).toString()));
-        HttpUtils.getInstance(HomeActivity.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("AAAAAAAAAphoneLogin", response);
-                        UserLogin userLogin = g.fromJson(response.toString(), UserLogin.class);
-                        Intent i = new Intent();
-                        User u = new User();
-                        String IsSuccess = userLogin.IsSuccess;
-                        if (IsSuccess.equals("true")) {
-                            ShareUitls.putString(HomeActivity.this, "ResultJWT", userLogin.ResultJWT);//请求头
-                            String Status = userLogin.Status;
-                            switch (Status) {
-                                case "1":
-                                    Toast.makeText(HomeActivity.this, "请完善个人信息", Toast.LENGTH_SHORT).show();
-                                    i.setClass(HomeActivity.this, CompleteInformationActivity.class);
-                                    i.putExtra("flag", "no");//没有初始信息传过去
-                                    startActivity(i);
-
-                                    break;
-                                case "2":
-                                case "3":
-                                    i.setClass(HomeActivity.this, MainActivity.class);
-                                    ShareUitls.putString(HomeActivity.this, "UID", userLogin.UserID);
-                                    ShareUitls.putLoginString(HomeActivity.this, "loginFlag", "0");
-
-                                    u.setUID(userLogin.UserID);
-                                    u.setLoginFlag("0");
-                                    u.setPhone(user.getPhone());
-                                    u.setPwd(u.getPwd());
-                                    User.UserInformation userInformation = u.getUserInformation();
-                                    userInformation.setNickName(userLogin.NickName);
-                                    userInformation.setFile(userLogin.ImgUrl);
-                                    userInformation.setGender(userLogin.Gender);
-                                    userInformation.setWeight(userLogin.Weight);
-                                    userInformation.setHeight(userLogin.Height);
-                                    userInformation.setBirthday(userLogin.Birthday);
-                                    u.setUserInformation(userInformation);
-                                    ShareUitls.putUser(HomeActivity.this, u);
-                                    String token = ShareUitls.getString(getApplicationContext(), "token", "");
-                                    if (token.length() != 0) {
-                                        upToken(token, HomeActivity.this);
-                                    }
-                                    InternetUtils.internet2(HomeActivity.this);//检测并上传上次遗留数据
-                                    startActivity(i);
-                                    break;
-                                case "0":
-                                case "4":
-
-                                default:
-                                    break;
-                            }
-                        } else {
-                            Log.i("AAAAAAAAASS", userLogin.toString());
-                            Toast.makeText(HomeActivity.this, "账户信息过期，请重新登录..", Toast.LENGTH_SHORT).show();
-                            i.setClass(HomeActivity.this, Login.class);
-                            startActivity(i);
-                        }
-                        finish();
-                    }
-
-                    @Override
-                    public void onErrorResponse(Throwable ex) {
-                        Log.i("AAAAAAAAA", "HOMEupToken");
-
-                        Toast.makeText(HomeActivity.this, "账户信息过期，请重新登录..", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(HomeActivity.this, Login.class);
-                        startActivity(i);
-                        finish();
-                        return;
-
-                    }
-                }
-        );
-    }
-
-    private void phoneLogin(boolean test) {
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest");
-        params.addBodyParameter("Mobile", "18611347002");
-        params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5("123456").toString()));
-        HttpUtils.getInstance(HomeActivity.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("AAAAAAAAAphoneLogin", response);
-                        UserLogin userLogin = g.fromJson(response.toString(), UserLogin.class);
-                        Intent i = new Intent();
-                        User u = new User();
-                        String IsSuccess = userLogin.IsSuccess;
-                        if (IsSuccess.equals("true")) {
-                            ShareUitls.putString(HomeActivity.this, "ResultJWT", userLogin.ResultJWT);//请求头
-                            String Status = userLogin.Status;
-                            switch (Status) {
-                                case "1":
-                                    Toast.makeText(HomeActivity.this, "请完善个人信息", Toast.LENGTH_SHORT).show();
-                                    i.setClass(HomeActivity.this, CompleteInformationActivity.class);
-                                    i.putExtra("flag", "no");//没有初始信息传过去
-                                    startActivity(i);
-
-                                    break;
-                                case "2":
-                                case "3":
-                                    i.setClass(HomeActivity.this, MainActivity.class);
-                                    ShareUitls.putString(HomeActivity.this, "UID", userLogin.UserID);
-                                    ShareUitls.putLoginString(HomeActivity.this, "loginFlag", "0");
-
-                                    u.setUID(userLogin.UserID);
-                                    u.setLoginFlag("0");
-                                    u.setPhone("18611347002");
-                                    u.setPwd(u.getPwd());
-                                    User.UserInformation userInformation = u.getUserInformation();
-                                    userInformation.setNickName(userLogin.NickName);
-                                    userInformation.setFile(userLogin.ImgUrl);
-                                    userInformation.setGender(userLogin.Gender);
-                                    userInformation.setWeight(userLogin.Weight);
-                                    userInformation.setHeight(userLogin.Height);
-                                    userInformation.setBirthday(userLogin.Birthday);
-                                    u.setUserInformation(userInformation);
-                                    ShareUitls.putUser(HomeActivity.this, u);
-                                    startActivity(i);
-
-                                    String token = ShareUitls.getString(getApplicationContext(), "token", "");
-                                    if (token.length() != 0) {
-                                        upToken(token, HomeActivity.this);
-                                    }
-                                    break;
-                                case "0":
-                                case "4":
-
-                                default:
-                                    break;
-                            }
-                        } else {
-                            Log.i("AAAAAAAAASS", userLogin.toString());
-                            Toast.makeText(HomeActivity.this, "账户信息过期，请重新登录..", Toast.LENGTH_SHORT).show();
-                            i.setClass(HomeActivity.this, Login.class);
-                            startActivity(i);
-                        }
-                        finish();
-                    }
-
-                    @Override
-                    public void onErrorResponse(Throwable ex) {
-                        Log.i("AAAAAAAAA", "HOMEupToken");
-
-                        Toast.makeText(HomeActivity.this, "账户信息过期，请重新登录..", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(HomeActivity.this, Login.class);
-                        startActivity(i);
-                        finish();
-                        return;
-
-                    }
-                }
-        );
-    }
     //消息推送获取DeviceToken接口
-    //请求地址：http://www.ssp365.com:8066/MdMobileService.ashx?do=PostDeviceTokenRequest
-    // static upTokenCallBack upToken;
+    public static void upToken(final Activity activity) {
+        final String token = ShareUitls.getToken(activity, "token", "null");
+        if (!token.equals("null")) {
 
-    public static void upToken(final String token, final Activity activity) {
-        Log.i("ttttttttttttttt", token);
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostDeviceTokenRequest");
-        params.addBodyParameter("ResultJWT", ShareUitls.getString(activity, "ResultJWT", "0"));
-        params.addBodyParameter("UID", ShareUitls.getString(activity, "UID", "0"));
-        params.addBodyParameter("DeviceToken", token);
-        params.addBodyParameter("DeviceTokenType", "1");
 
-        HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("ffff", response.toString());
-                        upTokenCallBack upToken = new Gson().fromJson(response.toString(), upTokenCallBack.class);
-                        if (upToken.getStatus() == 1) {
-                            ShareUitls.putString(activity, "token", token);
+            Log.i("ttttttttttttttt", token);
+            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostDeviceTokenRequest");
+            params.addBodyParameter("ResultJWT", ShareUitls.getString(activity, "ResultJWT", "0"));
+            params.addBodyParameter("UID", ShareUitls.getString(activity, "UID", "0"));
+            params.addBodyParameter("DeviceToken", token);
+            params.addBodyParameter("DeviceTokenType", "1");
+            Log.e("PostDeviceTokenRequest", ShareUitls.getString(activity, "UID", "0") + " " + token);
+            HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.e("PostDeviceTokenRequest", response.toString());
+                            //    upTokenCallBack upToken = new Gson().fromJson(response.toString(), upTokenCallBack.class);
+
                             return;
-                        } else {
-                            ShareUitls.putString(activity, "token", "");
-
                         }
-                        return;
-                    }
 
-                    @Override
-                    public void onErrorResponse(Throwable ex) {
+                        @Override
+                        public void onErrorResponse(Throwable ex) {
+                            Log.e("PostDeviceTokenRequest", "onErrorResponse");
 /*
 
                         Log.i("AAAAAAAAA", "HOMEgo2");
@@ -577,16 +454,19 @@ public class HomeActivity extends Activity {
 */
 
 
+                        }
+
+
                     }
 
+            );
 
-                }
-
-        );
+        }
     }
 
     //加载网络是否有广告
     private void getLoadingPages() {
+
         LoadingPagesUrl = new ArrayList<String>();
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetLoadingAdImgRequest");
         HttpUtils.getInstance(HomeActivity.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, false, new HttpUtils.ResponseListener() {
@@ -720,19 +600,22 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onResponse(String response) {
                         versionClass = g.fromJson(response, VersionClass.class);
-                        JSONObject jsonObject;
                         Log.e("版本aaaaa", response.toString());
                         if (versionClass.Status == 1) {
                             ShareUitls.putVersion(HomeActivity.this, versionClass.Version);
                             if (versionClass.Version.VersionCode > VersonUtils.getVerisonCode(HomeActivity.this)) {
 
+                              /*  UpadteApp upadteApp = new UpadteApp(activity, versionClass.Version, false, new UpadteApp.UpdateResult() {
+                                    @Override
+                                    public void onSuccess() {
+                                    }
+                                    @Override
+                                    public void onError() {
+                                        getLoadingPages();//获取广告信息
+                                    }
+                                });*/
 
-                                downloaddialog();
-                                downloadFile(versionClass.Version.DownloadUrl);
-
-                                //    showUpdateDialog();//提示下载新版本
-
-
+                                getLoadingPages();//获取广告信息
                             } else {
                                 getLoadingPages();//获取广告信息
                             }
@@ -756,161 +639,6 @@ public class HomeActivity extends Activity {
 
     }
 
-
-    /**
-     * 弹出升级对话框
-     */
-    private void showUpdateDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("最新版本:" + versionClass.Version.VersionName);
-
-        String[] Description = versionClass.Version.Description.split(";");
-
-        String description = "";
-        for (int i = 0; i < Description.length; i++) {
-            description += Description[i] + ";\n";
-        }
-        builder.setMessage(description);
-        builder.setPositiveButton("立即更新",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 开始更新
-//                        System.out.println("开始下载apk");
-                        downloaddialog();
-                        downloadFile(versionClass.Version.DownloadUrl);
-                    }
-                });
-
-        builder.setNegativeButton("以后再说",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        getLoadingPages();//获取广告信息
-                    }
-                }
-        );
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    /**
-     * 下载apk
-     */
-    private PopupWindow popupWindow;
-    //下载的对话框
-    private SeekBar progressBar;//下载进度条
-    private TextView downtext;//下载进度条
-    HttpManager httpManager;
-    NumberProgressBar numberProgressBar;
-
-    protected void downloaddialog() {
-
-
-        View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.dialog_download, null);
-        popupWindow = new PopupWindow(view, ImageUtil.dp2px(this, 300), ImageUtil.dp2px(this, 400), true);
-        progressBar = (SeekBar) view.findViewById(R.id.dialog_download_progress);
-        // numberProgressBar = (NumberProgressBar) view.findViewById(R.id.dialog_download_NumberProgressBar);
-
-
-        downtext = (TextView) view.findViewById(R.id.dialog_download_tv);
-        TextView dialog_download_Description = (TextView) view.findViewById(R.id.dialog_download_Description);
-        TextView dialog_download_versionname = (TextView) view.findViewById(R.id.dialog_download_versionname);
-        String[] Description = versionClass.Version.Description.split(";");
-        String description = "";
-        for (int i = 0; i < Description.length; i++) {
-            description += Description[i] + ";\n\n";
-        }
-        dialog_download_Description.setText(description);
-
-        dialog_download_versionname.setText(versionClass.Version.VersionName);
-        Button cancel = (Button) view.findViewById(R.id.dialog_download__cancel);
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                if (httpManager != null) {
-                }
-
-                getLoadingPages();//获取广告信息
-            }
-        });
-
-
-        popupWindow.setTouchable(false);
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(false);
-        popupWindow.showAtLocation(new View(this), Gravity.CENTER, 0, 0);
-    }
-
-    private void downloadFile(final String url) {
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(this, "sdcard不存在!", Toast.LENGTH_SHORT).show();
-            getLoadingPages();//获取广告信息
-            return;
-        }
-
-        // 文件在sdcard的路径
-        File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/apk/" + new Date().getTime() + "Version");
-        if (!tempfile.exists()) {
-            tempfile.mkdirs();
-        }
-        String path = tempfile.getPath();
-        RequestParams requestParams = new RequestParams(url);
-        requestParams.setSaveFilePath(path);
-        httpManager = x.http();
-        httpManager.get(requestParams, new Callback.ProgressCallback<File>() {
-            @Override
-            public void onWaiting() {
-            }
-
-            @Override
-            public void onStarted() {
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isDownloading) {
-                int percent = (int) (current * 100 / total);
-//                System.out.println("下载进度:" + percent + "%");
-                downtext.setText("正在下载，已完成:" + percent + "%");// 更新下载进度
-                progressBar.setMax((int) (total / 1000));
-                progressBar.setProgress((int) (current / 1000));
-
-                //  numberProgressBar.setMax((int) (total / 1000));
-                //  numberProgressBar.setProgress((int) (current / 1000));
-            }
-
-            @Override
-            public void onSuccess(File result) {
-                ShareUitls.putString(activity, "todayvideo", "");//视频缓存数据清空
-
-
-                Toast.makeText(HomeActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
-                VersonUtils.installApk(result, HomeActivity.this);// 安装apk
-                popupWindow.dismiss();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Toast.makeText(HomeActivity.this, "下载失败，请检查网络和SD卡", Toast.LENGTH_SHORT).show();
-                getLoadingPages();//获取广告信息
-                popupWindow.dismiss();
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                //getRegistrationId();
-                popupWindow.dismiss();
-            }
-
-            @Override
-            public void onFinished() {
-                popupWindow.dismiss();
-            }
-        });
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)//主要是对这个函数的复写
     {
@@ -922,4 +650,43 @@ public class HomeActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // huaweiApiClient.connect();
+
+    }
+
+    public void webTest() {
+//http://127.0.0.1:8080/ls-server/api/user?flag=register&username=test&password=123456
+        RequestParams params = new RequestParams("http://127.0.0.1:8080/PunchCard/loginServlet");
+        params.addBodyParameter("username", "scb");
+        params.addBodyParameter("password", "cbsun");
+        params.addBodyParameter("flag", "login");
+
+        HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("webTest", response.toString());
+                        //    upTokenCallBack upToken = new Gson().fromJson(response.toString(), upTokenCallBack.class);
+
+                        return;
+                    }
+
+                    @Override
+                    public void onErrorResponse(Throwable ex) {
+                        Log.e("webTestERR", "onErrorResponse");
+
+
+                    }
+
+
+                }
+
+        );
+
+    }
+
 }

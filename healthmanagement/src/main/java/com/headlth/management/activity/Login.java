@@ -188,20 +188,22 @@ public class Login extends OriginalActivity {
             }
         }
     }
-    static int  countm;
+
+    static int countm;
+
     public static void phoneLogin(final Activity activity, final String phone, final String pwd, final String FlagActivity) {
-     //   String version = VersonUtils.getVersionName(activity);//http://192.168.1.250:8082/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.5
+        //   String version = VersonUtils.getVersionName(activity);//http://192.168.1.250:8082/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.5
         //Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v" + version
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.6");
-        params.addBodyParameter("Mobile",phone);
+        params.addBodyParameter("Mobile", phone);
         params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
 
         //params.addBodyParameter("VersionNum", version);
-      //  Log.i("myblue",params.getUri()+"   "+version+"  "+Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
+        //  Log.i("myblue",params.getUri()+"   "+version+"  "+Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
         HttpUtils.getInstance(activity).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("myblue", (++countm)+"    "+response);
+                        Log.i("myblue", (++countm) + "    " + response);
 
                         UserLogin userLogin = new Gson().fromJson(response.toString(), UserLogin.class);
                         Intent i = new Intent();
@@ -262,13 +264,13 @@ public class Login extends OriginalActivity {
 // userLogin.MACAddress
                                     User.UserInformation userInformation = user.getUserInformation();
                                     userInformation.setNickName(userLogin.NickName);
-                                    if(userLogin.MACAddress.length()==0){
-                                   //  userInformation.setMAC("D6:48:63:F7:97:79");  MAC =rawResult.getText().toUpperCase() ;
-                                      //  userInformation.setMAC("D9:77:33:18:EE:EF");
-                                      userInformation.setMAC(userLogin.MACAddress.toUpperCase());
-                                    }else {
+                                    if (userLogin.MACAddress.length() == 0) {
+                                        //  userInformation.setMAC("D6:48:63:F7:97:79");  MAC =rawResult.getText().toUpperCase() ;
+                                        //  userInformation.setMAC("D9:77:33:18:EE:EF");
                                         userInformation.setMAC(userLogin.MACAddress.toUpperCase());
-                                      // userInformation.setMAC("D9:77:33:18:EE:EF");
+                                    } else {
+                                        userInformation.setMAC(userLogin.MACAddress.toUpperCase());
+                                        // userInformation.setMAC("D9:77:33:18:EE:EF");
                                     }
                                     userInformation.setFile(userLogin.ImgUrl);
                                     userInformation.setGender(userLogin.Gender);

@@ -52,7 +52,7 @@ public class CalendarActivity extends BaseActivity {
     private List<String> dateList;
     //   private List<NumberAndDate> numberAndDates;
     Map<Integer, String> numberAndDates;
-    private SimpleDateFormat dformat;
+    private SimpleDateFormat dformatNoDay, dformatHaveDay;
     private Calendar calendar;
 
     @Override
@@ -71,7 +71,8 @@ public class CalendarActivity extends BaseActivity {
         dateList = new ArrayList<>();
         numberAndDates = new HashMap<>();
         viewPagerCalendarViewAdapter = new ViewPagerCalendarViewAdapter();
-        dformat = new SimpleDateFormat("yyyy-MM");
+        dformatNoDay = new SimpleDateFormat("yyyy-MM");
+        dformatHaveDay = new SimpleDateFormat("yyyy-MM-dd");
 
         for (int i = -36; i < 12; i++) {//今天为准 可查看过去两年未来一年的数据 （按需求自有更改）
             Calendar calendar = getYEAR_MONTH(i);
@@ -83,11 +84,11 @@ public class CalendarActivity extends BaseActivity {
 
         }
         //位置移到上次点击的月份 默认今天
-        String date = ShareUitls.getString(activity, "CLICKDADE", new SimpleDateFormat("yyyy-MM-dd").format(new Date())).substring(0, 7);
-        int CurrentItem=36;
-        for (int i=0;i<48;i++) {
+        String date = ShareUitls.getString(activity, "CLICKDADE", dformatHaveDay.format(new Date())).substring(0, 7);
+        int CurrentItem = 36;
+        for (int i = 0; i < 48; i++) {
             if (date.equals(dateList.get(i))) {
-                CurrentItem=i;
+                CurrentItem = i;
                 break;
             }
         }
@@ -120,17 +121,23 @@ public class CalendarActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_recent:
+                if (ExerciseRecordActivity.activity != null) {
+                    ExerciseRecordActivity.activity.finish();
+                }
+                Date date = new Date();
+                String today = dformatHaveDay.format(date);
+                ShareUitls.putString(activity, "CLICKDADE", today);
                 Intent i = new Intent(activity, ExerciseRecordActivity.class);
-                i.putExtra("time", "");
+                i.putExtra("time", today);
                 startActivity(i);
-
+                finish();
                 break;
         }
     }
 
     public String getdate(Calendar calendar) {
         Date dat = calendar.getTime();
-        return dformat.format(dat);
+        return dformatNoDay.format(dat);
     }
 
     public Calendar getYEAR_MONTH(int i) // //获取前后日期 i为正数 向后推迟i天，负数时向前提前i天
