@@ -106,7 +106,8 @@ public class MyBuleWatchManager implements Serializable {
                 }
             }
             CharacteristicListener = mCharacteristicListener;
-            CharacteristicListener.onServicesDiscovered(mBluetoothGatt, WRITE_BluetoothGattCharacteristic);
+            mHandler.sendEmptyMessageDelayed(2000,0);
+
         }
         return myBuleConnectManager;
     }
@@ -120,11 +121,11 @@ public class MyBuleWatchManager implements Serializable {
     /**
      * 使用handler返回主线程,避免UI层直接操作而导致的奔溃
      */
-    private Handler mHandler = new Handler() {
+    private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
+            CharacteristicListener.onServicesDiscovered(mBluetoothGatt, WRITE_BluetoothGattCharacteristic);
         }
     };
 
@@ -363,7 +364,11 @@ public class MyBuleWatchManager implements Serializable {
         return mBluetoothGatt;
 
     }
+    public static MyBuleWatchManager getmyBuleConnectManager() {
 
+        return myBuleConnectManager;
+
+    }
     public BluetoothGattCharacteristic getBluetoothGattCharacteristic() {
         return WRITE_BluetoothGattCharacteristic;
     }

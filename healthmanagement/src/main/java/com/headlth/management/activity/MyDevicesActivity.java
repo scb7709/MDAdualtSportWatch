@@ -176,6 +176,7 @@ public class MyDevicesActivity extends BaseActivity {
         myBuleWatchManager = MyBuleWatchManager.getInstance(activity,MAC, new MyBuleWatchManager.OnCharacteristicListener() {
             @Override
             public void onServicesDiscovered(BluetoothGatt bluetoothGatt,BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
+
                 WRITE_BluetoothGattCharacteristic = myBuleWatchManager.getBluetoothGattCharacteristic();
                 mBluetoothGatt = myBuleWatchManager.getBluetoothGatt();
                 if (WRITE_BluetoothGattCharacteristic != null&&mBluetoothGatt!=null) {
@@ -271,8 +272,8 @@ public class MyDevicesActivity extends BaseActivity {
                 }
             } else {
             }
-            myBuleWatchManager.endConnect();
-            myBuleWatchManager = null;
+           /* myBuleWatchManager.endConnect();
+            myBuleWatchManager = null;*/
 
         }
     };
@@ -297,9 +298,9 @@ public class MyDevicesActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (myBuleWatchManager != null) {
+      /*  if (myBuleWatchManager != null) {
             myBuleWatchManager.endConnect();
-        }
+        }*/
         if (myBuleSerachManager != null) {
             myBuleSerachManager.endSearch();//停止搜索
         }

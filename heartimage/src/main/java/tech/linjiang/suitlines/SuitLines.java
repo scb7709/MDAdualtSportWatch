@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
- */
+
 public class SuitLines extends View {
 
     public static final String TAG = SuitLines.class.getSimpleName();

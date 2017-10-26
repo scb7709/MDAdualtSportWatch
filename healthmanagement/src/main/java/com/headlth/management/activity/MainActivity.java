@@ -206,13 +206,13 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     };
 
 
-  /*  //boolean
-    @Override
-    protected void onStart() {
-        super.onStart();
-        watchSportMonitoring();
-    }
-*/
+    /*  //boolean
+      @Override
+      protected void onStart() {
+          super.onStart();
+          watchSportMonitoring();
+      }
+  */
     @Override
     public void onResume() {
         super.onResume();
@@ -223,6 +223,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         String WATCHSPORT = ShareUitls.getString(MainActivity.this, "WATCHSPORT", "");
         Log.i("myblue", WATCHSPORT + "  --- START");
         if (WATCHSPORT.equals("START")) {
+            WatchState = "正在查询腕表数据";
             serachBule();
           /*  if (IsfLoginToMain) {//第一次进入首页需要同步数据 打开蓝牙检测数据
                 // ShareUitls.putString(MainActivity.this, "isfirst", "false");
@@ -234,9 +235,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private void watchSportMonitoring() {
         String isConnectActivity = ShareUitls.getString(MainActivity.this, "isConnectActivity", "");//
-        MyToash.Log(isConnectActivity+"' isConnectActivity");
-        if (isConnectActivity.equals("YES")||isConnectActivity.equals("SPORTING")) {
-            if (isConnectActivity.equals("YES") ){
+        MyToash.Log(isConnectActivity + "' isConnectActivity");
+        if (isConnectActivity.equals("YES") || isConnectActivity.equals("SPORTING")) {
+            if (isConnectActivity.equals("YES")) {
                 MaidongFragment.showNotDialog(MainActivity.this, false, null);
             }
             connectBule(true);
@@ -276,7 +277,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                     sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
                 } else {
-                    WatchState="检查到腕表设备正在运动模式中";
+                    WatchState = "检查到腕表设备正在运动模式中";
                     fragment_maidong_yougang_go();
                   /*  if (IsfLoginToMain) {
 
@@ -294,7 +295,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
                         break;
                     case "00"://没在运动
-                       WatchState="正在查询腕表数据";
+                        WatchState = "正在查询腕表数据";
                         fragment_maidong_yougang_go();
                         bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
                         sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
@@ -309,7 +310,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     private void Handle08(final String text) {
-        WatchState="";
+        WatchState = "";
         fragment_maidong_yougang_go();
         ShareUitls.putString(Activity, "WATCHSPORT", "");
         if (!text.equals("081400000000000000000000000000000000001c")/* && !ToWatchSportSummaryActivity*/) {//包含非0数据 则证明有数据 提示并跳转到腕表运动小结同步数据
@@ -415,8 +416,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         });
 
     }
-    private void fragment_maidong_yougang_go(){
-        if(MaidongFragment.fragment_maidong_yougang_go!=null){
+
+    private void fragment_maidong_yougang_go() {
+        if (MaidongFragment.fragment_maidong_yougang_go != null) {
             if (WatchState.length() != 0) {
                 MaidongFragment.fragment_maidong_yougang_go.setText(WatchState);
                 MaidongFragment.fragment_maidong_yougang_go.setClickable(false);
@@ -426,34 +428,30 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             }
         }
     }
+
     private void connectBule(final boolean isConnectActivity) {
-        MyToash.Log("connectBule1"+  isConnectActivity);
+        MyToash.Log("connectBule1" + isConnectActivity);
         myBuleWatchManager = MyBuleWatchManager.getInstance(Activity, MAC, new MyBuleWatchManager.OnCharacteristicListener() {
             @Override
             public void onServicesDiscovered(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
                 WRITE_BluetoothGattCharacteristic = WRITE_BluetoothGattCharacteristi;
                 mBluetoothGatt = bluetoothGatt;
                 if (WRITE_BluetoothGattCharacteristic != null && mBluetoothGatt != null) {
-                   if (!isConnectActivity) {//从登陆界面过来
-
-
-                       WatchState="正在查询腕表数据";
-                       fragment_maidong_yougang_go();
-                       byte[]   bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
-                       sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
-                       myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                    if (!isConnectActivity) {//从登陆界面过来
+                        WatchState = "正在查询腕表数据";
+                        fragment_maidong_yougang_go();
+                        byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                        sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
 
 
                       /*  MyToash.Log("connectBule2"+  isConnectActivity);
                         byte[] bytes = WatchBlueTestActivity.getWatchBuleData("GetWatchSportState");
                         sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");*/
-
-
-
                     /*    sendToBule(   WatchBlueTestActivity.snycDataOriginal_data(1000000000), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);//请求单次运动原始数据
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Original_data");*/
-                   }
+                    }
                 }
             }
 

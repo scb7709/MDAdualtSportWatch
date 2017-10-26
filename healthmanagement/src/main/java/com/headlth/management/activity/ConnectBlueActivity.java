@@ -270,11 +270,11 @@ public class ConnectBlueActivity extends BaseActivity {
             ShareUitls.putString(ConnectBlueActivity.this, "WATCHSPORT", "START");
             ShareUitls.putString(ConnectBlueActivity.this, "isConnectActivity", "YES");
         } else {
-            if (myBuleWatchManager != null) {
+          /*  if (myBuleWatchManager != null) {
                 myBuleWatchManager.endConnect();
                 WRITE_BluetoothGattCharacteristic = null;
                 mBluetoothGatt = null;
-            }
+            }*/
         }
     }
 

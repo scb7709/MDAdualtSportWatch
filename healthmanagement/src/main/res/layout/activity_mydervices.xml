@@ -76,6 +76,7 @@
         android:background="@color/gray"></View>
 
     <Button
+        android:visibility="gone"
         android:id="@+id/activity_mydevice_MACNULL"
         android:layout_width="match_parent"
         android:layout_height="50dp"

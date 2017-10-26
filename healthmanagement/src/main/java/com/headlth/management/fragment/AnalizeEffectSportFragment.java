@@ -82,7 +82,6 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     private TextView botomLin;
     View view;
     String tatal;
-    ;
     List<Button> btalls = null;
 
     List<TextView> ts = null;
@@ -96,13 +95,16 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         relativeLayout = (RelativeLayout) view.findViewById(R.id.view);
         zhu = (RelativeLayout) view.findViewById(R.id.zhu);
         botomLin = (TextView) view.findViewById(R.id.t1);
+        TotalDays = (TextView) view.findViewById(R.id.TotalDays);
+        MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
+        midleTime = (TextView) view.findViewById(R.id.midleTime);
         ButterKnife.inject(this, view);
         if (!ShareUitls.getString(getActivity(), "Target", "null").equals("null")) {
             Log.e("tttt", ShareUitls.getString(getActivity(), "Target", "null"));
             target = Integer.parseInt(ShareUitls.getString(getActivity(), "Target", "null"));
         }
 
-        tatal = StringForTime.stringForTime2(target);
+        tatal = StringForTime.stringForTime3(target);
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
 
@@ -197,7 +199,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                 paint.setTextSize(32);
             }
 
-            String effect = StringForTime.stringForTime2(EffectTime);
+            String effect = StringForTime.stringForTime3(EffectTime);
             int effectwidth = x+(zhouyiall.getWidth()-AnalizeClFragment.getTextWidth(effect,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
             int tatalwidth = x+(zhouyiall.getWidth()-AnalizeClFragment.getTextWidth(tatal,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
             canvas.drawText(effect, effectwidth, y - 90, paint);
@@ -451,15 +453,13 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                         h.sendMessage(mssg);
                     }
                 });
-                TotalDays = (TextView) view.findViewById(R.id.TotalDays);
-                MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
-                midleTime = (TextView) view.findViewById(R.id.midleTime);
+
                 TotalDays.setText("达标天数：" + anlyse.getData().getSummary().get(0).getTotalDays() + "天");
 
                /* avgEffec = "" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime()) / 60);
                 avgEffec = (avgEffec + "") + "'" + second((Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())) % 60) + "''";*/
 
-                AvgEffectTime.setText(StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())));
+                AvgEffectTime.setText(StringForTime.stringForTime3(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())));
                 MaxTime = Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime());
                /* avgEffec = "" + ( / 60);
                 avgEffec = (avgEffec + "") + "'" + second((Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgTotalTime())) % 60) + "''";
