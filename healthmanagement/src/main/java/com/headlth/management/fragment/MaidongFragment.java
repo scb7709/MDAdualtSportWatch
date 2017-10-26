@@ -180,10 +180,14 @@ public class MaidongFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragment_maidong_yougang_go = fragment_maidong_yougang_goo;
-        String WATCHSPORT = ShareUitls.getString(getActivity(), "WATCHSPORT", "");
-        if (WATCHSPORT.equals("START") && isfirst) {
-            fragment_maidong_yougang_go.setText("检查腕表数据,请稍后");
+        String WatchState = MainActivity.WatchState;
+        //String WATCHSPORT = ShareUitls.getString(getActivity(), "WATCHSPORT", "");
+        if (WatchState.length() != 0) {
+            fragment_maidong_yougang_go.setText(WatchState);
             fragment_maidong_yougang_go.setClickable(false);
+        } else {
+            fragment_maidong_yougang_go.setText("有氧运动");
+            fragment_maidong_yougang_go.setClickable(true);
         }
     }
 
@@ -458,7 +462,7 @@ public class MaidongFragment extends BaseFragment {
         if (maidongDataJson == null || maidong.equals("1")) {
             newChufang = true;
             Log.i("XXXXXXXXXX", "我的处方刷新");
-            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest&version=v2.9.6");
+            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ResultJWT);
             HttpUtils.getInstance(getActivity()).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
@@ -513,51 +517,43 @@ public class MaidongFragment extends BaseFragment {
     static boolean startSport = true;//避免重复点击
 
     public static void getAdvancedPrescriptionRequest(final Activity activity) {
-        Log.i("myblue", startSport + "  " + ShareUitls.getString(activity, "SPID", ""));
-        if (startSport) {
+        initDialog(activity);
+        if (true) {
             String SPID = ShareUitls.getString(activity, "SPID", "");//获取当前处方的SPID（本页刷新 和 答完问卷后会更新该参数 （QuestionnaireAdapter））
             if (SPID.length() != 0) {
-                startSport = false;
+                // startSport = false;
                 // String version = VersonUtils.getVersionName(activity);//&version=" + version
                 RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetAdvancedPrescriptionRequest&version=v2.9.6");
                 params.addBodyParameter("UID", ShareUitls.getString(activity, "UID", "0"));
                 params.addBodyParameter("ResultJWT", ShareUitls.getString(activity, "ResultJWT", "0"));
                 params.addBodyParameter("SPID", SPID);
-                HttpUtils.getInstance(activity).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
+                HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
                             @Override
                             public void onResponse(String response) {
-                                startSport = true;
                                 AdvancedPrescription advancedPrescription = new Gson().fromJson(response, AdvancedPrescription.class);//advancedPrescription.WatchDuration
-                                Log.i("//第三阶段", "  " + response.toString());
-                                //   Intent intent = new Intent(activity, TEXT.class);
-                                //  intent.putExtra("jsonObject1", response.toString());
-                                   /*   advancedPrescription.Status
-
-                                                    =0,
-                                            *Normal = 100,//正常运动
-                                            Intervallong = 200,//最近两周没有运动
-                                            Advanced = 300,//进阶
-                                            SmallVolidNum = 400,//次数不够或者两次运动间隔大于4天
-                                            FallBack = 500,//回退
-                                            ThreeStage=600,//第三阶段结束
-                                   *
-                                   * */
-                                switch (advancedPrescription.Status) {
-                                    case "100":
-                                        getAdadultFragmentStartSportDalog(activity);
-                                        // activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
-                                        break;
-                                    default:
-                                        activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
-                                        break;
+                                //   startSport = true;
+                                Log.i("myblue", "  " + response.toString());
+                                if (advancedPrescription == null || advancedPrescription.IsSuccess.equals("false")) {
+                                    getAdvancedPrescriptionRequest(activity);
+                                } else {
+                                    waitDialog.dismissDialog();
+                                    switch (advancedPrescription.Status) {
+                                        case "100":
+                                            getAdadultFragmentStartSportDalog(activity);
+                                            // activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
+                                            break;
+                                        default:
+                                            activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
+                                            break;
+                                    }
                                 }
-
 
                             }
 
                             @Override
                             public void onErrorResponse(Throwable ex) {
-                                startSport = true;
+                                waitDialog.dismissDialog();
+                                // startSport = true;
                                 Log.i("myblue", "onErrorResponse");
                             }
                         }
@@ -565,7 +561,7 @@ public class MaidongFragment extends BaseFragment {
                 );
             }
         } else {
-
+            waitDialog.dismissDialog();
         }
     }
 
@@ -600,12 +596,14 @@ public class MaidongFragment extends BaseFragment {
                 ShareUitls.putString(getActivity(), "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
                 ShareUitls.putString(getActivity(), "UBound", UserIndexList.UBound + "");
-                ShareUitls.putString(getActivity(), "LBound", UserIndexList.LBound + "");
+                String LBound = "50";
+                // String LBound=UserIndexList.LBound ;
+                ShareUitls.putString(getActivity(), "LBound", LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 
-                ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
+                ShareUitls.putUserInformationWatch(activity, "", (UserIndexList.target) + "", UserIndexList.UBound, LBound);//保存安静心率
 
-               // MyToash.Log("  Target"+ UserIndexList.target);
+                // MyToash.Log("  Target"+ UserIndexList.target);
                 ShareUitls.putString(getActivity(), "IsPlay", UserIndexList.IsPlay + "");
             }
 
@@ -804,7 +802,7 @@ public class MaidongFragment extends BaseFragment {
         go.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (flag) {
-                   activity.startActivity(new Intent(activity, CaptureActivity.class).putExtra("flag", "firstsport").putExtra("temperatureeAndWeathere", temperatureeAndWeathere));
+                    activity.startActivity(new Intent(activity, CaptureActivity.class).putExtra("flag", "firstsport").putExtra("temperatureeAndWeathere", temperatureeAndWeathere));
                     //  activity.startActivity(new Intent(activity, WatchBlueTestActivity.class));
 
 
@@ -826,17 +824,16 @@ public class MaidongFragment extends BaseFragment {
     }
 
     private static void initDialog(final Activity activity) {
-        if (waitDialog == null) {
-            waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity);
-            waitDialog.setCancleable(true);
-        }
+        waitDialog = null;
+        waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity);
+        waitDialog.setCancleable(true);
+        waitDialog.setMessage("");
+        waitDialog.showDailog();
+
     }
 
     private static void getTemperatureeAndWeathere(final Activity activity) {
         initDialog(activity);
-        waitDialog.setMessage("");
-        waitDialog.showDailog();
-
         UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostWeatherInfoRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
             @Override
             public void success(String response) {
@@ -859,7 +856,7 @@ public class MaidongFragment extends BaseFragment {
                                             }
                                         } else {
                                             //  activity.startActivity(new Intent(activity, WatchBlueTestActivity.class).putExtra("flag", "firstsport").putExtra("MAC", "F6:DD:A3:98:75:B1"));
-                                                IntentConnectBlueActivity(temperatureeAndWeathere, postParameterRequest, MAC, activity);
+                                            IntentConnectBlueActivity(temperatureeAndWeathere, postParameterRequest, MAC, activity);
                                         }
 
 

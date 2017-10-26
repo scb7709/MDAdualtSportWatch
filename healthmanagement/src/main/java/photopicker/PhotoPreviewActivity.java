@@ -304,7 +304,7 @@ public class PhotoPreviewActivity extends Activity {
 
     public void showPopupWindow(final Activity activity) {//flag=true是提示绑定腕表 否则是 提示监控数据已经同步
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_photopreview, null);
-        popupWindow = new PopupWindow(view, ScreenShot.getwidthPixels(activity), ImageUtil.dp2px(activity, 50), true);
+        popupWindow = new PopupWindow(view, ScreenShot.getwidthPixels(activity), ImageUtil.dp2px(activity, 70), true);
         view_publictitle_title = (TextView) view.findViewById(R.id.activity_image_preview_view_title);
         view.findViewById(R.id.activity_image_preview_view_delete).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,8 +32,6 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by abc on 2016/9/13.
@@ -83,6 +82,7 @@ public class SetPassWordActivity extends BaseActivity {
 
     private void initialize() {
         x.view().inject(this);
+        activity_setpassword_et_verifycode.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         verify_code = intent.getStringExtra("verify_code");
@@ -123,7 +123,7 @@ public class SetPassWordActivity extends BaseActivity {
                 time.start();
                 getSMS(phone);
                 activity_setpassword_reminder.setText("正在给 " + phone + " 发送验证码");
-                activity_setpasswordet_bt_commit.setClickable(false);
+              // activity_setpasswordet_bt_commit.setClickable(false);
                 break;
 
             case R.id.activity_setpasswordet_bt_commit:
@@ -223,9 +223,6 @@ public class SetPassWordActivity extends BaseActivity {
     }
 
     TimeCount time = new TimeCount(60000, 1000);
-    int count = 0;
-    Boolean isPhone = true;
-
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
@@ -350,49 +347,17 @@ public class SetPassWordActivity extends BaseActivity {
     }
 
     private void getSMS(final String phone) {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("Mobile", phone);
-        HttpUtils.getInstance(SetPassWordActivity.this).sendRequest("正在获取手机验证码,请稍后...", Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest", map, 0, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        activity_setpasswordet_bt_commit.setClickable(true);
-                        Log.e("getSMSjson", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String IsSuccess = jsonObject.getString("IsSuccess");
-                            String Status = jsonObject.getString("Status");
-                            if (IsSuccess.equals("true")) {
 
+        Login. getSMS(this,phone,flag.equals("Register")?"0":"1", new Login.SMSInterface() {
+            @Override
+            public void onResponse(String Verify_code) {
 
-                                activity_setpassword_reminder.setText("验证码已经发送到 " + phone);
-                                verify_code = Status;
-                                ShareUitls.putString(SetPassWordActivity.this, "SMSTIME", new Date().getTime() + "");
-                                Toast.makeText(SetPassWordActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
+                activity_setpassword_reminder.setText("验证码已经发送到 " + phone);
+                verify_code = Verify_code;
+                ShareUitls.putString(SetPassWordActivity.this, "SMSTIME", new Date().getTime() + "");
+                Toast.makeText(SetPassWordActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-                            } else {
-                                if (Status.equals("3")) {
-                                    Toast.makeText(SetPassWordActivity.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(SetPassWordActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-
-                        } catch (JSONException e) {
-                            activity_setpassword_reminder.setText("验证码获取失败,请点击重试...");
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(Throwable ex) {
-                        activity_setpasswordet_bt_commit.setClickable(true);
-                        activity_setpassword_reminder.setText("验证码获取失败,请点击重试...");
-                        Toast.makeText(SetPassWordActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-        );
     }
 }

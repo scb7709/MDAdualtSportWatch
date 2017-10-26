@@ -86,6 +86,7 @@ public class AnalizeClFragment extends BaseFragment {
     @InjectView(R.id.pingji)
     TextView pingji;
     private int screenWidth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,8 +99,6 @@ public class AnalizeClFragment extends BaseFragment {
 
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
-
-
 
 
         return view;
@@ -117,9 +116,6 @@ public class AnalizeClFragment extends BaseFragment {
 
     String avgTal;
     String totalCal;
-    private int progress = 0;
-    private RelativeLayout mRoundProgressBar4;
-    int roundnum = 100;
     int daohangHigh;
 
     @Override
@@ -267,14 +263,14 @@ public class AnalizeClFragment extends BaseFragment {
                 avgTal = "" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgCal()));
                 AvgCal.setText(avgTal);
          /*   TotalDays.setText("共运动：" + anlyse.getData().getSummary().get(0).getTotalDays() + "天");*/
-                MaxTotalTime.setText((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory()) + 20) + "");
+                MaxTotalTime.setText((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) + "");
 
 
                 Log.e("qqq", MaxTotalTime.getText().toString().length() + "-----" + anlyse.getData().getSummary().get(0).getMaxCalory().length());
-                if (((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory()) + 20) / 2 + "").length() != anlyse.getData().getSummary().get(0).getMaxCalory().length()) {
-                    midleTime.setText((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory()) + 20) / 2 + "  ");
+                if (((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) / 2 + "").length() != anlyse.getData().getSummary().get(0).getMaxCalory().length()) {
+                    midleTime.setText((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) / 2 + "  ");
                 } else {
-                    midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory()) + 20) / 2 + "");
+                    midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) / 2 + "");
                 }
 
 
@@ -290,11 +286,6 @@ public class AnalizeClFragment extends BaseFragment {
 
     }
 
-
-    public String countSize(String str) {
-
-        return null;
-    }
 
     public class draw extends View {
         int x = 0;
@@ -314,66 +305,43 @@ public class AnalizeClFragment extends BaseFragment {
         @Override
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-
-            Log.e("0000", x + "开始画了---22222" + y + "开始画了");
+           // Log.e("0000", x + "开始画了---22222" + y + "开始画了");
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.FILL);
             paint.setAntiAlias(true);
             paint.setColor(Color.parseColor("#ffcc33"));
             paint.setStrokeWidth((float) 1.0);
-            if(screenWidth<1080){
+            if (screenWidth < 1080) {
                 paint.setTextSize(22);
-            }else{
+            } else {
                 paint.setTextSize(32);
             }
+            int width = x+(clzhouyi.getWidth()-getTextWidth(data,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
-            canvas.drawText(data, x + 10, y - 80, paint);
+            canvas.drawText(data, width, y - 80, paint);
             canvas.drawBitmap(bitmap, x + clzhouyi.getWidth() / 4, y - 60, paint);
 
         }
 
     }
-
-    public static void drawImage(Canvas canvas, Bitmap blt, int x, int y,
-                                 int w, int h, int bx, int by) {
-        Rect src = new Rect();// 图片 >>原矩形
-        Rect dst = new Rect();// 屏幕 >>目标矩形
-        src.left = bx;
-        src.top = by;
-        src.right = bx + w;
-        src.bottom = by + h;
-
-        dst.left = x;
-        dst.top = y;
-        dst.right = x + w;
-        dst.bottom = y + h;
-        // 画出指定的位图，位图将自动--》缩放/自动转换，以填补目标矩形
-        // 这个方法的意思就像 将一个位图按照需求重画一遍，画后的位图就是我们需要的了
-        canvas.drawBitmap(blt, null, dst, null);
-        src = null;
-        dst = null;
+    public static int getTextWidth(String content,Paint paint){
+        int width = 0;
+        if(content!=null&&content.length()>0){
+            int length = content.length();
+            float[] widths = new float[length];
+            paint.getTextWidths(content,widths);
+            for (int i = 0; i < length; i++) {
+                width += (int)Math.ceil(widths[i]);
+            }
+        }
+        return width;
     }
-
-
-    private Bitmap drawableToBitamp(Drawable drawable) {
-        BitmapDrawable bd = (BitmapDrawable) drawable;
-        return bd.getBitmap();
-    }
-
-
-    int zhouwuHign;
-    int xxxx;
-    int yyyy;
-    int xxx;
-    int yyy;
-    int xx;
-    int yy;
     int x;
     int y;
     int bootom;
     int gap;
     int top;
-    int count;
     public Handler h = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -393,16 +361,16 @@ public class AnalizeClFragment extends BaseFragment {
                     botomLin.getLocationOnScreen(location0);
                     int x0 = location0[0];
                     int y0 = location0[1];
-                    Log.e("zuobiao", "botomLinx1:" + x0 + "botomLiny1:" + y0);
-                    Log.e("zuobiao", "botomLint1：" + botomLin.getLeft() + "botomLinRight：" + botomLin.getRight() + "botomLinTop：" + botomLin.getTop() + "botomLinBottom：" + botomLin.getBottom());
                     bootom = zhu.getTop();
                     top = botomLin.getTop();
                     gap = (botomLin.getTop() - zhu.getTop());
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                        Log.e("zhixin???", "gap:==");
                         FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) bts.get(i).getLayoutParams();
                         // 取控件aaa当前的布局参数
-                        linearParams.height = gap * Integer.parseInt(anlyse.getData().getDetail().get(i).getCalory()) / (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory()) + 20); // 当控件的高强制设成365象素
+                        int temp=Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory());
+                        if(temp!=0){
+                            linearParams.height = gap * Integer.parseInt(anlyse.getData().getDetail().get(i).getCalory()) / (temp); //
+                        }
                         bts.get(i).setLayoutParams(linearParams); // 使设置好的布局参数应用到控件aaa
                         ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
 
@@ -413,17 +381,12 @@ public class AnalizeClFragment extends BaseFragment {
                 }
             }
             if (msg.what == 50) {
-
-                RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.view);
-                if (count == 1) {
-                    d = new draw(getContext(), msg.obj, msg.arg1, (msg.arg2 - daohangHigh));
-                    relativeLayout.addView(d);
-                    count++;
-                } else {
+                if (d != null) {
                     relativeLayout.removeView(d);
-                    d = new draw(getContext(), msg.obj, msg.arg1, (msg.arg2 - daohangHigh));
-                    relativeLayout.addView(d);
                 }
+                d = new draw(getContext(), msg.obj, msg.arg1, (msg.arg2 - daohangHigh));
+                relativeLayout.addView(d);
+
             }
         }
     };
@@ -435,30 +398,5 @@ public class AnalizeClFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.reset(this);
     }
-
-    public class MyTestView extends View {
-        //构造器
-        public MyTestView(Context context) {
-            super(context);
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            // TODO Auto-generated method stub
-            super.onDraw(canvas);
-            //绘制黑色背景
-        /*    canvas.drawColor(Color.BLACK);*/
-            //创建画笔
-            Paint paint = new Paint();
-            //设置画笔颜色为红色
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setAntiAlias(true);
-            paint.setColor(Color.parseColor("#42c3f7"));
-            canvas.drawCircle(68, 68, 68, paint);// 小圆
-        }
-
-    }
-
 
 }

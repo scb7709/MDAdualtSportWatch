@@ -39,32 +39,18 @@ import com.headlth.management.acs.App;
 import com.headlth.management.entity.User;
 import com.headlth.management.entity.UserLogin;
 import com.headlth.management.entity.VersionClass;
-import com.headlth.management.entity.logcallback;
-import com.headlth.management.entity.upTokenCallBack;
-import com.headlth.management.myview.MyToash;
-import com.headlth.management.myview.NumberProgressBar;
-import com.headlth.management.utils.Constant;
-import com.headlth.management.utils.DataTransferUtils;
-import com.headlth.management.utils.Encryption;
 
-import com.headlth.management.utils.FileViewer;
-import com.headlth.management.utils.ImageUtil;
+import com.headlth.management.utils.Constant;
+
+
 import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.HttpUtils;
-import com.headlth.management.utils.UpadteApp;
-import com.headlth.management.utils.VersonUtils;
 
-/*import com.huawei.hms.api.ConnectionResult;
-import com.huawei.hms.api.HuaweiApiClient;
-import com.huawei.hms.support.api.client.PendingResult;
-import com.huawei.hms.support.api.client.ResultCallback;
-import com.huawei.hms.support.api.push.HuaweiPush;
-import com.huawei.hms.support.api.push.TokenResult;*/
 import com.squareup.picasso.Picasso;
 
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.fb.FeedbackAgent;
+
 
 import com.umeng.message.PushAgent;
 
@@ -182,30 +168,7 @@ public class HomeActivity extends Activity {
     }
 
     private void initialize() {
-
-        //Log.i("xiaoming","fdsfdsf_fsdfdsdf_sdfdsf".split("_").length+"      "+"fdsfdsf_fsdfdsdf_sdfdsf_".split("_").length);
-/*List<int []> integerList=new ArrayList<>();
-        List<String> stringList=new ArrayList<>();
-        integerList.add(new int[]{1,0});
-        integerList.add(new int[]{3,0});
-        integerList.add(new int[]{-1,0});
-        stringList.add("08141500");
-        stringList.add("08141502");
-        stringList.add("08141501");
-        Collections.sort(stringList);
-        Collections.sort(integerList, new Comparator<int[]>() {
-            @Override
-            public int compare(int[] ints, int[] t1) {
-                return ints[0] - t1[0];
-            }
-        });
-        for(int i=0;i<3;i++){
-            MyToash.Log(integerList.get(i)[0]+"   "+stringList.get(i));
-        }*/
-
-
         x.view().inject(this);
-        // HMSPushInit(this);
         activity = this;
         ShareUitls.putString(activity, "questionnaire", "1");//控制首页界面推荐内容重新刷新
         ShareUitls.putString(activity, "maidong", "1");//控制首页界面重新刷新
@@ -214,11 +177,8 @@ public class HomeActivity extends Activity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         ShareUitls.putString(HomeActivity.this, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
         // ShareUitls.putString(getApplicationContext(), "TODAY", format.format(new Date()));//保存启动APP的时间 确保每天都重新登录过
-
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.onAppStart();
-        FeedbackAgent agent = new FeedbackAgent(this);//
-        agent.sync();
 
 
     }
@@ -390,7 +350,22 @@ public class HomeActivity extends Activity {
         if (!loginFlag.equals("null")) {
             if (loginFlag.equals("0")) {
                 User user = ShareUitls.getUser(activity);
-                Login.phoneLogin(activity, user.getPhone(), user.getPwd(), FlagActivity);
+                if (user == null) {
+                    Toast.makeText(activity, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
+                    activity.startActivity(new Intent(activity, Login.class));
+                    activity.finish();
+                    return;
+                }
+                if (user.getPhone() != null) {
+                    Login.phoneLogin(activity, user.getPhone(), user.getPwd(), FlagActivity);
+                } else if (user.getUserInformation().getNickName() != null) {
+                    Login.phoneLogin(activity, user.getUserInformation().getNickName(), user.getPwd(), FlagActivity);
+                } else {
+                    Toast.makeText(activity, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
+                    activity.startActivity(new Intent(activity, Login.class));
+                    activity.finish();
+                }
+
             } else {
                 Map<String, String> map = new HashMap<String, String>();
                 User user = ShareUitls.getUser(activity);
@@ -592,38 +567,38 @@ public class HomeActivity extends Activity {
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    VersionClass versionClass;
+    // VersionClass versionClass;
 
     public void checkVersion() {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostVersionNewRequest");
         HttpUtils.getInstance(HomeActivity.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        versionClass = g.fromJson(response, VersionClass.class);
+                        VersionClass versionClass = g.fromJson(response, VersionClass.class);
                         Log.e("版本aaaaa", response.toString());
                         if (versionClass.Status == 1) {
                             ShareUitls.putVersion(HomeActivity.this, versionClass.Version);
-                            if (versionClass.Version.VersionCode > VersonUtils.getVerisonCode(HomeActivity.this)) {
-
-                              /*  UpadteApp upadteApp = new UpadteApp(activity, versionClass.Version, false, new UpadteApp.UpdateResult() {
-                                    @Override
-                                    public void onSuccess() {
-                                    }
-                                    @Override
-                                    public void onError() {
-                                        getLoadingPages();//获取广告信息
-                                    }
-                                });*/
-
+                        /*    if (versionClass.Version.VersionCode > VersonUtils.getVerisonCode(HomeActivity.this)) {
+                                if(InternetUtils.getNetworkState(activity)==1) {//wifi提示更新
+                                    UpadteApp upadteApp = new UpadteApp(activity, versionClass.Version, false, new UpadteApp.UpdateResult() {
+                                        @Override
+                                        public void onSuccess() {
+                                        }
+                                        @Override
+                                        public void onError() {
+                                            getLoadingPages();//获取广告信息
+                                        }
+                                    });
+                                }
                                 getLoadingPages();//获取广告信息
                             } else {
                                 getLoadingPages();//获取广告信息
-                            }
+                            }*/
 
-                        } else {
+                        }/* else {
                             getLoadingPages();//获取广告信息
-                        }
-
+                        }*/
+                        getLoadingPages();//获取广告信息
                     }
 
                     @Override

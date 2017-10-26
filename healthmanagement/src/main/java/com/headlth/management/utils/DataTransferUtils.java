@@ -253,12 +253,7 @@ public class DataTransferUtils {
     public static byte[] calendar2Bytes() {
         Calendar calendar = new GregorianCalendar();
         int time = (int) ((calendar.getTimeInMillis() / 1000)/*+8*60*60*/);
-        byte[] bytes = new byte[4];
-        for (int i = bytes.length - 1; i >= 0; i--) {
-            bytes[i] = (byte) (time & 0xFF);
-            time >>= 8;
-        }
-        return bytes;
+        return get4Bytes(time,4);
     }
 
     //获取数字的四（2）个字节
@@ -271,13 +266,5 @@ public class DataTransferUtils {
         }
         return bytes;
     }
-
-    public static Calendar bytes2Calendar(byte[] bytes) {
-        int time = (bytes[0] << 24) & 0xFF000000 | (bytes[1] << 16) & 0xFF0000 | (bytes[2] << 8) & 0xFF00 | bytes[3] & 0xFF;
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(time * 1000L);
-        return calendar;
-    }
-
 
 }

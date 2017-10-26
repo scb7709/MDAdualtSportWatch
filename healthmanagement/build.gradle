@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "com.headlth.management"
         minSdkVersion 18
-        versionCode 23
-        versionName "2.9.6"
+        versionCode 24
+        versionName "3.0.0"
         multiDexEnabled true
 
         ndk {
@@ -55,7 +55,6 @@ dependencies {
     //  compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/android-async-http-1.4.7.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
-    compile files('libs/com.umeng.fb.5.4.0.jar')
     compile files('libs/picasso-2.5.2.jar')
     compile files('libs/retrofit-1.9.0.jar')
     compile files('libs/mta-sdk-1.6.2.jar')
@@ -75,7 +74,6 @@ dependencies {
     compile project(':toprightmenu')
     compile 'com.android.support:support-v4:25.3.1'
     compile project(':heartimage')
-    compile project(':MPChartLib')
     compile 'com.android.support:design:25.3.1'
     compile files('libs/zxing.jar')
     compile files('libs/umeng-analytics-v6.1.2.jar')

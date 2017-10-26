@@ -170,7 +170,7 @@ public class Login extends OriginalActivity {
 
     //注册
     private void Register() {
-        String phone = et_phone.getText().toString();
+      final   String phone = et_phone.getText().toString();
         if (phone.length() == 0) {
             Toast.makeText(getApplicationContext(), "手机号不能为空", Toast.LENGTH_SHORT).show();
         } else {
@@ -181,7 +181,17 @@ public class Login extends OriginalActivity {
                     Toast.makeText(getApplicationContext(), "手机号格式错误", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    getSMS(phone);
+                    getSMS(this,phone, "0",new SMSInterface() {
+                        @Override
+                        public void onResponse(String verify_code) {
+                            Intent intent = new Intent(Login.this, SetPassWordActivity.class);
+                            intent.putExtra("verify_code", verify_code);
+                            intent.putExtra("flag", "Register");
+                            intent.putExtra("phone", phone);
+                            ShareUitls.putString(Login.this, "SMSTIME", new Date().getTime() + "");
+                            startActivity(intent);
+                        }
+                    });
 
 
                 }
@@ -192,8 +202,7 @@ public class Login extends OriginalActivity {
     static int countm;
 
     public static void phoneLogin(final Activity activity, final String phone, final String pwd, final String FlagActivity) {
-        //   String version = VersonUtils.getVersionName(activity);//http://192.168.1.250:8082/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.5
-        //Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v" + version
+
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserLoginRequest&version=v2.9.6");
         params.addBodyParameter("Mobile", phone);
         params.addBodyParameter("Pwd", Encryption.decode(Encryption.encodeByMD5(pwd).toString()));
@@ -754,19 +763,22 @@ public class Login extends OriginalActivity {
 
 
     //手机号判断
-    public boolean isMobile(String mobiles) {
+    public static boolean isMobile(String mobiles) {
         String telRegex = "[1][358]\\d{9}";//"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
         if (TextUtils.isEmpty(mobiles)) return false;
         else return mobiles.matches(telRegex);
     }
 
-    private void getSMS(final String phone) {
+    public interface SMSInterface {
+        void onResponse(String verify_code);
+    }
 
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest");
-       /* params.addBodyParameter("ResultJWT",ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));*/
+    public static void getSMS(final Activity activity,final String phone,final String IsForgotPw, final SMSInterface smsInterface) {
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest&version=v2.9.6");
         params.addBodyParameter("Mobile", phone);
-        HttpUtils.getInstance(Login.this).sendRequestRequestParams("正在获取手机验证码,请稍后...", params, true, new HttpUtils.ResponseListener() {
+        params.addBodyParameter("IsForgotPw", IsForgotPw);
+        params.addBodyParameter("Code", Encryption.decode(Encryption.encodeByMD5(new StringBuffer(phone).reverse().toString()).toString()));
+        HttpUtils.getInstance(activity).sendRequestRequestParams("正在获取手机验证码,请稍后...", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("getSMSjson", response);
@@ -776,28 +788,25 @@ public class Login extends OriginalActivity {
                             String IsSuccess = jsonObject.getString("IsSuccess");
                             String Status = jsonObject.getString("Status");
                             if (IsSuccess.equals("true")) {
-                                Intent intent = new Intent(Login.this, SetPassWordActivity.class);
-                                intent.putExtra("verify_code", Status);
-                                intent.putExtra("flag", "Register");
-                                intent.putExtra("phone", phone);
-                                ShareUitls.putString(Login.this, "SMSTIME", new Date().getTime() + "");
-                                startActivity(intent);
+                                smsInterface.onResponse(Status);
                             } else {
-                                if (Status.equals("3")) {
+                                Toast.makeText(activity, jsonObject.getString("Message"), Toast.LENGTH_SHORT).show();
+
+                              /*  if (Status.equals("3")) {
                                     Toast.makeText(Login.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(Login.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
-                                }
+                                }*/
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(activity, "获取获取码失败", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(getApplicationContext(), "获取获取码失败", Toast.LENGTH_SHORT).show();
-                        return;
+                        Toast.makeText(activity, "获取获取码失败", Toast.LENGTH_SHORT).show();
                     }
                 }
 

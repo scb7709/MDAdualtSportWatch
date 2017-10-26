@@ -59,6 +59,8 @@ public class MyWatchBlueHandler extends Handler {
             myWatchBlueHandler.removeMessages(0);
             if (flag.length() != 0) {
                 myWatchBlueHandler.sendEmptyMessageDelayed(0, 10000);
+            }else {
+
             }
         }
     }

@@ -53,6 +53,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
     @ViewInject(R.id.activity_questionnaireresult_commit)
     private Button activity_questionnaireresult_commit;
 
+
     @ViewInject(R.id.activity_questionnaireresult_pay_layout)
     private LinearLayout activity_questionnaireresult_pay_layout;
     @ViewInject(R.id.activity_questionnaireresult_pay_text)
@@ -91,12 +92,25 @@ public class QuestionnaireResultActivity extends BaseActivity {
         PlanNameID = intent.getStringExtra("PlanNameID");
         QuestionnaireID = intent.getStringExtra("QuestionnaireID");
         // prescriptionList=(QuestionaireResultJson.PrescriptionList )intent.getSerializableExtra("prescriptionList");
-        ShareUitls.putString(QuestionnaireResultActivity.this, "OrderNO", "");//微信支付回调后用来检查后台是否支付成功 此处置为空
-        ShareUitls.putString(QuestionnaireResultActivity.this, "PAY", PAY);
-
+        ShareUitls.putString(activity, "OrderNO", "");//微信支付回调后用来检查后台是否支付成功 此处置为空
+        ShareUitls.putString(activity, "PAY", PAY);
         Log.i("WWWWWWWWQQQ", PAY + "            " + QuestionnaireID + "            " + PlanNameID + "            " + UID);
         getQuestionnairResultHttp();
-        getMaidongFragmentData();//刷新首页
+        todaydata = ShareUitls.getString(activity, "todaydata", "{}");//
+        maidong = ShareUitls.getString(activity, "maidong", "0");//
+        MaidongDataJson maidongDataJson = null;
+        Log.i("XXXXAAXXXXXX", maidong + "       " + todaydata);
+        try {
+            maidongDataJson = g.fromJson(todaydata.toString(), MaidongDataJson.class);
+        } catch (Exception e) {
+        }
+        if (maidongDataJson == null || maidong.equals("1")) {
+            getMaidongFragmentData();//刷新首页
+        }else {
+            setMaidongData(maidongDataJson, todaydata);
+        }
+
+
     }
 
     @Override
@@ -126,7 +140,11 @@ public class QuestionnaireResultActivity extends BaseActivity {
                     getOrderID();
                 } else {
                     //  String    PowerFinishedCount=ShareUitls.getString(QuestionnaireResultActivity.this,"PowerFinishedCount","");
-                    this.view = view;
+                    if (IsSportStart || IsStrengthStart) {
+                        getAdadultFragmentStartSportDalog();
+                    } else {
+                        Toast.makeText(QuestionnaireResultActivity.this, "当前处方未开始", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
 
@@ -332,7 +350,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
 
     }
 
-    String maidong = "";
+    String maidong = "", todaydata="";
     Gson g = new Gson();
     private String WebSiteSPStartMsg = "";
     boolean IsStrengthStart = false;
@@ -343,7 +361,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
 
     private void getMaidongFragmentData() {
         String maidong = ShareUitls.getString(QuestionnaireResultActivity.this, "maidong", "1");//首页界面是否重新刷新 （是否答完题或者是否运动完有新数据）
-        if ( maidong.equals("1")) {
+        if (maidong.equals("1")) {
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ShareUitls.getString(QuestionnaireResultActivity.this, "ResultJWT", "0"));
@@ -354,7 +372,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
                             MaidongDataJson maidongDataJson = g.fromJson(response.toString(), MaidongDataJson.class);
                             Log.i("VVVVVVVVVCCC", "" + maidongDataJson.toString());
                             if (maidongDataJson != null && maidongDataJson.UserIndexList != null) {
-                                setMaidongData(maidongDataJson,response);
+                                setMaidongData(maidongDataJson, response);
                             } else {
                                 Toast.makeText(QuestionnaireResultActivity.this, "数据异常", Toast.LENGTH_SHORT).show();
                             }
@@ -372,46 +390,45 @@ public class QuestionnaireResultActivity extends BaseActivity {
     }
 
 
-    private void setMaidongData(MaidongDataJson maidongDataJson,String response) {
+    private void setMaidongData(MaidongDataJson maidongDataJson, String response) {
 
         if (maidongDataJson.Status == 1) {
             MaidongDataJson.UserIndexList UserIndexList = maidongDataJson.UserIndexList;
+
             WebSiteSPStartMsg = UserIndexList.WebSiteSPStartMsg;
+            if (maidong.equals("1")) {
                 ShareUitls.putString(QuestionnaireResultActivity.this, "my", "1");//我界面是否需要刷新
                 ShareUitls.putString(QuestionnaireResultActivity.this, "SPID", UserIndexList.SPID + "");
-            // SPID = UserIndexList.SPID + "";
                 ShareUitls.putString(QuestionnaireResultActivity.this, "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "PlanNameID", UserIndexList.PlanNameID + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "UBound", UserIndexList.UBound + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "LBound", UserIndexList.LBound + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "Target", (UserIndexList.target) + "");
                 ShareUitls.putString(QuestionnaireResultActivity.this, "IsPlay", UserIndexList.IsPlay + "");
-               ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
+                ShareUitls.putUserInformationWatch(activity, "", (UserIndexList.target) + "", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
+            }
             if (UserIndexList.IsShowTodayPowerTrainPlan.equals("true")) {//
                 if (UserIndexList.IsPlay.equals("true")) {
                     IsStrengthStart = true;
-                    try {
-                        ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", UserIndexList.vlist.get(UserIndexList.PowerFinishedCount) + "");
-                    } catch (IndexOutOfBoundsException i) {
+                    if (maidong.equals("1")) {
                         try {
-                            ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", "1001");
-                        } catch (IndexOutOfBoundsException j) {
+                            ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", UserIndexList.vlist.get(UserIndexList.PowerFinishedCount) + "");
+                        } catch (IndexOutOfBoundsException i) {
+                            try {
+                                ShareUitls.putString(QuestionnaireResultActivity.this, "vlist", "1001");
+                            } catch (IndexOutOfBoundsException j) {
+                            }
                         }
                     }
                 }
             }
-
             if (UserIndexList.IsSportStart.equals("true")) {
                 IsSportStart = true;
             }
-            if (IsSportStart || IsStrengthStart) {
-                getAdadultFragmentStartSportDalog();
-            } else {
-                Toast.makeText(QuestionnaireResultActivity.this, "当前处方未开始", Toast.LENGTH_SHORT).show();
+            if (maidong.equals("1")) {
+                ShareUitls.putString(QuestionnaireResultActivity.this, "todaydata", response);//
+                ShareUitls.putString(QuestionnaireResultActivity.this, "maidong", "0");
             }
-            ShareUitls.putString(QuestionnaireResultActivity.this, "todaydata", response);//
-            ShareUitls.putString(QuestionnaireResultActivity.this, "maidong", "0");
-
         }
 
 

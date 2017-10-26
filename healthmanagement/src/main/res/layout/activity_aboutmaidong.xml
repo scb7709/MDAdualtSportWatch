@@ -42,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="15dp"
+        android:visibility="gone"
         android:background="@color/white"
         android:orientation="horizontal">
 
@@ -78,12 +79,13 @@
         android:id="@+id/activity_aboutmaidong_clearcache"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="15dp"
+
         android:background="@color/white"
         android:orientation="horizontal">
 
 
         <TextView
+            android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -104,7 +106,12 @@
             android:layout_marginRight="15dp"
             android:textColor="#666666"
             android:textSize="13dp" />
-
+        <Button
+            android:layout_width="9dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/icon_right_arrow" />
     </LinearLayout>
 
     <View
@@ -116,12 +123,13 @@
         android:id="@+id/activity_aboutmaidong_aboutus"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="15dp"
+
         android:background="@color/white"
         android:orientation="horizontal">
 
 
         <TextView
+            android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -149,5 +157,51 @@
         android:layout_height="1dp"
         android:background="@color/gray"></View>
 
+    <LinearLayout
+        android:id="@+id/fragment_my_updateversion"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
 
+        <!--  <ImageView
+              android:layout_marginLeft="15dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:src="@mipmap/icon_update" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:text="检查更新"
+            android:textColor="#666666"
+            android:textSize="15dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"></View>
+
+        <TextView
+            android:id="@+id/fragment_my_newversion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:text="有新版本"
+            android:textColor="#ffad00"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="9dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/icon_right_arrow" />
+
+    </LinearLayout>
 </LinearLayout>

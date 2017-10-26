@@ -35,8 +35,10 @@ import com.headlth.management.myview.CircleImageView;
 import com.headlth.management.service.UpdateService;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
+import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
 
+import com.headlth.management.utils.UpadteApp;
 import com.headlth.management.utils.VersonUtils;
 
 
@@ -67,17 +69,12 @@ public class MyFragment extends BaseFragment {
     @ViewInject(R.id.fragmrnt_my_allvalidsporttime)
     private TextView fragmrnt_my_allvalidsporttime;
 
-    @ViewInject(R.id.fragment_my_newversion)
-    private TextView fragment_my_newversion;
 
 
-    private String url;
-    private View view;
-    private boolean isupdate;
     private User user;
     private User.UserInformation userInformation;
     private String UID;
-    VersionClass.Version version;
+
 
     @SuppressLint("ValidFragment")
     public MyFragment() {
@@ -92,23 +89,9 @@ public class MyFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        url = Constant.BASE_URL;
-        version = ShareUitls.getVersion(getActivity());
-        isupdate = version != null && VersonUtils.getVerisonCode(getActivity()) != -1 && version.VersionCode > VersonUtils.getVerisonCode(getActivity());
         UID = ShareUitls.getString(getActivity(), "UID", "");
         Log.i("strstrstrstr","onCreateView");
         return x.view().inject(this, inflater, container);
-    }
-
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Log.i("strstrstrstr","onViewCreated");
-        if (isupdate) {
-            fragment_my_newversion.setVisibility(View.VISIBLE);
-        }
-
     }
 
     @Override
@@ -135,7 +118,6 @@ public class MyFragment extends BaseFragment {
     @Event(value = {R.id.fragmrnt_my_update,
             R.id.fragment_my_aboutus,
             R.id.fragment_my_health,
-            R.id.fragment_my_updateversion,
             R.id.fragment_my_user,
             R.id.fragmrnt_my_order,
             R.id.fragmrnt_my_prescription,
@@ -157,24 +139,6 @@ public class MyFragment extends BaseFragment {
                 break;
             case R.id.fragment_my_health:
                 startActivity(new Intent(getActivity(), HealthDatumActivity.class));
-                break;
-            case R.id.fragment_my_updateversion:
-
-                if (isupdate) {
-                   /* UpadteApp upadteApp = new UpadteApp(getActivity(), version, true, new UpadteApp.UpdateResult() {
-                        @Override
-                        public void onSuccess() {
-                        }
-                        @Override
-                        public void onError() {
-                        }
-                    });*/
-                    Intent intent = new Intent(getActivity(), UpdateService.class);
-                    intent.putExtra("apkUrl", version.DownloadUrl);
-                    getActivity().startService(intent);
-                } else {
-                    Toast.makeText(getActivity(), "没有新版本可更新", Toast.LENGTH_SHORT).show();
-                }
                 break;
             case R.id.fragment_my_user:
                 startActivity(new Intent(getActivity(), AccountManageActivity.class));

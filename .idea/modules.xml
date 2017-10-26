@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MDAdualtSport.iml" filepath="$PROJECT_DIR$/MDAdualtSport.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChartLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pushlib/Pushlib.iml" filepath="$PROJECT_DIR$/Pushlib/Pushlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/healthmanagement/healthmanagement.iml" filepath="$PROJECT_DIR$/healthmanagement/healthmanagement.iml" />
       <module fileurl="file://$PROJECT_DIR$/heartimage/heartimage.iml" filepath="$PROJECT_DIR$/heartimage/heartimage.iml" />

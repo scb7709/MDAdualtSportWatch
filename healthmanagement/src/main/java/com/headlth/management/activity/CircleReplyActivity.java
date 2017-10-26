@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,7 +89,7 @@ public class CircleReplyActivity extends BaseActivity {
     @ViewInject(R.id.circlereply_Like_Count)
     private TextView circlereply_Like_Count;
     private Holder holder;
-
+    InputMethodManager inputMethodManager ;
     private class Holder {
         @ViewInject(R.id.listview_contentdetails_icon)
         public RoundImageView listview_contentdetails_icon;
@@ -113,11 +114,13 @@ public class CircleReplyActivity extends BaseActivity {
     private int replyCount;
     private int position;
     private View footer;
+    private TextView Safa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         view_publictitle_title.setText("回复");
         position = Integer.parseInt(getIntent().getStringExtra("position"));
         comment = CircleList.getInstance().commentlist.get(position);
@@ -146,6 +149,8 @@ public class CircleReplyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 circlereply_layout.setVisibility(View.VISIBLE);
+                ContentDetailsActivity.showSoftInputFromWindow(circlereply_replyContent);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
             }
         });
         circlereply_Like.setOnClickListener(new View.OnClickListener() {
@@ -211,13 +216,15 @@ public class CircleReplyActivity extends BaseActivity {
 
 
         footer = LayoutInflater.from(this).inflate(R.layout.listview_footer_view, null);
-        TextView textView = (TextView) footer.findViewById(R.id.listview_footer_view_text);
-        textView.setText("暂无回复,快来抢沙发吧...");
+         Safa = (TextView) footer.findViewById(R.id.listview_footer_view_text);
+        Safa.setText("暂无回复,快来抢沙发吧...");
         circlereply_maidongcircle_listview.addFooterView(footer, null, false);
-        textView.setOnClickListener(new View.OnClickListener() {
+        Safa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 circlereply_layout.setVisibility(View.VISIBLE);
+                ContentDetailsActivity.showSoftInputFromWindow(circlereply_replyContent);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
             }
         });
         holder = new Holder();
@@ -261,10 +268,15 @@ public class CircleReplyActivity extends BaseActivity {
                         }
                         if (CircleList.getInstance().replylist.size() == 0) {
                             circlereply_maidongcircle_listview.addFooterView(footer);
+                            if(Safa!=null){
+                                Safa.setText("暂无评论,快来抢沙发吧...");
+                            }
                             // contentdetails_nodata.setVisibility(View.VISIBLE);
                         } else {
                             circlereply_maidongcircle_listview.removeFooterView(footer);
-
+                            if(Safa!=null){
+                                Safa.setText("");
+                            }
                         }
                         replyAdapter.notifyDataSetChanged();
                     }
@@ -292,30 +304,10 @@ public class CircleReplyActivity extends BaseActivity {
 
     public void addReplyListener() {//发评论 replay=true,,回复评论 replay=false
         circlereply_replyContent.setHint("回复" + comment.getUserRealname());
-      /*  circlereply_replyContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String commentContentt = circlereply_replyContent.getText().toString();
-                if (commentContentt.length() != 0) {
-                    circlereply_send.setBackgroundColor(Color.parseColor("#ffad00"));
-                } else {
-                    circlereply_send.setBackgroundColor(0);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
         circlereply_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 circlereply_layout.setVisibility(View.GONE);
                 circlereply_replyContent.setText("");
 
@@ -324,6 +316,7 @@ public class CircleReplyActivity extends BaseActivity {
         circlereply_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 String commentContentt = circlereply_replyContent.getText().toString();
                 if (commentContentt.length() != 0) {
                     sendReply(commentContentt);

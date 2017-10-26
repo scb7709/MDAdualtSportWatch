@@ -37,10 +37,12 @@ public class MyBuleWatchManager implements Serializable {
      * 发现服务、数据读写操作接口
      */
     public interface OnCharacteristicListener {
-        void onServicesDiscovered(BluetoothGatt mBluetoothGatt,BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristic);
+        void onServicesDiscovered(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristic);
+
         void onCharacteristicChanged(byte[] data);
     }
-    private static OnCharacteristicListener CharacteristicListener ;
+
+    private static OnCharacteristicListener CharacteristicListener;
     private static MyBuleWatchManager myBuleConnectManager;
     private Activity activity;
     private BluetoothAdapter bluetoothAdapter;
@@ -67,13 +69,13 @@ public class MyBuleWatchManager implements Serializable {
         if (flag) {
             first_connect();//开启首次连接
         } else {
-            activity.registerReceiver(receiver,MyBuleSearchManager. registBroadcast());
+            activity.registerReceiver(receiver, MyBuleSearchManager.registBroadcast());
             MyBuleSearchManager.openBluetooth(activity);
         }
 
 
-
     }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -81,14 +83,15 @@ public class MyBuleWatchManager implements Serializable {
             Log.i("", "蓝牙广播回调 action=" + action);
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {//关闭系统蓝牙
                 Log.i("", "系统蓝牙断开！！");
-             //   boolean isEnable = enable();
-             //   if (!isEnable)
+                //   boolean isEnable = enable();
+                //   if (!isEnable)
                 //    openBluetooth(activity);
             } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
                 first_connect();//开启首次连接
             }
         }
     };
+
     public static MyBuleWatchManager getInstance(Activity activity, String ADRS, OnCharacteristicListener mCharacteristicListener) {
         if (myBuleConnectManager == null) {
             synchronized (MyBuleWatchManager.class) {
@@ -96,14 +99,14 @@ public class MyBuleWatchManager implements Serializable {
                     myBuleConnectManager = new MyBuleWatchManager(activity, ADRS, mCharacteristicListener);
                 }
             }
-        }else {
-            if(mCharacteristicListener!=null) {
+        } else {
+            if (mCharacteristicListener != null) {
                 if (CharacteristicListener != null) {
                     CharacteristicListener = null;
                 }
             }
             CharacteristicListener = mCharacteristicListener;
-            CharacteristicListener.onServicesDiscovered(mBluetoothGatt,WRITE_BluetoothGattCharacteristic);
+            CharacteristicListener.onServicesDiscovered(mBluetoothGatt, WRITE_BluetoothGattCharacteristic);
         }
         return myBuleConnectManager;
     }
@@ -204,7 +207,10 @@ public class MyBuleWatchManager implements Serializable {
 
                 case 3://设备可用
                     Log.i("myblue", "找到特征");
-                    CharacteristicListener.onServicesDiscovered(mBluetoothGatt,WRITE_BluetoothGattCharacteristic);
+                    try {
+                        CharacteristicListener.onServicesDiscovered(mBluetoothGatt, WRITE_BluetoothGattCharacteristic);
+                    } catch (NullPointerException n) {
+                    }
                     break;
             }
         }
@@ -304,7 +310,7 @@ public class MyBuleWatchManager implements Serializable {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        //    Log.i("myblue", "数据通知11");
+            //    Log.i("myblue", "数据通知11");
             if (CharacteristicListener != null) {
                 CharacteristicListener.onCharacteristicChanged(characteristic.getValue());
             }
@@ -359,7 +365,7 @@ public class MyBuleWatchManager implements Serializable {
     }
 
     public BluetoothGattCharacteristic getBluetoothGattCharacteristic() {
-            return WRITE_BluetoothGattCharacteristic;
+        return WRITE_BluetoothGattCharacteristic;
     }
 
 

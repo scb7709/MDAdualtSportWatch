@@ -259,19 +259,6 @@ public class CalendarView extends View {
                     //当前正常状态
                     //字体颜色
                     if (!isToday(getString(date.year + ""), getString(date.month + ""), getString(date.day + ""))) {
-
-
-                        //内环圆
-                  /*  canvas.drawCircle((float) (mCellSpace * (i + 0.5)),
-                            (float) ((j + 0.5) * mCellSpace), (float) (mCellSpace / 3-10),
-                            mCirclePaint);
-                    Log.e("r", (float) (mCellSpace / 3) + "-----1");
-                    Log.e("r", (float) (mCellSpace / 3 - 1) + "-----1");*/
-
-
-                        //画内环圆字体    空白圆的数字
-
-
                         //画外环圆 空白圆的外环圆
                         mCirclePaint2 = new Paint(2);
                         mCirclePaint2.setStyle(Paint.Style.STROKE);

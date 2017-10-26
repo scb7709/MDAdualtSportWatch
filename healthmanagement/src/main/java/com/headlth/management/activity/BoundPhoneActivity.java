@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,6 +57,8 @@ public class BoundPhoneActivity extends BaseActivity {
     private String phone, pwd;
     private String flag;//是三方验证登录的还是手机号登录的
     private String FlagActivity;//是那个界面过来的
+    Map<String, String> phoneAndverify_code;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +68,11 @@ public class BoundPhoneActivity extends BaseActivity {
     }
 
     private void initialize() {
+        phoneAndverify_code = new HashMap<>();
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         FlagActivity = intent.getStringExtra("FlagActivity");
-        Log.i("FlagActivity",FlagActivity);
+        Log.i("FlagActivity", FlagActivity);
         if (flag.equals("other")) {
             map = (Map<String, String>) (getIntent().getSerializableExtra("map"));
         } else {
@@ -84,9 +86,9 @@ public class BoundPhoneActivity extends BaseActivity {
     private void getEvent(View view) {
         switch (view.getId()) {
             case R.id.view_publictitle_back:
-                Log.i("FlagActivityt",FlagActivity);
-                if(FlagActivity.equals("HomeActivity")) {
-                    Log.i("FlagActivitytr",FlagActivity);
+                Log.i("FlagActivityt", FlagActivity);
+                if (FlagActivity.equals("HomeActivity")) {
+                    Log.i("FlagActivitytr", FlagActivity);
                     Intent intent = new Intent(BoundPhoneActivity.this, Login.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -128,9 +130,22 @@ public class BoundPhoneActivity extends BaseActivity {
 
     private void getSMS(final String phone) {
 
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest");
-       /* params.addBodyParameter("ResultJWT",ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));*/
+        Login.getSMS(this, phone, "0", new Login.SMSInterface() {
+            @Override
+            public void onResponse(String Verify_code) {
+              /*  if(phoneAndverify_code.get(phone)!=null){
+                    phoneAndverify_code.remove(phone);
+                }*/
+                phoneAndverify_code.put(phone,Verify_code);
+                verify_code = Verify_code;
+                ShareUitls.putString(BoundPhoneActivity.this, "SMSTIME", new Date().getTime() + "");
+                Toast.makeText(BoundPhoneActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    /*    RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest");
+        params.addBodyParameter("IsForgotPw", "0");
+        params.addBodyParameter("Code", Encryption.decode(Encryption.encodeByMD5(new StringBuffer(phone).reverse().toString()).toString()));
         params.addBodyParameter("Mobile", phone);
         HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("正在获取手机验证码,请稍后...", params, true, new HttpUtils.ResponseListener() {
 
@@ -148,11 +163,12 @@ public class BoundPhoneActivity extends BaseActivity {
                                 ShareUitls.putString(BoundPhoneActivity.this, "SMSTIME", new Date().getTime() + "");
                                 Toast.makeText(BoundPhoneActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
                             } else {
-                                if (Status.equals("3")) {
+                                Toast.makeText(BoundPhoneActivity.this, jsonObject.getString("Message"), Toast.LENGTH_SHORT).show();
+                           *//*     if (Status.equals("3")) {
                                     Toast.makeText(BoundPhoneActivity.this, "该手机号已经被注册", Toast.LENGTH_SHORT).show();
                                 }else{
                                     Toast.makeText(BoundPhoneActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
-                                }
+                                }*//*
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -167,7 +183,7 @@ public class BoundPhoneActivity extends BaseActivity {
                     }
                 }
 
-        );
+        );*/
     }
 
     //手机号校验
@@ -179,7 +195,7 @@ public class BoundPhoneActivity extends BaseActivity {
             if (phone.length() != 11) {
                 Toast.makeText(BoundPhoneActivity.this, "手机号必须11位", Toast.LENGTH_SHORT).show();
             } else {
-                if (!isMobile(phone)) {
+                if (!Login.isMobile(phone)) {
                     Toast.makeText(BoundPhoneActivity.this, "手机号格式错误", Toast.LENGTH_SHORT).show();
                 } else {
                     CheckExist(phone);
@@ -189,12 +205,6 @@ public class BoundPhoneActivity extends BaseActivity {
         }
     }
 
-    //手机号判断
-    public boolean isMobile(String mobiles) {
-        String telRegex = "[1][358]\\d{9}";//"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        if (TextUtils.isEmpty(mobiles)) return false;
-        else return mobiles.matches(telRegex);
-    }
 
     //验证码校验
     private void VerifyVerifycode() {
@@ -209,7 +219,7 @@ public class BoundPhoneActivity extends BaseActivity {
                         if (OLDSMSTIME != 0) {
                             long NOWSMSTIME = new Date().getTime();
                             if ((double) ((NOWSMSTIME - OLDSMSTIME) / 60000) <= 15) {
-                                BoundPhone(phone);
+                                BoundPhone();
 
                             } else {
                                 Toast.makeText(BoundPhoneActivity.this, "验证码已经失效,请重新获取", Toast.LENGTH_LONG).show();
@@ -245,7 +255,7 @@ public class BoundPhoneActivity extends BaseActivity {
         HttpUtils.getInstance(BoundPhoneActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        activity_boundphone_commit.setClickable(true);
+                        // activity_boundphone_commit.setClickable(true);
                         Log.e("getSMSjson", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -254,7 +264,7 @@ public class BoundPhoneActivity extends BaseActivity {
                                 activity_boundphone_comfire.setClickable(false);
                                 activity_boundphone_comfire.setTextColor(Color.parseColor("#999999"));
                                 time.start();
-                                activity_boundphone_commit.setClickable(false);
+                                //  activity_boundphone_commit.setClickable(false);
                                 getSMS(phone);
 
 
@@ -281,8 +291,20 @@ public class BoundPhoneActivity extends BaseActivity {
         );
     }
 
-    private void BoundPhone(final String phone) {
-
+    private void BoundPhone() {
+        final String phone=activity_boundphone_phone.getText().toString();
+        if (!Login.isMobile(phone)) {
+            Toast.makeText(BoundPhoneActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (phoneAndverify_code.get(phone)==null){
+            Toast.makeText(BoundPhoneActivity.this, "该手机号还未获取验证码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!verify_code.equals(phoneAndverify_code.get(phone))){
+            Toast.makeText(BoundPhoneActivity.this, "手机号和验证码不匹配", Toast.LENGTH_SHORT).show();
+            return;
+        }
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserMobileBindingRequest");
         params.addBodyParameter("ResultJWT", ShareUitls.getString(BoundPhoneActivity.this, "ResultJWT", "0"));
         params.addBodyParameter("UID", ShareUitls.getString(BoundPhoneActivity.this, "UID", "0"));
@@ -298,9 +320,9 @@ public class BoundPhoneActivity extends BaseActivity {
                                 Toast.makeText(BoundPhoneActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
 
                                 if (flag.equals("other")) {
-                                    HttpUtils.getInstance(BoundPhoneActivity.this).otherRegister(map,"BoundPhoneActivity");
+                                    HttpUtils.getInstance(BoundPhoneActivity.this).otherRegister(map, "BoundPhoneActivity");
                                 } else {
-                                    Login.phoneLogin(BoundPhoneActivity.this, phone, pwd,"BoundPhoneActivity");
+                                    Login.phoneLogin(BoundPhoneActivity.this, phone, pwd, "BoundPhoneActivity");
                                 }
                             } else if (Status.equals("1")) {
                                 Toast.makeText(BoundPhoneActivity.this, "该手机号已被其他账户绑定", Toast.LENGTH_SHORT).show();
@@ -324,13 +346,14 @@ public class BoundPhoneActivity extends BaseActivity {
 
         );
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)//主要是对这个函数的复写
     {
         // TODO Auto-generated method stub
 
         if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
-            if(FlagActivity.equals("HomeActivity")) {
+            if (FlagActivity.equals("HomeActivity")) {
                 Intent intent = new Intent(BoundPhoneActivity.this, Login.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

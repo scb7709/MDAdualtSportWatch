@@ -68,8 +68,8 @@ public class WatchSportSummaryActivity extends BaseActivity {
 
 
     //当前心率
-    @ViewInject(R.id.ValidTime)
-    private TextView ValidTime;
+    @ViewInject(R.id.average_heartrate_value)
+    private TextView average_heartrate_value;
     @ViewInject(R.id.share)
     private RelativeLayout share;//分享
     @ViewInject(R.id.btback)
@@ -163,24 +163,29 @@ public class WatchSportSummaryActivity extends BaseActivity {
 
     private void showSingle_motion_results(String text) {
         if (text != null && text.length() == 40 && text.startsWith("0814")) {
-            final int TargeT = Integer.parseInt(userInformation.getWatchDuration());
-            final int mEffectiveTimee = DataTransferUtils.getInt_10(text.substring(16, 20));
+            final int TargeT = Integer.parseInt(userInformation.getWatchDuration());//100;//
+            final int mEffectiveTimee = DataTransferUtils.getInt_10(text.substring(16, 20));//50;//
             int stepTimeTVv = DataTransferUtils.getInt_10(text.substring(12, 16));
-            mEffectiveTime.setText(StringForTime.stringForTime(mEffectiveTimee));
-            stepTimeTV.setText(StringForTime.stringForTime(stepTimeTVv));
-            Target.setText(StringForTime.stringForTime(TargeT));
+
+            mEffectiveTime.setText(StringForTime.stringForTime(mEffectiveTimee));//有效时间
+            stepTimeTV.setText(StringForTime.stringForTime(stepTimeTVv));//总时间
+            Target.setText(StringForTime.stringForTime(TargeT));//目标时间
             //  smallprogressCircle.setMax(TargeT);
-            ValidTime.setText(DataTransferUtils.getInt_10(text.substring(22, 24)) + "");
+            average_heartrate_value.setText(DataTransferUtils.getInt_10(text.substring(22, 24)) + "");//平均心率
+            final int steep = 10000 / TargeT;
+            if(mEffectiveTimee==0){
+                return;
+            }
+            final int alltime = mEffectiveTimee > TargeT ? TargeT : mEffectiveTimee;
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     // handler.sendEmptyMessage(3);
-                    for (int i = 0; i <= mEffectiveTimee; i = i + 100) {
-                        //   smallprogressCircle.setProgress((100 * (showTime)) / (60 * TargeT));
+                    for (int i = 1; i <= alltime; i++) {
                         smallprogressCircle.setProgress(i * 100 / TargeT);
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(steep);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -223,14 +228,28 @@ public class WatchSportSummaryActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            // Log.i("mybule", "设备可读可写");
-            String text = msg.obj.toString();
-            int length = text.length();
-            Log.i("myblue", "" + text + "  " + length);
-            if (length > 5) {
-
-                String head = text.substring(0, 2);
-                HandlerData(length, head, text);
+            if (msg.what == 1) {//画心率图
+                // Log.i("mybule", "设备可读可写");
+                String text = msg.obj.toString();
+                int length = text.length();
+                Log.i("myblue", "" + text + "  " + length);
+                if (length > 5) {
+                    String head = text.substring(0, 2);
+                    HandlerData(length, head, text);
+                }
+            } else {//画心率图
+                MyToash.Log("画心率图");
+                if (lines != null && lines.size() > 0) {
+                    MyToash.Log("画心率图"+  lines.size());
+                    suitLines.setLineForm(true);
+                    int[] colors = new int[2];
+                    suitLines.anim();
+                    colors[0] = Color.parseColor("#ff4763");
+                    colors[1] = Color.parseColor("#b51225");
+                    suitLines.setDefaultOneLineColor(colors);
+                    suitLines.setLineType(SuitLines.SEGMENT);
+                    suitLines.feedWithAnim(lines);
+                }
             }
         }
     };
@@ -457,37 +476,44 @@ public class WatchSportSummaryActivity extends BaseActivity {
         }
     }
 
-    private void setHeartInage(String text) {
-        String[] strings = text.split("_");
-        List<Integer> tempValue = new ArrayList<>();
-        for (String s : strings) {
-            int value = DataTransferUtils.getInt_10(s.substring(12, 14));
-            tempValue.add(value);
-        }
+    List<Unit> lines;
 
-        List<Integer> thirdData = new ArrayList<>();
-        int steep = strings.length / 30;
+    private void setHeartInage(final String text) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
 
-        if (steep == 0) {
-            thirdData = tempValue;
-        } else {
-            for (int i = 0; i < 30; i = i + steep) {
-                thirdData.add(tempValue.get(i));
+                String[] strings = text.split("_");
+                List<Integer> tempValue = new ArrayList<>();
+                for (String s : strings) {
+                    int value = DataTransferUtils.getInt_10(s.substring(12, 14));
+                    tempValue.add(value);
+                }
+
+                List<Integer> thirdData = new ArrayList<>();
+                int steep = strings.length / 30;
+
+                if (steep <=1) {
+                    thirdData = tempValue;
+                } else {
+                    for (int i = 0; i < 30; i = i + steep) {
+                        thirdData.add(tempValue.get(i));
+                    }
+                }
+                int tempsize=thirdData.size();
+                if(tempsize>0) {
+                    lines = new ArrayList<>();
+                    for (int i = 0; i < tempsize; i++) {
+                        float vlaue = thirdData.get(i) - 43;
+                        lines.add(new Unit(vlaue < 0 ? 1 : vlaue, ""));
+                    }
+                    handler.sendEmptyMessage(101);
+                }
             }
-        }
-        List<Unit> lines = new ArrayList<>();
-        for (int i = 0; i < thirdData.size(); i++) {
-            float vlaue = thirdData.get(i) - 43;
-            lines.add(new Unit(vlaue < 0 ? 1 : vlaue, ""));
-        }
-        suitLines.setLineForm(true);
-        int[] colors = new int[2];
-        suitLines.anim();
-        colors[0] = Color.parseColor("#ff4763");
-        colors[1] = Color.parseColor("#b51225");
-        suitLines.setDefaultOneLineColor(colors);
-        suitLines.setLineType(SuitLines.SEGMENT);
-        suitLines.feedWithAnim(lines);
+        }.start();
+
+
     }
 
 
@@ -543,9 +569,9 @@ public class WatchSportSummaryActivity extends BaseActivity {
         super.onDestroy();
         ShareUitls.putString(WatchSportSummaryActivity.this, "WATCHSPORT", "");
         ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
-        if (myBuleWatchManager != null) {
+       /* if (myBuleWatchManager != null) {
             myBuleWatchManager.endConnect();
-        }
+        }*/
     }
 
     @Override
@@ -557,9 +583,9 @@ public class WatchSportSummaryActivity extends BaseActivity {
             if (canback) {
                 ShareUitls.putString(WatchSportSummaryActivity.this, "WATCHSPORT", "");
                 ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
-                if (myBuleWatchManager != null) {
+              /*  if (myBuleWatchManager != null) {
                     myBuleWatchManager.endConnect();
-                }
+                }*/
                 finish();
             } else
                 Toast.makeText(WatchSportSummaryActivity.this, "正在同步数据", Toast.LENGTH_LONG).show();

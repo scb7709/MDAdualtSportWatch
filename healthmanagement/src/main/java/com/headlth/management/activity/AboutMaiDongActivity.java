@@ -1,5 +1,6 @@
 package com.headlth.management.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -8,6 +9,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
@@ -15,8 +17,8 @@ import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.utils.FileViewer;
 import com.headlth.management.utils.ShareUitls;
+import com.headlth.management.utils.UpadteApp;
 import com.headlth.management.utils.VersonUtils;
-import com.umeng.fb.FeedbackAgent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -41,7 +43,11 @@ public class AboutMaiDongActivity extends BaseActivity {
 
     @ViewInject(R.id.activity_aboutmaidong_cache)
     private TextView activity_aboutmaidong_cache;
+    @ViewInject(R.id.fragment_my_newversion)
+    private TextView fragment_my_newversion;
 
+
+    private boolean isupdate;
 
     // VersionClass.Version version;
 
@@ -52,7 +58,7 @@ public class AboutMaiDongActivity extends BaseActivity {
 
     WaitDialog waitDialog;
     private String SDPATH;//SD卡根目录
-
+Activity activity;
     private BottomMenuDialog bottomMenuDialog;
 
     @Override
@@ -65,6 +71,11 @@ public class AboutMaiDongActivity extends BaseActivity {
     }
 
     private void initialize() {
+        activity=this;
+        isupdate = UpadteApp.updateAPP(activity, false);
+        if (isupdate) {
+            fragment_my_newversion.setVisibility(View.VISIBLE);
+        }
         //version = ShareUitls.getVersion(this);;
         activity_aboutmaidong_versioncode.setText("当前版本: " + VersonUtils.getVersionName(AboutMaiDongActivity.this));
         view_publictitle_title.setText("关于迈动");
@@ -92,6 +103,7 @@ public class AboutMaiDongActivity extends BaseActivity {
             , R.id.activity_aboutmaidong_feedback
             , R.id.activity_aboutmaidong_clearcache
             , R.id.activity_aboutmaidong_aboutus
+            , R.id.fragment_my_updateversion
 
     })
     private void getEvent(View view) {
@@ -100,8 +112,8 @@ public class AboutMaiDongActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.activity_aboutmaidong_feedback:
-                FeedbackAgent agent = new FeedbackAgent(this);
-                agent.startFeedbackActivity();
+               // FeedbackAgent agent = new FeedbackAgent(this);
+               // agent.startFeedbackActivity();
                 break;
             case R.id.activity_aboutmaidong_clearcache:
                 clearcache();
@@ -110,6 +122,15 @@ public class AboutMaiDongActivity extends BaseActivity {
             case R.id.activity_aboutmaidong_aboutus:
                 startActivity(new Intent(this, AboutUsActivity.class));
                 break;
+            case R.id.fragment_my_updateversion:
+
+                if (isupdate) {
+                    UpadteApp.updateAPP(activity, true);
+                } else {
+                    Toast.makeText(activity, "没有新版本可更新", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
     }
 

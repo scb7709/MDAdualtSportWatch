@@ -156,7 +156,6 @@ public class HttpUtils {
     }
     int  count=0;
     public void sendRequestRequestParams(final String dialogMessage, final RequestParams params, final boolean dialog, final ResponseListener responseListener) {
-        MyToash.Log(count+"    =count");
         if (context == null) {
             responseListener.onErrorResponse(null);
             return;
@@ -357,7 +356,7 @@ public class HttpUtils {
 
         if (InternetUtils.internet(context)) {
             String version = VersonUtils.getVersionName(context);
-            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostThirdPartyRegisterRequest&version=v" + version);
+            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostThirdPartyRegisterRequest&version=v2.9.6");
             params.addBodyParameter("ThirdPartyID", map.get("loginflag"));
             params.addBodyParameter("ThirdPartyCode", map.get("openid"));
             //  params.addBodyParameter("VersionNum", map.get(version));

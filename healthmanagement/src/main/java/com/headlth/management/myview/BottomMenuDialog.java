@@ -99,6 +99,7 @@ public class BottomMenuDialog extends Dialog {
 
             TextView btnCancel = (TextView) view.findViewById(R.id.btn_cancel);
             ViewGroup layContainer = (ViewGroup) view.findViewById(R.id.lay_container);
+
             LayoutParams lpItem = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             LayoutParams lpDivider = new LayoutParams(LayoutParams.MATCH_PARENT, 1);
             int dip1 = (int) (1 * p.context.getResources().getDisplayMetrics().density + 0.5f);

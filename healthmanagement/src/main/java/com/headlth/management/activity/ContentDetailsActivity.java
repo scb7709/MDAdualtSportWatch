@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -92,6 +93,8 @@ public class ContentDetailsActivity extends BaseActivity {
     private TextView contentdetails_Like_Count;
     private Holder holder;
 
+    InputMethodManager inputMethodManager ;
+
     public class Holder {
 
 
@@ -121,8 +124,9 @@ public class ContentDetailsActivity extends BaseActivity {
 
     private Circle circle;
     private CommentAdapter commentAdapter;
-    private int position,commentCount;
+    private int position, commentCount;
     private View footer;
+    private TextView Safa;
     private boolean flag;//判断是我的分享界面传来的还是迈动圈子
 
     @Override
@@ -135,15 +139,16 @@ public class ContentDetailsActivity extends BaseActivity {
     }
 
     private void initialize() {
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         CircleList.getInstance().replylist.clear();
         view_publictitle_title.setText("动态详情");
         position = Integer.parseInt(getIntent().getStringExtra("position"));
         String tempflag = getIntent().getStringExtra("flag");
         if (tempflag.equals("MyShareActivity")) {
-           flag = true;
+            flag = true;
             circle = CircleList.getInstance().mycirclelist.get(position);
         } else {
-          flag = false;
+            flag = false;
             circle = CircleList.getInstance().circlelist.get(position);
         }
         Log.i("aaaaaaaaaaXIANGQING", circle.toString());
@@ -175,19 +180,7 @@ public class ContentDetailsActivity extends BaseActivity {
     private void setData() {
 
         addCommentListener();
-        view_publictitle_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                CircleList.getInstance().commentlist.clear();
-            }
-        });
-        contentdetails_Comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                contentdetails_sendcomment_re.setVisibility(View.VISIBLE);
-            }
-        });
+
         contentdetails_refresh_view.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
@@ -238,33 +231,17 @@ public class ContentDetailsActivity extends BaseActivity {
         } else {
             contentdetails_like_IM.setImageResource(R.mipmap.icon_no_zan);
         }
-        contentdetails_Like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (circle.getIsAttitude().equals("0")) {
 
-                    if (!requestnetworking) {
-                        addLike("0");
-                    }
-
-
-                } else {
-                    if (!requestnetworking) {
-                        addLike("1");
-                    }
-
-
-                }
-            }
-        });
         footer = LayoutInflater.from(this).inflate(R.layout.listview_footer_view, null);
-        TextView textView = (TextView) footer.findViewById(R.id.listview_footer_view_text);
-        textView.setText("暂无评论,快来抢沙发吧...");
+        Safa = (TextView) footer.findViewById(R.id.listview_footer_view_text);
+        Safa.setText("暂无评论,快来抢沙发吧...");
         contentdetails_maidongcircle_listview.addFooterView(footer, null, false);
-        textView.setOnClickListener(new View.OnClickListener() {
+        Safa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 contentdetails_sendcomment_re.setVisibility(View.VISIBLE);
+                showSoftInputFromWindow(commentContent);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
             }
         });
 
@@ -329,10 +306,15 @@ public class ContentDetailsActivity extends BaseActivity {
                         }
                         if (CircleList.getInstance().commentlist.size() == 0) {
                             contentdetails_maidongcircle_listview.addFooterView(footer);
+                            if(Safa!=null){
+                                Safa.setText("暂无评论,快来抢沙发吧...");
+                            }
                             // contentdetails_nodata.setVisibility(View.VISIBLE);
                         } else {
                             contentdetails_maidongcircle_listview.removeFooterView(footer);
-
+                            if(Safa!=null){
+                                Safa.setText("");
+                            }
                         }
 
                     }
@@ -377,11 +359,13 @@ public class ContentDetailsActivity extends BaseActivity {
                                 circle.setCommentCount(commentCount);
                                 contentdetails_like_reply.setImageResource(R.mipmap.icon_reply);
                                 getComment("");
-                                if(flag){
+                                if (flag) {
                                     CircleList.getInstance().circlelist.clear();//迈动圈子数据变化 清空数据
                                 }
+
+
                                 Toast.makeText(ContentDetailsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
-                               // Log.i("AAAAAAAAAXIZNHENG新增  ", CircleList.getInstance().circlelist.get(position).getCommentCount() + "");
+                                // Log.i("AAAAAAAAAXIZNHENG新增  ", CircleList.getInstance().circlelist.get(position).getCommentCount() + "");
                             } else {
                                 Toast.makeText(ContentDetailsActivity.this, "评论失败", Toast.LENGTH_SHORT).show();
                             }
@@ -408,40 +392,12 @@ public class ContentDetailsActivity extends BaseActivity {
 
 
     public void addCommentListener() {//发评论 replay=true,,回复评论 replay=false
-      /*  // waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity, "正在分享请稍后...");
-        final View share_popupWindoww_view = LayoutInflater.from(ContentDetailsActivity.this).inflate(R.layout.dialog_contentdetails_addcomment, null);
-        final PopupWindow share_popupWindoww = new PopupWindow(share_popupWindoww_view, GetWindowSize.getInstance(this).getGetWindowwidth(), GetWindowSize.getInstance(this).getGetWindowheight(), true);
 
-        Button cancel = (Button) share_popupWindoww_view.findViewById(R.id.dialog_contentdetails_addcomment_cancel);
-        final Button send = (Button) share_popupWindoww_view.findViewById(R.id.dialog_contentdetails_addcomment_send);
-        TextView contentdetails_statechange = (TextView) share_popupWindoww_view.findViewById(R.id.contentdetails_statechange);
-        final EditText commentContent = (EditText) share_popupWindoww_view.findViewById(R.id.dialog_contentdetails_addcomment_commentContent);*/
-
-     /*   commentContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String commentContentt = commentContent.getText().toString();
-                if (commentContentt.length() != 0) {
-                    send.setBackgroundColor(Color.parseColor("#ffad00"));
-                } else {
-                    send.setBackgroundColor(0);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 contentdetails_sendcomment_re.setVisibility(View.GONE);
                 commentContent.setText("");
             }
@@ -451,6 +407,7 @@ public class ContentDetailsActivity extends BaseActivity {
             public void onClick(View v) {
                 String commentContentt = commentContent.getText().toString();
                 if (commentContentt.length() != 0) {
+                    inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                     addContent(commentContentt);
                     contentdetails_sendcomment_re.setVisibility(View.GONE);
                     commentContent.setText("");
@@ -458,6 +415,48 @@ public class ContentDetailsActivity extends BaseActivity {
 
             }
         });
+        view_publictitle_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                CircleList.getInstance().commentlist.clear();
+            }
+        });
+        contentdetails_Comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                contentdetails_sendcomment_re.setVisibility(View.VISIBLE);
+                showSoftInputFromWindow(commentContent);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
+            }
+        });
+        contentdetails_Like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (circle.getIsAttitude().equals("0")) {
+
+                    if (!requestnetworking) {
+                        addLike("0");
+                    }
+
+
+                } else {
+                    if (!requestnetworking) {
+                        addLike("1");
+                    }
+
+
+                }
+            }
+        });
+    }
+
+    public static void showSoftInputFromWindow(EditText commentContent) {
+        commentContent.setFocusable(true);
+        commentContent.setFocusableInTouchMode(true);
+        commentContent.requestFocus();
+
     }
     public class ShareCommentList {
         String Status;
@@ -506,7 +505,7 @@ public class ContentDetailsActivity extends BaseActivity {
                                 circle.setAttitudeCount(0);
                             }
                         }
-                        if(flag){
+                        if (flag) {
                             CircleList.getInstance().circlelist.clear();//迈动圈子数据变化 清空数据
                         }
 

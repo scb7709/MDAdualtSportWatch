@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.headlth.management.R;
+import com.headlth.management.utils.VersonUtils;
 
 import org.xutils.HttpManager;
 import org.xutils.common.Callback;
@@ -36,6 +37,8 @@ public class UpdateService extends Service {
     private Notification notification;
     private HttpManager httpManager;
     private RemoteViews views;
+    public boolean DownLoading;
+    private File file;
 
     @Override
     public void onCreate() {
@@ -56,7 +59,7 @@ public class UpdateService extends Service {
             notifyUser(getString(R.string.update_download_failed), getString(R.string.update_download_failed), 0);
 
             stopSelf();
-
+            return 0;
         }
         apkUrl = intent.getStringExtra("apkUrl");
         notifyUser(getString(R.string.update_download_start), getString(R.string.update_download_start), 0);
@@ -65,6 +68,7 @@ public class UpdateService extends Service {
     }
 
     private void startDownload() {
+        DownLoading = true;
         RequestParams requestParams = new RequestParams(apkUrl);
         requestParams.setSaveFilePath(filePath);
         httpManager = x.http();
@@ -85,8 +89,10 @@ public class UpdateService extends Service {
 
             @Override
             public void onSuccess(File result) {
-                notifyUser(getString(R.string.update_download_finish), getString(R.string.update_download_finish), 100);
-                stopSelf();
+                VersonUtils.installApk(result, getApplicationContext());// 安装apk
+                file = result;
+                //notifyUser(getString(R.string.update_download_finish), getString(R.string.update_download_finish), 100);
+                // stopSelf();
             }
 
             @Override
@@ -121,7 +127,7 @@ public class UpdateService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.app_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon))
-                .setContentTitle("迈动健康");
+                .setContentTitle("迈动健康版本更新");
         if (progress > 0 && progress <= 100) {
 
             builder.setProgress(100, progress, false);
@@ -138,6 +144,12 @@ public class UpdateService extends Service {
         notificationManager.notify(0, notification);
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+
+        DownLoading = false;
     }
 
     private void initNotificationForLowVersion(Context context) {
@@ -165,14 +177,14 @@ public class UpdateService extends Service {
      * @return
      */
     private PendingIntent getContentIntent() {
-        Log.e("tag", "getContentIntent()");
+       /* Log.e("tag", "getContentIntent()");
         File apkFile = new File(filePath);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(Uri.parse("file://" + apkFile.getAbsolutePath()), "application/vnd.android.package-archive");
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        startActivity(intent);
-        return pendingIntent;
+        startActivity(intent);*/
+        return PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
 
     }
 

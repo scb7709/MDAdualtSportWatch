@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <!--  android:background="@drawable/photo_proview_shape"-->
+    <!--  android:background="@drawable/photo_proview_shape"-->
 
     <RelativeLayout
         android:id="@+id/activity_image_preview_view_head"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layout_gravity="top"
-        android:layout_marginTop="0dp"
-        android:background="#99FFFFFF">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/photopreview_head_shape">
 
         <TextView
             android:id="@+id/activity_image_preview_view_title"

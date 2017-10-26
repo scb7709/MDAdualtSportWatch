@@ -42,6 +42,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/QQDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/QQDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/QQDebug/shaders" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/QQ/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/QQ/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/QQ/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/QQ/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/QQ/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/QQ/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/assets" type="java-test-resource" />
@@ -50,12 +56,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testQQDebug/shaders" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/QQ/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/QQ/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/QQ/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/QQ/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/QQ/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/QQ/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/QQ/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/QQ/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/QQ/assets" type="java-resource" />
@@ -163,7 +163,6 @@
     <orderEntry type="library" exported="" name="retrofit-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="photoview-library-1.2.2" level="project" />
     <orderEntry type="library" exported="" name="transition-25.3.1" level="project" />
-    <orderEntry type="library" exported="" name="com.umeng.fb.5.4.0" level="project" />
     <orderEntry type="library" exported="" name="design-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="weiboSDKCore_3.1.4" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-25.3.1" level="project" />
@@ -173,8 +172,8 @@
     <orderEntry type="library" exported="" name="support-core-utils-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-fragment-25.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="multidex-instrumentation-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="bugly_crash_release" level="project" />
     <orderEntry type="library" exported="" name="umeng-analytics-v6.1.2" level="project" />
+    <orderEntry type="library" exported="" name="bugly_crash_release" level="project" />
     <orderEntry type="library" exported="" name="GifView" level="project" />
     <orderEntry type="library" exported="" name="achartengine-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="xUtils-3.3.22" level="project" />
@@ -194,7 +193,6 @@
     <orderEntry type="library" exported="" name="animated-vector-drawable-25.3.1" level="project" />
     <orderEntry type="module" module-name="Pushlib" exported="" />
     <orderEntry type="module" module-name="heartimage" exported="" />
-    <orderEntry type="module" module-name="MPChartLib" exported="" />
     <orderEntry type="module" module-name="toprightmenu" exported="" />
     <orderEntry type="library" exported="" name="org.apache.http.legacy-android-25" level="project" />
   </component>

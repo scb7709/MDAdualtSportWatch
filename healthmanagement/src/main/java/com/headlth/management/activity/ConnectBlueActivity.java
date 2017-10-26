@@ -78,13 +78,14 @@ public class ConnectBlueActivity extends BaseActivity {
 
     private String flag = "";
     private PopupWindow success;
-  //  private String instructType;
+    //  private String instructType;
     private String UID;
- //   private boolean isfirstConnect = true, ISOVER;
+    //   private boolean isfirstConnect = true, ISOVER;
     private TemperatureeAndWeathere temperatureeAndWeathere;
     private PostParameterRequest postParameterRequest;
     private Activity activity;
     private MyWatchBlueHandler myWatchBlueHandler;//发出的蓝牙指令10秒内收不到回复的处理类
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +109,9 @@ public class ConnectBlueActivity extends BaseActivity {
         temperatureeAndWeathere = (TemperatureeAndWeathere) intent.getSerializableExtra("temperatureeAndWeathere");
         WeatherTemperatureSize = temperatureeAndWeathere.Data.size();
         MyToash.Log(WeatherTemperatureSize + "");
-       // if (flag.equals("firstsport") || flag.equals("bangding")) {
-            postParameterRequest = (PostParameterRequest) intent.getSerializableExtra("postParameterRequest");
-      //  }
+        // if (flag.equals("firstsport") || flag.equals("bangding")) {
+        postParameterRequest = (PostParameterRequest) intent.getSerializableExtra("postParameterRequest");
+        //  }
         view_publictitle_title.setText("连接腕表");
         userInformation = ShareUitls.getUser(ConnectBlueActivity.this).getUserInformation();
         waitDialog = new com.headlth.management.clenderutil.WaitDialog(this, false);
@@ -123,7 +124,7 @@ public class ConnectBlueActivity extends BaseActivity {
 
 
     private void serachBule() {
-       // myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("connectBule",30000);
+        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("connectBule", 30000);
         myBuleSerachManager = MyBuleSearchManager.getInstance(ConnectBlueActivity.this, 0, new MyBuleSearchManager.LeScanCallbackListener() {
             @Override
             public void getBluetoothDeviceList(List<MyBuleSearchManager.BluetoothDeviceEntity> bluetoothDevices) {
@@ -135,13 +136,14 @@ public class ConnectBlueActivity extends BaseActivity {
                     return;//监听未触发
                 } else {
                     if (bluetoothDevice.rssi == 1111) {//搜索八秒也未搜索到目标设备
-                       // waitDialog.dismissDialog();
+                        // waitDialog.dismissDialog();
                         WatchBlueTestActivity.Nosearchtothetargetdevice(myBuleSerachManager, ConnectBlueActivity.this, true);
                         return;
                     }
                     if (bluetoothDevice.device != null) {
                         if (bluetoothDevice.device.getAddress() != null && bluetoothDevice.device.getName() != null) {
                             if (bluetoothDevice.device.getAddress().equals(MAC)) {//搜索到目标设备
+                                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("", 0);
                                 Log.i("myblue", "搜索到目标设备");
                                 if (myBuleSerachManager != null) {
                                     myBuleSerachManager.endSearch();//停止搜索
@@ -165,32 +167,34 @@ public class ConnectBlueActivity extends BaseActivity {
     }
 
     private void connectBule() {
-        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("connectBule",60000);
+        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("connectBule", 60000);
         myBuleWatchManager = MyBuleWatchManager.getInstance(ConnectBlueActivity.this, MAC, new MyBuleWatchManager.OnCharacteristicListener() {
             @Override
-            public void onServicesDiscovered(BluetoothGatt bluetoothGatt,BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
+            public void onServicesDiscovered(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
                 if (activity != null) {
                     WRITE_BluetoothGattCharacteristic = WRITE_BluetoothGattCharacteristi;
                     mBluetoothGatt = bluetoothGatt;
-                    if (WRITE_BluetoothGattCharacteristic != null&&mBluetoothGatt!=null) {
-
-                      //  mBluetoothGatt.requestMtu(512);
+                    if (WRITE_BluetoothGattCharacteristic != null && mBluetoothGatt != null) {
+                        //  mBluetoothGatt.requestMtu(512);
                         if (mBluetoothGatt != null) {
                             if ((flag.equals("firstsport") || flag.equals("bangding"))) {//第一次连接才发送绑定命令
                                 waitDialog.setMessage("正在绑定设备");
                                 sendToBule(WatchBlueTestActivity.bangding(true, UID));
-                                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("bangding",20000);
+                                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("bangding", 20000);
                             } else {
-                                waitDialog.setMessage("正在查询设备数据");
-                                //查询设备是否有未上传的数据（单次运动数据）
-                                byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+
+                                waitDialog.setMessage("正在查询设备状态");
+                                byte[] bytes = WatchBlueTestActivity.getWatchBuleData("GetWatchSportState");
                                 sendToBule(bytes);
-                                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("GetWatchSportState");
+
+
                             }
                         }
                     }
                 }
             }
+
             @Override
             public void onCharacteristicChanged(byte[] data) {
                 Log.i("myblue", "数据通知");
@@ -265,7 +269,7 @@ public class ConnectBlueActivity extends BaseActivity {
             Log.i("myblue", "bangding");
             ShareUitls.putString(ConnectBlueActivity.this, "WATCHSPORT", "START");
             ShareUitls.putString(ConnectBlueActivity.this, "isConnectActivity", "YES");
-        }else {
+        } else {
             if (myBuleWatchManager != null) {
                 myBuleWatchManager.endConnect();
                 WRITE_BluetoothGattCharacteristic = null;
@@ -293,12 +297,12 @@ public class ConnectBlueActivity extends BaseActivity {
             public void strikeDelayed(String flag) {
                 switch (flag) {
                     case "connectBule":
-                        MyToash.Toash(activity, "连接失败");
+                        MyToash.Toash(activity, "连接失败,请确认设备是否打开了蓝牙");
                         if (myBuleSerachManager != null) {
                             myBuleSerachManager.endSearch();//停止搜索
                             myBuleSerachManager = null;
                         }
-                        if(myBuleWatchManager!=null){
+                        if (myBuleWatchManager != null) {
                             myBuleWatchManager.endConnect();
                         }
                         finish();//091459b61d094a000000ff000000ff000000f48e
@@ -306,11 +310,20 @@ public class ConnectBlueActivity extends BaseActivity {
                     //个人信息
                     case "bangding":
                         MyToash.Toash(activity, "绑定失败");
-                        if(myBuleWatchManager!=null){
+                        if (myBuleWatchManager != null) {
                             myBuleWatchManager.endConnect();
                         }
                         finish();
                         break;
+                    //个人信息
+                    case "GetWatchSportState":
+                        waitDialog.setMessage("正在查询设备数据");
+                        //查询设备是否有未上传的数据（单次运动数据）
+                        byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                        sendToBule(bytes);
+                        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                        break;
+
                     case "Single_motion_results":
                         waitDialog.setMessage("正在同步数据");
                         snycData("Personal_information_synchronization");//开启同步
@@ -328,12 +341,12 @@ public class ConnectBlueActivity extends BaseActivity {
                         //运动参数
                     case "sportparameter_synchronization":
 
-                      //  break;
-                    //名字
+                        //  break;
+                        //名字
                     case "name_synchronization":
-                        SnycFail();
-                       // show += "姓名同步失败...\n";
-                       // activity_connectblue_remind.setText(show);
+                        SnycFail("同步失败(连接异常)");
+                        // show += "姓名同步失败...\n";
+                        // activity_connectblue_remind.setText(show);
                         //snycData("weather_synchronization");
                         break;
                     //天气
@@ -360,7 +373,13 @@ public class ConnectBlueActivity extends BaseActivity {
                         break;
                     //采样参数
                     case "samplingparameter_synchronization":
-                        SnycFail();
+                        show += "采样参数同步失败...\n";
+                        activity_connectblue_remind.setText(show);
+                        if (!flag.equals("nofirstsport")) {
+                            SnycFail("同步失败(连接异常)");
+                        } else {
+                            SnycSuccess();
+                        }
                         break;
                 }
             }
@@ -404,11 +423,23 @@ public class ConnectBlueActivity extends BaseActivity {
     private void HandlerData(String head, final String text) {
 
         switch (head) {
+            case "13"://单次运动结果查询
+                if (text.substring(0,6).equals("130400")) {//
+                    waitDialog.setMessage("正在查询设备数据");
+                    //查询设备是否有未上传的数据（单次运动数据）
+                    byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                    sendToBule(bytes);
+                    myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                } else {
+                    show += "同步失败";
+                    SnycFail("同步失败(腕表正处于运动模式中)");
+                }
+                break;
             case "08"://单次运动结果查询
                 if (!text.contains("00000000000000000000000000000000")) {//包含非0数据 则证明有数据 提示并跳转到腕表运动小结同步数据
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
-                    MySQLiteDataDao.getInstance(activity).insertSingleAndOriginal(new MySQLiteBaseClass.Single_Original(DataTransferUtils.getInt_10(text.substring(4, 12))+"",text));//保存单次运动数据
-                    UpLoadingWatchData.getInstance(activity).uploadingWatchData("Single_motion_results", text,0);//上传单次数据
+                    MySQLiteDataDao.getInstance(activity).insertSingleAndOriginal(new MySQLiteBaseClass.Single_Original(DataTransferUtils.getInt_10(text.substring(4, 12)) + "", text));//保存单次运动数据
+                    UpLoadingWatchData.getInstance(activity).uploadingWatchData("Single_motion_results", text, 0);//上传单次数据
                     waitDialog.setMessage("您有未上传的数据");
                     Toast.makeText(ConnectBlueActivity.this, "检测到您有未上传的数据即将上传数据", Toast.LENGTH_LONG).show();
                     waitDialog.dismissDialog();
@@ -443,7 +474,7 @@ public class ConnectBlueActivity extends BaseActivity {
                         updatekMac(MAC);//上传蓝牙地址
                     } else {
                         show += "绑定失败...\n";
-                        SnycFail();
+                        SnycFail("此腕表设备已被其他账户绑定");
                     }
                 }
 
@@ -456,7 +487,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("time_synchronization");
                 } else {
                     show += "个人信息同步失败...\n";
-                    SnycFail();
+                    SnycFail("同步失败(连接异常)");
                 }
 
                 break;
@@ -464,10 +495,10 @@ public class ConnectBlueActivity extends BaseActivity {
                 Log.i("myblue", "时间同步完成");
                 if (text.substring(4, 6).equals("00")) {
                     show += "时间同步成功...\n";
-                    if(!flag.equals("bangding")) {
+                    if (!flag.equals("bangding")) {
                         snycData("sportparameter_synchronization");
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("sportparameter_synchronization");
-                    }else {//绑定不同步运动参数
+                    } else {//绑定不同步运动参数
                         if (userInformation.getNickName().length() > 8) {
                             synchronizationNameCount = 0;
                         } else {
@@ -478,7 +509,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     }
                 } else {
                     show += "时间同步失败...\n";
-                    SnycFail();
+                    SnycFail("同步失败(连接异常)");
                 }
 
                 break;
@@ -495,14 +526,14 @@ public class ConnectBlueActivity extends BaseActivity {
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("name_synchronization");
                 } else {
                     show += "运动参数同步失败...\n";
-                    SnycFail();
+                    SnycFail("同步失败(连接异常)");
                 }
 
 
                 break;
 
             case "04"://姓名同步
-                Log.i("myblue", "姓名同步完成"+synchronizationNameCount);
+                Log.i("myblue", "姓名同步完成" + synchronizationNameCount);
                 if (synchronizationNameCount == 0) {
                     synchronizationNameCount = 1;
                     sendToBule(WatchBlueTestActivity.snycDataName(userInformation.getNickName(), false));
@@ -514,7 +545,7 @@ public class ConnectBlueActivity extends BaseActivity {
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("weather_synchronization");
                     } else {
                         show += "姓名同步失败...\n";
-                        SnycFail();
+                        SnycFail("同步失败(连接异常)");
                     }
 
                 }
@@ -573,7 +604,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     SnycSuccess();
                 } else {
                     show += "采样参数同步失败...\n";
-                    SnycFail();
+                    SnycFail("同步失败(连接异常)");
                 }
                 break;
 
@@ -590,14 +621,21 @@ public class ConnectBlueActivity extends BaseActivity {
         showNotDialog();
     }
 
-    private void SnycFail() {
+    private void SnycFail(String message) {
         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
-        MyToash.Toash(activity, "同步失败");
+        //myWatchBlueHandler = null;
+        MyToash.Toash(activity, message);
         waitDialog.dismissDialog();
-        if(myBuleWatchManager!=null){
-            myBuleWatchManager.endConnect();
+        if (message.equals("同步失败(腕表正处于运动模式中)")) {
+          //  MyToash.Log("同步失败(腕表正处于运动模式中)");
+            ShareUitls.putString(ConnectBlueActivity.this, "isConnectActivity", "SPORTING");
+        } else {
+            if (myBuleWatchManager != null) {
+                myBuleWatchManager.endConnect();
+            }
+
         }
-        startActivity(new Intent(activity,MainActivity.class));
+       // startActivity(new Intent(activity, MainActivity.class));
         finish();
     }
 
@@ -637,7 +675,7 @@ public class ConnectBlueActivity extends BaseActivity {
 
     public void checkMac(final String MAC) {//接口判断该蓝牙是否被绑定
 
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostCheckMACRequest&version=v" + version);
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostCheckMACRequest&version=v2.9.6");
         params.addBodyParameter("MACAddress", MAC);
         HttpUtils.getInstance(ConnectBlueActivity.this).sendRequestRequestParamsNew("", params, true, new HttpUtils.ResponseListenerNew() {
                     @Override
@@ -667,7 +705,7 @@ public class ConnectBlueActivity extends BaseActivity {
     }
 
     public void updatekMac(final String MAC) {//上传更新User蓝牙地址
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostMACRequest&version=v" + version);
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostMACRequest&version=v2.9.6");
         params.addBodyParameter("MACAddress", MAC);
         Log.i("myblue", ShareUitls.getString(ConnectBlueActivity.this, "UID", "0") + " " + ShareUitls.getString(ConnectBlueActivity.this, "ResultJWT", "0") + "  " + MAC);
         HttpUtils.getInstance(ConnectBlueActivity.this).sendRequestRequestParamsNew("", params, true, new HttpUtils.ResponseListenerNew() {

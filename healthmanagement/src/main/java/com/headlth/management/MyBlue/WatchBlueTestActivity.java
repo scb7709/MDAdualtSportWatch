@@ -647,15 +647,15 @@ public class WatchBlueTestActivity extends Activity {
         strFirst.append(tempdate);
 
         strFirst.append(Weathere);
-
+        Log.i("snycDataWeathere111", tempdate+"  "+Weathere);
         byte[] hexStr2ByteArray = DataTransferUtils.hexStr2ByteArray(strFirst.toString());
         byte sum = 0;
-        for (int i = 0; i < (19 > hexStr2ByteArray.length ? hexStr2ByteArray.length : 19); i++) {
+        int size=19 > hexStr2ByteArray.length ? hexStr2ByteArray.length : 19;
+        for (int i = 0; i < size; i++) {
             bytes[i] = hexStr2ByteArray[i];
             sum += bytes[i];
         }
         bytes[19] = sum;
-
         return bytes;
     }
 

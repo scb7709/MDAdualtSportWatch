@@ -192,15 +192,12 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     private int con_state = -1;//当前状态 -1：热身准备 ，0 ：暂停，1：运动中 2 运动小结
     private boolean con_isstate;//true:运动，false：暂停
     private int fifteen_minutes = 0;//15分钟倒计时
-    private boolean lock;//锁切换
-    String instruct = "";
-    Intent intent;
     String UploadTime = "";
-    private boolean warning = true;//心率不在范围内震动警告
     private MediaPlayer exceedMediaPlayer, underMediaPlayer;
     private int tenvibratro;
     private MyBulePolorManager myBuleConnectManager;
-
+    int LoseConnectcount;//持续10秒收不到最新心率  心率为-- (失去了连接)
+    boolean LoseConnectSetValue;
 
     private BroadcastReceiver ServiceToActivityReceiver = new BroadcastReceiver() {
         @Override
@@ -232,6 +229,8 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void setValue() {
+        LoseConnectSetValue = false;
+        LoseConnectcount = 0;
         mBmp.setText(value + "");
         if (con_state == 1) {
             //保存心率值跟采集的时间获取12小时制
@@ -536,15 +535,10 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
                                                              con_state = 1;
                                                              bt_controller.setText("暂停");
                                                              statechange.setText("运动中");
-                                                             // mHandler.post(mRunnable);
-                                                             intent.putExtra("con_state", 1);
-                                                             // sendBroadcast(intent);
+
                                                          } else {
                                                              con_state = 0;
-                                                             intent.putExtra("con_state", 0);
-                                                             //sendBroadcast(intent);
                                                              bt_controller.setText("继续");
-                                                             // mHandler.removeCallbacks(mRunnable);
                                                              statechange.setText("休息中");
                                                          }
                                                          con_isstate = !con_isstate;
@@ -620,6 +614,15 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     int fineMinute = 0;
 
     private boolean setData_Update() {
+        if(LoseConnectcount>10){//超过十秒了没收到心率带返回的心率
+            if(!LoseConnectSetValue) {
+                value = 0;
+                mBmp.setText("--");
+                LoseConnectSetValue=true;
+            }
+        }else {
+            LoseConnectcount++;
+        }
         if (con_state == 2) {
             return true;
         }
@@ -816,7 +819,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
             } else if (msg.what == 4) {
                 startAnimation(0, 0);
                 value = 0;
-                if (!clicked) {
+               if (!clicked) {
                     mBmp.setText("- -");
                 }
             } else if (msg.what == 7) {
@@ -1539,7 +1542,6 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
             d = new draw(getApplicationContext());
             drawline.addView(d);
         }
-
         if (!isStop) {
             isStop = false;
         }
@@ -1633,10 +1635,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
+
 
     //实例化对象
     public void popWindow() {

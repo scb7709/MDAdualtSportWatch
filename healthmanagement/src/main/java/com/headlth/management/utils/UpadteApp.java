@@ -3,8 +3,10 @@ package com.headlth.management.utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +18,12 @@ import android.widget.Toast;
 
 import com.headlth.management.R;
 import com.headlth.management.entity.VersionClass;
+import com.headlth.management.myview.BottomMenuDialog;
+import com.headlth.management.myview.BottomMenuUpdateAPPDialog;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.NumberProgressBar;
 import com.headlth.management.myview.PubLicDialog;
+import com.headlth.management.service.UpdateService;
 
 import org.xutils.HttpManager;
 import org.xutils.common.Callback;
@@ -36,6 +42,11 @@ public class UpadteApp {
     private VersionClass.Version version;
     private UpdateResult updateResult;
 
+
+    private static VersionClass.Version Version;
+    public static BottomMenuUpdateAPPDialog bottomMenuUpdateAPPDialog;
+
+
     public interface UpdateResult {
         void onSuccess();
 
@@ -47,13 +58,14 @@ public class UpadteApp {
         this.activity = activity;
         this.version = version;
         this.updateResult = updateResult;
-        if (update) {
+        if (!update) {
             downloaddialog();
             downloadFile(version.DownloadUrl);
         } else {
             showUpdateDialog();
         }
     }
+
 
     /**
      * 弹出升级对话框
@@ -64,7 +76,7 @@ public class UpadteApp {
         for (int i = 0; i < Description.length; i++) {
             description += Description[i] + ";\n";
         }
-        PubLicDialog.showNotDialog(activity, new String[]{"最新版本:" +version.VersionName, description, "立即更新", "以后再说"}, new PubLicDialog.PubLicDialogOnClickListener() {
+        PubLicDialog.showNotDialog(activity, new String[]{"最新版本:" + version.VersionName, description, "立即更新", "以后再说"}, new PubLicDialog.PubLicDialogOnClickListener() {
             @Override
             public void setPositiveButton() {
                 downloaddialog();
@@ -95,11 +107,13 @@ public class UpadteApp {
         downtext = (TextView) view.findViewById(R.id.dialog_download_tv);
         TextView dialog_download_Description = (TextView) view.findViewById(R.id.dialog_download_Description);
         TextView dialog_download_versionname = (TextView) view.findViewById(R.id.dialog_download_versionname);
+
         String[] Description = version.Description.split(";");
         String description = "";
         for (int i = 0; i < Description.length; i++) {
             description += Description[i] + ";\n\n";
         }
+
         dialog_download_Description.setText(description);
 
         dialog_download_versionname.setText(version.VersionName);
@@ -124,6 +138,7 @@ public class UpadteApp {
     }
 
     private void downloadFile(final String url) {
+        MyToash.Log("url==" + url);
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Toast.makeText(activity, "sdcard不存在!", Toast.LENGTH_SHORT).show();
             updateResult.onError();
@@ -131,7 +146,7 @@ public class UpadteApp {
         }
 
         // 文件在sdcard的路径
-        File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/madteenager/apk/" + new Date().getTime() + "Version");
+        File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/apk/" + new Date().getTime() + "Version");
         if (!tempfile.exists()) {
             tempfile.mkdirs();
         }
@@ -160,8 +175,6 @@ public class UpadteApp {
 
             @Override
             public void onSuccess(File result) {
-
-
                 Toast.makeText(activity, "下载成功", Toast.LENGTH_SHORT).show();
                 VersonUtils.installApk(result, activity);// 安装apk
                 popupWindow.dismiss();
@@ -190,9 +203,55 @@ public class UpadteApp {
         });
     }
 
+
+    public static boolean updateAPP(final Activity activity, boolean nowupdate) {
+        //  BottomMenuUpdateAPPDialog bottomMenuUpdateAPPDialog=null;
+        if (Version == null) {
+            Version = ShareUitls.getVersion(activity);
+        }
+        //  Log.e("版本aaaaa",Version.VersionCode+" "+VersonUtils.getVerisonCode(activity));
+        boolean isupdate = Version != null && VersonUtils.getVerisonCode(activity) != -1 && Version.VersionCode > VersonUtils.getVerisonCode(activity);
+        if (isupdate) {
+            if (nowupdate) {
+                String[] Description = Version.Description.split(";");
+                String description = "";
+                for (int i = 0; i < Description.length; i++) {
+                    if (i < Description.length - 1) {
+                        description += Description[i] + ";\n\n";
+                    } else {
+                        description += Description[i] + ";";
+                    }
+                }
+                BottomMenuUpdateAPPDialog.Builder builder = new BottomMenuUpdateAPPDialog.Builder(activity).setTitle("新版本" + Version.VersionName);
+                builder.addMenu(description, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                })
+                        .addMenu("立即更新", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                bottomMenuUpdateAPPDialog.dismiss();
+                                Intent intent = new Intent(activity, UpdateService.class);
+                                intent.putExtra("apkUrl", Version.DownloadUrl);
+                                activity.startService(intent);
+                            }
+                        });
+                bottomMenuUpdateAPPDialog = builder.create();
+                bottomMenuUpdateAPPDialog.show();
+            }
+
+
+            return true;
+        }
+        return false;
+    }
+
+
     public static boolean More21() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
     public static boolean MoreAPI(int level) {
         return Build.VERSION.SDK_INT >= level;
     }

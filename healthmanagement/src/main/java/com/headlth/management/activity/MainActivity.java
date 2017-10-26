@@ -33,15 +33,20 @@ import com.headlth.management.MyBlue.WatchBlueTestActivity;
 import com.headlth.management.R;
 import com.headlth.management.acs.App;
 import com.headlth.management.acs.BaseActivity;
+import com.headlth.management.entity.VersionClass;
 import com.headlth.management.fragment.AnalizeFragment;
 import com.headlth.management.fragment.MaidongCircleFragment;
 import com.headlth.management.fragment.MaidongFragment;
 import com.headlth.management.fragment.MyFragment;
+import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.PubLicDialog;
+import com.headlth.management.service.UpdateService;
 import com.headlth.management.utils.DataTransferUtils;
 import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
+import com.headlth.management.utils.UpadteApp;
+import com.headlth.management.utils.VersonUtils;
 import com.headlth.management.watchdatasqlite.MySQLiteBaseClass;
 import com.headlth.management.watchdatasqlite.MySQLiteDataDao;
 import com.headlth.management.watchdatasqlite.UpLoadingWatchData;
@@ -88,7 +93,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private MySQLiteDataDao mySQLiteDataDao;
     private MyWatchBlueHandler myWatchBlueHandler;//发出的蓝牙指令10秒内收不到回复的处理类
     private String MAC;
-    boolean IsfLoginToMain;
+    //boolean IsfLoginToMain;
+    public static String WatchState = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         // mayRequestLocation();
         x.view().inject(this);
         Activity = this;
+        UpadteApp.updateAPP(Activity, true);
         initialize();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//获取拍照权限
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
@@ -105,7 +112,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private void initialize() {
 
         mySQLiteDataDao = MySQLiteDataDao.getInstance(Activity);
-        IsfLoginToMain = ShareUitls.getString(MainActivity.this, "IsfLoginToMain", "").equals("true");
+        //IsfLoginToMain = ShareUitls.getString(MainActivity.this, "IsfLoginToMain", "").equals("true");
         ShareUitls.putString(MainActivity.this, "isConnectActivity", "");
         fragmentManager = getSupportFragmentManager();
         activity_main_tabs.check(activity_main_maindong.getId());
@@ -200,10 +207,16 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     };
 
 
-    //boolean
+  /*  //boolean
     @Override
     protected void onStart() {
         super.onStart();
+        watchSportMonitoring();
+    }
+*/
+    @Override
+    public void onResume() {
+        super.onResume();
         watchSportMonitoring();
     }
 
@@ -211,18 +224,22 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         String WATCHSPORT = ShareUitls.getString(MainActivity.this, "WATCHSPORT", "");
         Log.i("myblue", WATCHSPORT + "  --- START");
         if (WATCHSPORT.equals("START")) {
-            if (IsfLoginToMain) {//第一次进入首页需要同步数据 打开蓝牙检测数据
+            serachBule();
+          /*  if (IsfLoginToMain) {//第一次进入首页需要同步数据 打开蓝牙检测数据
                 // ShareUitls.putString(MainActivity.this, "isfirst", "false");
                 serachBule();
 
-            }
+            }*/
         }
     }
 
     private void watchSportMonitoring() {
         String isConnectActivity = ShareUitls.getString(MainActivity.this, "isConnectActivity", "");//
-        if (isConnectActivity.equals("YES")) {
-            MaidongFragment.showNotDialog(MainActivity.this, false, null);
+        MyToash.Log(isConnectActivity+"' isConnectActivity");
+        if (isConnectActivity.equals("YES")||isConnectActivity.equals("SPORTING")) {
+            if (isConnectActivity.equals("YES") ){
+                MaidongFragment.showNotDialog(MainActivity.this, false, null);
+            }
             connectBule(true);
             ShareUitls.putString(MainActivity.this, "isConnectActivity", "");
         }
@@ -233,6 +250,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
             if (msg.what == 1) {//收不到数据通知
                 String text = msg.obj.toString();
                 Log.i("myblue", text);
@@ -253,21 +271,19 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 Handle08(text);
                 break;
             case "13"://得到腕表运动状态13040017
-               /* String result=text.substring(4,6);
-                switch (result){
-                    case  "01":
-                       // break;
-                    case  "02":
-                     //   break;
-                    case  "03":
+                if (text.contains("13040017")) {//
+                    //查询设备是否有未上传的数据（单次运动数据）
+                    bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                    sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                    myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                } else {
+                    WatchState="检查到腕表设备正在运动模式中";
+                    fragment_maidong_yougang_go();
+                  /*  if (IsfLoginToMain) {
 
-                        break;
-                    case  "00"://没在运动
-                        bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
-                        sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
-                        break;
-                }*/
-                //   break;
+                    }*/
+                }
+                break;
             case "14"://腕表运动状态变更通知
                 String result = text.substring(4, 6);
                 switch (result) {
@@ -279,8 +295,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
                         break;
                     case "00"://没在运动
+                       WatchState="正在查询腕表数据";
+                        fragment_maidong_yougang_go();
                         bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
                         sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
                         break;
                 }
                 //   bytes = WatchBlueTestActivity.getWatchBuleData("WatchSportStateChange");
@@ -291,26 +310,28 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     private void Handle08(final String text) {
+        WatchState="";
+        fragment_maidong_yougang_go();
         ShareUitls.putString(Activity, "WATCHSPORT", "");
         if (!text.equals("081400000000000000000000000000000000001c")/* && !ToWatchSportSummaryActivity*/) {//包含非0数据 则证明有数据 提示并跳转到腕表运动小结同步数据
             mySQLiteDataDao.insertSingleAndOriginal(new MySQLiteBaseClass.Single_Original(DataTransferUtils.getInt_10(text.substring(4, 12)) + "", text));//保存单次运动数据
             UpLoadingWatchData.getInstance(Activity).uploadingWatchData("Single_motion_results", text, 0);//上传单次数据
 
-            if (IsfLoginToMain) {
+          /*  if (IsfLoginToMain) {
                 ShareUitls.putString(Activity, "IsfLoginToMain", "false");
                 MaidongFragment.fragment_maidong_yougang_go.setText("开始运动");
                 MaidongFragment.fragment_maidong_yougang_go.setClickable(true);
-            }
+            }*/
             RemindSyncDataDailog(Activity);
 
-        } else {
+        } /*else {
             if (IsfLoginToMain) {
                 ShareUitls.putString(Activity, "IsfLoginToMain", "false");
                 MaidongFragment.fragment_maidong_yougang_go.setText("开始运动");
                 MaidongFragment.fragment_maidong_yougang_go.setClickable(true);
             }
 
-        }
+        }*/
 
 
     }
@@ -364,6 +385,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                                 if (myBuleSerachManager != null) {
                                     myBuleSerachManager.endSearch();//停止搜索
                                 }
+
                                 connectBule(false);
                             }
 
@@ -385,9 +407,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                         if (myBuleWatchManager != null) {
                             myBuleWatchManager.endConnect();
                         }
-                        ShareUitls.putString(Activity, "WATCHSPORT", "");
-                        MaidongFragment.fragment_maidong_yougang_go.setText("开始运动");
-                        MaidongFragment.fragment_maidong_yougang_go.setClickable(true);
+                        WatchState = "";
+                        fragment_maidong_yougang_go();
                         break;
 
                 }
@@ -395,34 +416,59 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         });
 
     }
-
+    private void fragment_maidong_yougang_go(){
+        if(MaidongFragment.fragment_maidong_yougang_go!=null){
+            if (WatchState.length() != 0) {
+                MaidongFragment.fragment_maidong_yougang_go.setText(WatchState);
+                MaidongFragment.fragment_maidong_yougang_go.setClickable(false);
+            } else {
+                MaidongFragment.fragment_maidong_yougang_go.setText("有氧运动");
+                MaidongFragment.fragment_maidong_yougang_go.setClickable(true);
+            }
+        }
+    }
     private void connectBule(final boolean isConnectActivity) {
-            myBuleWatchManager = MyBuleWatchManager.getInstance(Activity, MAC, new MyBuleWatchManager.OnCharacteristicListener() {
-                @Override
-                public void onServicesDiscovered(BluetoothGatt bluetoothGatt,BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
-                    WRITE_BluetoothGattCharacteristic = WRITE_BluetoothGattCharacteristi;
-                    mBluetoothGatt = bluetoothGatt;
-                    if (WRITE_BluetoothGattCharacteristic != null&&mBluetoothGatt!=null) {
-                        if (!isConnectActivity) {
-                            byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
-                            sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+        MyToash.Log("connectBule1"+  isConnectActivity);
+        myBuleWatchManager = MyBuleWatchManager.getInstance(Activity, MAC, new MyBuleWatchManager.OnCharacteristicListener() {
+            @Override
+            public void onServicesDiscovered(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristi) {
+                WRITE_BluetoothGattCharacteristic = WRITE_BluetoothGattCharacteristi;
+                mBluetoothGatt = bluetoothGatt;
+                if (WRITE_BluetoothGattCharacteristic != null && mBluetoothGatt != null) {
+                   if (!isConnectActivity) {//从登陆界面过来
+
+
+                       WatchState="正在查询腕表数据";
+                       fragment_maidong_yougang_go();
+                       byte[]   bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                       sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                       myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+
+
+                      /*  MyToash.Log("connectBule2"+  isConnectActivity);
+                        byte[] bytes = WatchBlueTestActivity.getWatchBuleData("GetWatchSportState");
+                        sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");*/
+
+
 
                     /*    sendToBule(   WatchBlueTestActivity.snycDataOriginal_data(1000000000), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);//请求单次运动原始数据
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Original_data");*/
-                        }
-                    }
+                   }
                 }
-                @Override
-                public void onCharacteristicChanged(byte[] data) {
-                    //  Log.i("myblue", "数据通知");
-                    String text = DataTransferUtils.format(data);
-                    Message message = Message.obtain();
-                    message.obj = text;
-                    message.what = 1;
-                    handler.sendMessage(message);
+            }
 
-                }
-            });
+            @Override
+            public void onCharacteristicChanged(byte[] data) {
+                //  Log.i("myblue", "数据通知");
+                String text = DataTransferUtils.format(data);
+                Message message = Message.obtain();
+                message.obj = text;
+                message.what = 1;
+                handler.sendMessage(message);
+
+            }
+        });
     }
 
     long temptime;
@@ -449,6 +495,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         ShareUitls.putString(this, "MainActivity", "");//用来记录当前界面是否存在
         unregisterReceiver(main_listCountReceiver);//解除广播 收到通知后台推送的新小新 然后首页铃铛+  1   的 广播
         if (myBuleWatchManager != null) {
@@ -458,4 +505,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             myBuleSerachManager.endSearch();//停止搜索
         }
     }
+
+
 }
