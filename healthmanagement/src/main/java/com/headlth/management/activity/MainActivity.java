@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // mayRequestLocation();
         x.view().inject(this);
         Activity = this;
         UpadteApp.updateAPP(Activity, true);
