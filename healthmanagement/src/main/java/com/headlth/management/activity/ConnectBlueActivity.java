@@ -353,11 +353,11 @@ public class ConnectBlueActivity extends BaseActivity {
                     case "weather_synchronization":
                         show += "天气同步失败...\n";
                         activity_connectblue_remind.setText(show);
-                        sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature));
+                        sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature,0));
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
                         break;
-                    //气温
-                    case "temperaturee_synchronization":
+                    //气温temperature_synchronization
+                    case "temperature_synchronization":
                         show += "气温同步失败...\n";
                         activity_connectblue_remind.setText(show);
                         snycData("samplingparameter_synchronization");
@@ -541,7 +541,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 } else {
                     if (text.substring(4, 6).equals("00")) {
                         show += "姓名同步成功...\n";
-                        sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(0).WeatherDetails));
+                        sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(0).WeatherDetails,0));
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("weather_synchronization");
                     } else {
                         show += "姓名同步失败...\n";
@@ -556,7 +556,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 ++synchronizationWeatherCount;
                 if (synchronizationWeatherCount < WeatherTemperatureSize) {
                     MyToash.Log(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails);
-                    sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails));
+                    sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails,synchronizationWeatherCount));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("weather_synchronization");
                 } else {
                     if (text.substring(4, 6).equals("00")) {
@@ -564,7 +564,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     } else {
                         show += "天气同步失败...\n";
                     }
-                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature));
+                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature,0));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
                     //  snycData("temperaturee_synchronization");
 
@@ -574,7 +574,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 ++synchronizationTemperatureCount;
                 if (synchronizationTemperatureCount < WeatherTemperatureSize) {
                     //   MyToash.Log(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature);
-                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature));
+                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature,synchronizationTemperatureCount));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
 
                 } else {

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.headlth.management.R;
 import com.headlth.management.entity.anlyseCallBack;
+import com.headlth.management.utils.StringForTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,122 +139,9 @@ public class AnalizeClFragment extends BaseFragment {
 
         if (anlyse != null) {
             if (anlyse.getStatus() != 0) {
-                clzhouyi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-
-
-                            int[] location55 = new int[2];
-                            clzhouyi.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(0).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-
-
-                        }
-
-                    }
-                });
-                clzhouer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhouer.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(1).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-
-                    }
-                });
-                clzhousan.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhousan.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(2).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-
-                    }
-                });
-                clzhousi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhousi.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(3).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-
-                    }
-                });
-                clzhouwu.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhouwu.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(4).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-
-                    }
-                });
-                clzhouliu.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhouliu.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(5).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-                    }
-                });
-                clzhouri.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (anlyse != null) {
-                            int[] location55 = new int[2];
-                            clzhouri.getLocationOnScreen(location55);
-                            Message mssg = h.obtainMessage();
-                            mssg.what = 50;
-                            mssg.obj = anlyse.getData().getDetail().get(6).getCalory();
-                            mssg.arg1 = location55[0];
-                            mssg.arg2 = location55[1];
-                            h.sendMessage(mssg);
-                        }
-                    }
-                });
-
-
+                for (int ShowPossition=0; ShowPossition < 7; ShowPossition++) {
+                    setOnClickListener(ShowPossition);
+                }
                 totalCal = "" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getTotalCal()));
                 TotalCal.setText(totalCal);
                 avgTal = "" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgCal()));
@@ -283,17 +171,36 @@ public class AnalizeClFragment extends BaseFragment {
     }
 
 
+    private void setOnClickListener(final int ShowPossition){
+        final Button show = bts.get(ShowPossition);
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] location55 = new int[2];
+                show.getLocationOnScreen(location55);
+                showdraw(anlyse.getData().getDetail().get(ShowPossition).getCalory(),location55[0],location55[1]);
+            }
+        });
+    }
+
+    private void showdraw(String EffectTime,int x,int y) {
+        if (d != null) {
+            relativeLayout.removeView(d);
+            d = null;
+        }
+        d = new draw(getContext(), EffectTime, x, (y - daohangHigh));
+        relativeLayout.addView(d);
+
+    }
     public class draw extends View {
         int x = 0;
         int y = 0;
         String data = "";
 
-        public draw(Context context, Object data, int x, int y) {
+        public draw(Context context, String data, int x, int y) {
             super(context);
             setWillNotDraw(false);
-            Log.e("0000", x + "开始画了---1111" + y + "开始画了");
-
-            this.data = (String) data;
+            this.data =data;
             this.x = x;
             this.y = y;
         }
@@ -376,14 +283,7 @@ public class AnalizeClFragment extends BaseFragment {
                     h.sendEmptyMessageDelayed(1, 1);
                 }
             }
-            if (msg.what == 50) {
-                if (d != null) {
-                    relativeLayout.removeView(d);
-                }
-                d = new draw(getContext(), msg.obj, msg.arg1, (msg.arg2 - daohangHigh));
-                relativeLayout.addView(d);
 
-            }
         }
     };
 

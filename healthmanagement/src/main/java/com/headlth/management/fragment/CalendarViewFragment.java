@@ -183,7 +183,7 @@ public class CalendarViewFragment extends BaseFragment {
         );
     }
     public String getdate(Calendar calendar) {
-        SimpleDateFormat dformat = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat dformat = new SimpleDateFormat("yyyy/MM");
         Date dat = calendar.getTime();
         return dformat.format(dat);
     }

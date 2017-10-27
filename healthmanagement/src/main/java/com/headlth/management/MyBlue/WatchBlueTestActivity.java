@@ -34,6 +34,7 @@ import org.xutils.x;
 
 import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -233,13 +234,13 @@ public class WatchBlueTestActivity extends Activity {
             case R.id.weather_synchronization://天气 0x01
                 flag = true;
                 instructType = "weather_synchronization";
-                sendToBule(snycDataWeathere("多云"), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                sendToBule(snycDataWeathere("多云",0), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
                 break;
             case R.id.temperaturee_synchronization://气温 0x01
                 flag = true;
                 instructType = "temperaturee_synchronization";
                 byte[] temperaturee = {10, 30, -10};
-                sendToBule(snycDataTemperaturee(""), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                sendToBule(snycDataTemperaturee("",0), WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
 
                 break;
             case R.id.sportparameter_synchronization://运动参数 0x01
@@ -610,8 +611,14 @@ public class WatchBlueTestActivity extends Activity {
         bytes[19] = sum;
         return bytes;
     }
-
-    public static byte[] snycDataWeathere(String Weathere) {
+/*
+10-27 13:41:53.739 8672-8672/com.headlth.management I/snycDataWeathere111: 029c13  f7963596e8960000000000000000
+10-27 13:41:53.831 8672-8672/com.headlth.management I/snycDataWeathere111: 029c14  1a59914e00000000000000000000
+10-27 13:41:54.716 8672-8672/com.headlth.management I/snycDataWeathere111: 029c15  2759ce9800000000000000000000
+10-27 13:41:54.807 8672-8672/com.headlth.management I/snycDataWeathere222: 029c13  1C1C16
+*
+* */
+    public static byte[] snycDataWeathere(String Weathere,int time) {
         byte[] bytes = new byte[20];
         for (int i = 0; i < 20; i++) {//初始化全部为0
             bytes[i] = 0;
@@ -619,10 +626,12 @@ public class WatchBlueTestActivity extends Activity {
         StringBuffer strFirst = new StringBuffer();
         strFirst.append("0e");
         strFirst.append(Integer.toHexString(20));
-        Date d = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, time);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(d);
-        Log.i("snycDataWeathere111", date);
+        String date = sdf.format(calendar.getTime());
+       // Log.i("snycDataWeathere111", date);
 
         String tempdate = Integer.toHexString(Integer.parseInt(date.substring(2, 8)));
         switch (tempdate.length()) {
@@ -647,7 +656,7 @@ public class WatchBlueTestActivity extends Activity {
         strFirst.append(tempdate);
 
         strFirst.append(Weathere);
-        Log.i("snycDataWeathere111", tempdate+"  "+Weathere);
+        Log.i("snycDataWeathere111", time+"  "+tempdate+"  "+date+"  "+Weathere);
         byte[] hexStr2ByteArray = DataTransferUtils.hexStr2ByteArray(strFirst.toString());
         byte sum = 0;
         int size=19 > hexStr2ByteArray.length ? hexStr2ByteArray.length : 19;
@@ -659,7 +668,7 @@ public class WatchBlueTestActivity extends Activity {
         return bytes;
     }
 
-    public static byte[] snycDataTemperaturee(String temperaturee) {
+    public static byte[] snycDataTemperaturee(String temperaturee,int time) {
         byte[] bytes = new byte[9];
         for (int i = 0; i < 9; i++) {//初始化全部为0
             bytes[i] = 0;
@@ -667,9 +676,11 @@ public class WatchBlueTestActivity extends Activity {
         StringBuffer strFirst = new StringBuffer();
         strFirst.append("0f");
         strFirst.append("09");
-        Date d = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, time);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(d);//Integer.parseInt(date.substring(2, 8))
+        String date = sdf.format(calendar.getTime());
         String tempdate = Integer.toHexString(Integer.parseInt(date.substring(2, 8)));
         switch (tempdate.length()) {
             case 1:
@@ -693,9 +704,11 @@ public class WatchBlueTestActivity extends Activity {
         // String tempdate2 = Integer.toHexString(991231);
         strFirst.append(tempdate);
         strFirst.append(temperaturee);
+        Log.i("snycDataWeathere222", time+"  "+tempdate+"  "+date+"  "+temperaturee);
         byte[] hexStr2ByteArray = DataTransferUtils.hexStr2ByteArray(strFirst.toString());
         byte sum = 0;
-        for (int i = 0; i < (8 > hexStr2ByteArray.length ? hexStr2ByteArray.length : 8); i++) {
+        int temp=(8 > hexStr2ByteArray.length ? hexStr2ByteArray.length : 8);
+        for (int i = 0; i < temp; i++) {
             bytes[i] = hexStr2ByteArray[i];
             sum += bytes[i];
         }

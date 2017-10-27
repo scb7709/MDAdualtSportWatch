@@ -824,6 +824,9 @@ public class MaidongFragment extends BaseFragment {
     }
 
     private static void initDialog(final Activity activity) {
+        if(waitDialog!=null){
+            waitDialog.dismissDialog();
+        }
         waitDialog = null;
         waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity);
         waitDialog.setCancleable(true);
@@ -841,6 +844,7 @@ public class MaidongFragment extends BaseFragment {
                     MyToash.Log(response);
                     final TemperatureeAndWeathere temperatureeAndWeathere = new Gson().fromJson(response, TemperatureeAndWeathere.class);
                     if (temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
+
                         UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostParameterRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
                             @Override
                             public void success(String response) {
