@@ -147,6 +147,7 @@ Activity activity;
                     @Override
                     public void onClick(View v) {
                         waitDialog.showDailog();
+                        ShareUitls.putString(activity, "todayvideo", "");
                         FileViewer.deleteFolderFile(SDPATH + "/maidong/maidongvideo", true, handler);
                     }
                 });

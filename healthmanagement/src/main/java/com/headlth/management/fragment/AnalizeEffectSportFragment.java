@@ -7,11 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +20,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.headlth.management.R;
 import com.headlth.management.entity.anlyseCallBack;
-import com.headlth.management.entity.sevenDataTime;
-import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.StringForTime;
 
@@ -117,11 +112,9 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     int y;
     int bootom;
     int MaxHight;
-
     int top;
     int daohangHigh;
     int MaxTime = 0;
-
     public Handler h = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -129,7 +122,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                 if (backd.getWidth() != 0 && backd.getHeight() != 0 && relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0 && botomLin.getWidth() != 0 && botomLin.getHeight() != 0) {
                     FrameLayout.LayoutParams youxiaolinearParams = (FrameLayout.LayoutParams) youxiao.getLayoutParams();
                     // 取控件aaa当前的布局参数
-                    youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;// 当控件的高强制设成365象素
+                    youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;//
                     youxiao.setLayoutParams(youxiaolinearParams);
 
                     int[] location666 = new int[2];
@@ -146,13 +139,15 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                     MaxHight = (botomLin.getTop() - zhu.getTop());
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
                         FrameLayout.LayoutParams linearParamsall = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        linearParamsall.height = MaxHight * (target) / (MaxTime); //
-                        btalls.get(i).setLayoutParams(linearParamsall);
-                        FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        // 取控件aaa当前的布局参数
-                        linearParams.height = MaxHight * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())) / (MaxTime); //
-                        btalls.get(i).setLayoutParams(linearParams);
-                        ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                        if(MaxTime!=0){
+                            linearParamsall.height = MaxHight * (target) / (MaxTime); //
+                            btalls.get(i).setLayoutParams(linearParamsall);
+                            FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
+                            // 取控件aaa当前的布局参数
+                            linearParams.height = MaxHight * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())) / (MaxTime); //
+                            btalls.get(i).setLayoutParams(linearParams);
+                            ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                        }
                     }
                 }
             }

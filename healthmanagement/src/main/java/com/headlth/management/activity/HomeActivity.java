@@ -176,7 +176,8 @@ public class HomeActivity extends Activity {
         ShareUitls.putString(activity, "todaydata", "{}");//
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         ShareUitls.putString(activity, "isConnectActivity", "");
-        ShareUitls.putString(HomeActivity.this, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
+        ShareUitls.putString(activity, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
+        ShareUitls.putString(activity, "todayvideo", "");
         // ShareUitls.putString(getApplicationContext(), "TODAY", format.format(new Date()));//保存启动APP的时间 确保每天都重新登录过
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.onAppStart();
