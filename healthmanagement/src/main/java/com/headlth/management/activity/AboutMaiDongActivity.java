@@ -67,7 +67,6 @@ Activity activity;
         x.view().inject(this);
         SDPATH = Environment.getExternalStorageDirectory().getAbsolutePath();
         initialize();
-
     }
 
     private void initialize() {
@@ -200,8 +199,6 @@ Activity activity;
                 waitDialog.dismissDialog();
                 bottomMenuDialog.dismiss();
             }
-
-
         }
     };
 }
