@@ -201,7 +201,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     private int tenvibratro;
     private MyBulePolorManager myBuleConnectManager;
     int LoseConnectcount;//持续10秒收不到最新心率  心率为-- (失去了连接)
-    boolean LoseConnectSetValue;
+   // boolean LoseConnectSetValue;
     private BroadcastReceiver ServiceToActivityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -236,7 +236,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void setValue() {
-        LoseConnectSetValue = false;
+     //   LoseConnectSetValue = false;
         LoseConnectcount = 0;
         mBmp.setText(value + "");
         if (con_state == 1) {
@@ -620,8 +620,8 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     int fineMinute = 0;
 
     private boolean setData_Update() {
-        if (LoseConnectcount > 10) {//超过十秒了没收到心率带返回的心率
-            if (LoseConnectcount == 11) {//40秒内没有收到心率重启连接
+        if (LoseConnectcount > 3) {//超过十秒了没收到心率带返回的心率
+            if (LoseConnectcount == 4) {//40秒内没有收到心率重启连接
                 value = 0;
                 mBmp.setText("--");
             }

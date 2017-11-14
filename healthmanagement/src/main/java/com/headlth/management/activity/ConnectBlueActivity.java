@@ -167,6 +167,8 @@ public class ConnectBlueActivity extends BaseActivity {
     }
 
     private void connectBule() {
+
+
         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("connectBule", 60000);
         myBuleWatchManager = MyBuleWatchManager.getInstance(ConnectBlueActivity.this, MAC, new MyBuleWatchManager.OnCharacteristicListener() {
             @Override
@@ -291,6 +293,8 @@ public class ConnectBlueActivity extends BaseActivity {
         }
     }
 
+    int connnectcount;//重连次数
+
     private void myWatchBlueHandler() {
         myWatchBlueHandler = MyWatchBlueHandler.getInstance(new MyWatchBlueHandler.MyWatchBlueHandlerListener() {
             @Override
@@ -317,11 +321,25 @@ public class ConnectBlueActivity extends BaseActivity {
                         break;
                     //个人信息
                     case "GetWatchSportState":
-                        waitDialog.setMessage("正在查询设备数据");
-                        //查询设备是否有未上传的数据（单次运动数据）
-                        byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
-                        sendToBule(bytes);
-                        myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                        if (connnectcount < 3) {//重连
+                            myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
+                            connnectcount++;
+                            if (myBuleWatchManager != null) {
+                                myBuleWatchManager.endConnect();
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            connectBule();
+                        } else {
+                            waitDialog.setMessage("正在查询设备数据");
+                            //查询设备是否有未上传的数据（单次运动数据）
+                            byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                            sendToBule(bytes);
+                            myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                        }
                         break;
 
                     case "Single_motion_results":
@@ -353,7 +371,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     case "weather_synchronization":
                         show += "天气同步失败...\n";
                         activity_connectblue_remind.setText(show);
-                        sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature,0));
+                        sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature, 0));
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
                         break;
                     //气温temperature_synchronization
@@ -424,7 +442,7 @@ public class ConnectBlueActivity extends BaseActivity {
 
         switch (head) {
             case "13"://单次运动结果查询
-                if (text.substring(0,6).equals("130400")) {//
+                if (text.substring(0, 6).equals("130400")) {//
                     waitDialog.setMessage("正在查询设备数据");
                     //查询设备是否有未上传的数据（单次运动数据）
                     byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
@@ -541,7 +559,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 } else {
                     if (text.substring(4, 6).equals("00")) {
                         show += "姓名同步成功...\n";
-                        sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(0).WeatherDetails,0));
+                        sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(0).WeatherDetails, 0));
                         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("weather_synchronization");
                     } else {
                         show += "姓名同步失败...\n";
@@ -556,7 +574,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 ++synchronizationWeatherCount;
                 if (synchronizationWeatherCount < WeatherTemperatureSize) {
                     MyToash.Log(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails);
-                    sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails,synchronizationWeatherCount));
+                    sendToBule(WatchBlueTestActivity.snycDataWeathere(temperatureeAndWeathere.Data.get(synchronizationWeatherCount).WeatherDetails, synchronizationWeatherCount));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("weather_synchronization");
                 } else {
                     if (text.substring(4, 6).equals("00")) {
@@ -564,7 +582,7 @@ public class ConnectBlueActivity extends BaseActivity {
                     } else {
                         show += "天气同步失败...\n";
                     }
-                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature,0));
+                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(0).Temperature, 0));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
                     //  snycData("temperaturee_synchronization");
 
@@ -574,7 +592,7 @@ public class ConnectBlueActivity extends BaseActivity {
                 ++synchronizationTemperatureCount;
                 if (synchronizationTemperatureCount < WeatherTemperatureSize) {
                     //   MyToash.Log(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature);
-                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature,synchronizationTemperatureCount));
+                    sendToBule(WatchBlueTestActivity.snycDataTemperaturee(temperatureeAndWeathere.Data.get(synchronizationTemperatureCount).Temperature, synchronizationTemperatureCount));
                     myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("temperature_synchronization");
 
                 } else {
@@ -627,7 +645,7 @@ public class ConnectBlueActivity extends BaseActivity {
         MyToash.Toash(activity, message);
         waitDialog.dismissDialog();
         if (message.equals("同步失败(腕表正处于运动模式中)")) {
-          //  MyToash.Log("同步失败(腕表正处于运动模式中)");
+            //  MyToash.Log("同步失败(腕表正处于运动模式中)");
             ShareUitls.putString(ConnectBlueActivity.this, "isConnectActivity", "SPORTING");
         } else {
             if (myBuleWatchManager != null) {
@@ -635,7 +653,7 @@ public class ConnectBlueActivity extends BaseActivity {
             }
 
         }
-       // startActivity(new Intent(activity, MainActivity.class));
+        // startActivity(new Intent(activity, MainActivity.class));
         finish();
     }
 

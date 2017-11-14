@@ -827,6 +827,7 @@ public class WatchBlueTestActivity extends Activity {
         for (int i = 0; i < WatchDuration.length; i++) {
             bytes[i + 2] = WatchDuration[i];
         }
+        MyToash.Log(userInformation.getUBound()+"     wwwwwwwwww "+userInformation.getLBound());
         bytes[6] = (byte)(Integer.parseInt( userInformation.getUBound())); //hexStr2ByteArray[0];
         bytes[7] = (byte) (Integer.parseInt( userInformation.getLBound()));//hexStr2ByteArray[1];
 

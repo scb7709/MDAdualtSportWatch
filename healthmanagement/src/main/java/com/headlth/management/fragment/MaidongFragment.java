@@ -597,7 +597,7 @@ public class MaidongFragment extends BaseFragment {
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
                 ShareUitls.putString(getActivity(), "UBound", UserIndexList.UBound + "");
                 String LBound = "50";
-                // String LBound=UserIndexList.LBound ;
+                //   String LBound=UserIndexList.LBound ;
                 ShareUitls.putString(getActivity(), "LBound", LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 

@@ -144,7 +144,19 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 bytesOriginal_data = WatchBlueTestActivity.snycDataOriginal_data(Starttime);
             }
         }
+
+
+        initsuitLines();
         connectBule();//连接蓝牙
+    }
+    private void initsuitLines() {
+        suitLines.setLineForm(true);
+        int[] colors = new int[2];
+        suitLines.anim();
+        colors[0] = Color.parseColor("#ff4763");
+        colors[1] = Color.parseColor("#b51225");
+        suitLines.setDefaultOneLineColor(colors);
+        suitLines.setLineType(SuitLines.SEGMENT);
     }
 
 
@@ -241,13 +253,6 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 MyToash.Log("画心率图");
                 if (lines != null && lines.size() > 0) {
                     MyToash.Log("画心率图"+  lines.size());
-                    suitLines.setLineForm(true);
-                    int[] colors = new int[2];
-                    suitLines.anim();
-                    colors[0] = Color.parseColor("#ff4763");
-                    colors[1] = Color.parseColor("#b51225");
-                    suitLines.setDefaultOneLineColor(colors);
-                    suitLines.setLineType(SuitLines.SEGMENT);
                     suitLines.feedWithAnim(lines);
                 }
             }
@@ -399,7 +404,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
                                 Original_data = Original_data.substring(0, Original_data.length() - 1);//去掉最后一位_
                             }
 
-                            MyToash.Log(Starttime + "   画心率图 " + startTimeList.get(startTimeListsize - 1));
+                           /// MyToash.Log(Starttime + "   画心率图 " + startTimeList.get(startTimeListsize - 1));
                             //if (Starttime == startTimeList.get(startTimeListsize - 1)) {//最近一次单次运动时间==最近一次原始时间  有可能最近一次单次运动采集不到原始数据
                             setHeartInage(Original_data);//画最近的心率图
                             //  }
@@ -485,22 +490,25 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 super.run();
 
                 String[] strings = text.split("_");
+                MyToash.Log("画心率图1"+  strings.length);
                 List<Integer> tempValue = new ArrayList<>();
                 for (String s : strings) {
                     int value = DataTransferUtils.getInt_10(s.substring(12, 14));
                     tempValue.add(value);
                 }
-
+                MyToash.Log("画心率图2"+  tempValue.size());
                 List<Integer> thirdData = new ArrayList<>();
-                int steep = strings.length / 30;
+                int size = strings.length;
+                int steep = size / 30;
 
                 if (steep <=1) {
                     thirdData = tempValue;
                 } else {
-                    for (int i = 0; i < 30; i = i + steep) {
+                    for (int i = 0; i < size; i = i + steep) {
                         thirdData.add(tempValue.get(i));
                     }
                 }
+                MyToash.Log("画心率图3"+  thirdData.size());
                 int tempsize=thirdData.size();
                 if(tempsize>0) {
                     lines = new ArrayList<>();
@@ -508,7 +516,13 @@ public class WatchSportSummaryActivity extends BaseActivity {
                         float vlaue = thirdData.get(i) - 43;
                         lines.add(new Unit(vlaue < 0 ? 1 : vlaue, ""));
                     }
-                    handler.sendEmptyMessage(101);
+
+                    if (lines != null && lines.size() > 0) {
+                        MyToash.Log("画心率图4"+  lines.size());
+                        suitLines.feedWithAnim(lines);
+                    }
+
+                    //handler.sendEmptyMessage(101);
                 }
             }
         }.start();
