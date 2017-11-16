@@ -80,22 +80,24 @@ public class MyDevicesActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart(); //MyBuleWatchSummaryManager.getInstance()
-        if (MyBuleWatchManager.IS_CONNECT) {
-            activity_mydevice_connect.setText("已连接");
-        } else {
-            activity_mydevice_connect.setText("已断开");
-        }
         MAC =ShareUitls.getUserInformationMac(MyDevicesActivity.this);
         Log.i("myblue", MAC);
         if (!MAC.equals("")) {
             activity_mydevice_bangding.setBackgroundResource(R.drawable.shape_mydevice_bangding);
             activity_mydevice_bangding.setText("解绑");
             activity_mydevice_bangding.setTextColor(Color.parseColor("#bfbfbf"));
+            if (MyBuleWatchManager.IS_CONNECT) {
+                activity_mydevice_connect.setText("已连接");
+            } else {
+                activity_mydevice_connect.setText("已断开");
+            }
         } else {
             activity_mydevice_bangding.setBackgroundResource(R.drawable.shape_mydevice_nobangding);
             activity_mydevice_bangding.setText("去绑定");
             activity_mydevice_bangding.setTextColor(Color.parseColor("#ffac04"));
+            activity_mydevice_connect.setText("未绑定");
         }
+
     }
 
     @Event(value = {R.id.view_publictitle_back, R.id.activity_mydevice_layout,R.id.activity_mydevice_MACNULL})
@@ -130,12 +132,22 @@ public class MyDevicesActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response, PublicDataClass.MdResponse mdResponse) {
                         if (mdResponse.Status.equals("1")) {
-                            waitDialog.setMessage("解绑成功");
                             ShareUitls.putUserInformationMac(MyDevicesActivity.this, "");
+                            if (myBuleWatchManager != null) {
+                                myBuleWatchManager.endConnect();
+                            }
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            waitDialog.setMessage("解绑成功");
                             activity_mydevice_bangding.setBackgroundResource(R.drawable.shape_mydevice_nobangding);
                             activity_mydevice_bangding.setText("去绑定");
+                            activity_mydevice_connect.setText("未绑定");
                             activity_mydevice_bangding.setTextColor(Color.parseColor("#ffac04"));
                             waitDialog.dismissDialog();
+
                         } else {
 
 

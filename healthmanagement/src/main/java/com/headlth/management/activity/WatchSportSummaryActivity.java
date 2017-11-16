@@ -490,13 +490,13 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 super.run();
 
                 String[] strings = text.split("_");
-                MyToash.Log("画心率图1"+  strings.length);
+               // MyToash.Log("画心率图1"+  strings.length);
                 List<Integer> tempValue = new ArrayList<>();
                 for (String s : strings) {
                     int value = DataTransferUtils.getInt_10(s.substring(12, 14));
                     tempValue.add(value);
                 }
-                MyToash.Log("画心率图2"+  tempValue.size());
+              //  MyToash.Log("画心率图2"+  tempValue.size());
                 List<Integer> thirdData = new ArrayList<>();
                 int size = strings.length;
                 int steep = size / 30;
@@ -508,7 +508,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
                         thirdData.add(tempValue.get(i));
                     }
                 }
-                MyToash.Log("画心率图3"+  thirdData.size());
+              //  MyToash.Log("画心率图3"+  thirdData.size());
                 int tempsize=thirdData.size();
                 if(tempsize>0) {
                     lines = new ArrayList<>();

@@ -150,11 +150,13 @@ public class ConnectBlueActivity extends BaseActivity {
                                     myBuleSerachManager = null;
                                 }
                                 waitDialog.setMessage("正在连接腕表设备");
-                                if (flag.equals("firstsport") || flag.equals("bangding")) {
-                                    checkMac(MAC);//开启绑定流程
+                                connectBule();
+                              /*  if (flag.equals("firstsport") || flag.equals("bangding")) {
+                                    connectBule();//开启蓝牙连接 成功之后发送绑定指令
+                                    //checkMac(MAC);//开启绑定流程
                                 } else {
                                     connectBule();    //开启连接同步数据
-                                }
+                                }*/
                                 return;
                             }
 
@@ -725,7 +727,7 @@ public class ConnectBlueActivity extends BaseActivity {
     public void updatekMac(final String MAC) {//上传更新User蓝牙地址
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostMACRequest&version=v2.9.6");
         params.addBodyParameter("MACAddress", MAC);
-        Log.i("myblue", ShareUitls.getString(ConnectBlueActivity.this, "UID", "0") + " " + ShareUitls.getString(ConnectBlueActivity.this, "ResultJWT", "0") + "  " + MAC);
+       // Log.i("myblue", ShareUitls.getString(ConnectBlueActivity.this, "UID", "0") + " " + ShareUitls.getString(ConnectBlueActivity.this, "ResultJWT", "0") + "  " + MAC);
         HttpUtils.getInstance(ConnectBlueActivity.this).sendRequestRequestParamsNew("", params, true, new HttpUtils.ResponseListenerNew() {
                     @Override
                     public void onResponse(String response, PublicDataClass.MdResponse mdResponse) {

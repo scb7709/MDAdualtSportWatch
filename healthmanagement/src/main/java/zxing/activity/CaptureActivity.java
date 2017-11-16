@@ -46,9 +46,14 @@ import com.google.zxing.Result;
 import com.headlth.management.R;
 import com.headlth.management.activity.ConnectBlueActivity;
 import com.headlth.management.entity.PostParameterRequest;
+import com.headlth.management.entity.PublicDataClass;
 import com.headlth.management.entity.TemperatureeAndWeathere;
 import com.headlth.management.myview.MyToash;
+import com.headlth.management.utils.Constant;
+import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.watchdatasqlite.UpLoadingWatchData;
+
+import org.xutils.http.RequestParams;
 
 import zxing.camera.CameraManager;
 import zxing.decode.DecodeThread;
@@ -95,7 +100,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private Camera m_Camera;
     private Camera.Parameters mParameters;
     private boolean IsOpen;
-    private String flag,MAC;
+    private String flag, MAC;
     private Vibrator vibrator;
     private TemperatureeAndWeathere temperatureeAndWeathere;
     private PostParameterRequest postParameterRequest;
@@ -255,27 +260,21 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     public void handleDecode(Result rawResult, Bundle bundle) {
         inactivityTimer.onActivity();
         beepManager.playBeepSoundAndVibrate();
-        MAC =rawResult.getText().toUpperCase() ;
-      //  MAC ="CF:09:6B:27:02:BB";
+        MAC = rawResult.getText().toUpperCase();
+        //  MAC ="CF:09:6B:27:02:BB";
       /*  bundle.putInt("width", mCropRect.width());
         bundle.putInt("height", mCropRect.height());
         bundle.putString("result", rawResult.getText());*/
         //  ConnectBlueActivitygfg
         //startActivity(new Intent(CaptureActivity.this, ResultActivity.class).putExtras(bundle));
-        MyToash.Log("CaptureActivityMAC"+  MAC);
-      //  Log.i("CaptureActivity", MAC);
+        MyToash.Log("CaptureActivityMAC" + MAC);
+        //  Log.i("CaptureActivity", MAC);
         String reg = "[0-9a-zA-Z]{2}:[0-9a-zA-Z]{2}:[0-9a-zA-Z]{2}:[0-9a-zA-Z]{2}:[0-9a-zA-Z]{2}:[0-9a-zA-Z]{2}";
         if (MAC.matches(reg)) {
-            if (postParameterRequest!=null) {
-                if(temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
-                    vibrator.vibrate(100);
-                    startActivity(new Intent(activity, ConnectBlueActivity.class).putExtra("MAC", MAC).putExtra("flag", flag).
-                            putExtra("temperatureeAndWeathere", temperatureeAndWeathere).
-                            putExtra("postParameterRequest", postParameterRequest)
-
-                    );
-                    finish();
-                }else {
+            if (postParameterRequest != null) {
+                if (temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
+                 checkMac();
+                } else {
                     getTemperatureeAndWeathere(true);
                 }
             } else {
@@ -408,12 +407,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                     postParameterRequest = new Gson().fromJson(response, PostParameterRequest.class);
                     if (flag && postParameterRequest != null) {
                         if (temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
-                            vibrator.vibrate(100);
-                            startActivity(new Intent(activity, ConnectBlueActivity.class).putExtra("MAC", MAC).putExtra("flag", flag).
-                                    putExtra("temperatureeAndWeathere", temperatureeAndWeathere).
-                                    putExtra("postParameterRequest", postParameterRequest)
-                            );
-                            finish();
+                            checkMac();
                         } else {
                             getTemperatureeAndWeathere(true);
                         }
@@ -431,6 +425,51 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         });
     }
 
+    private void startConnectBlue() {
+        vibrator.vibrate(100);
+        startActivity(new Intent(activity, ConnectBlueActivity.class).putExtra("MAC", MAC).putExtra("flag", flag).
+                putExtra("temperatureeAndWeathere", temperatureeAndWeathere).
+                putExtra("postParameterRequest", postParameterRequest)
+        );
+        finish();
+
+    }
+
+
+    public void checkMac() {//接口判断该蓝牙是否被绑定
+
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostCheckMACRequest&version=v2.9.6");
+        params.addBodyParameter("MACAddress", MAC);
+        HttpUtils.getInstance(activity).sendRequestRequestParamsNew("", params, false, new HttpUtils.ResponseListenerNew() {
+                    @Override
+                    public void onResponse(String response, PublicDataClass.MdResponse mdResponse) {
+                        MyToash.Log(response);
+                        if (mdResponse.Status.equals("3")) {
+                           startConnectBlue();
+                        } else {
+
+                            Toast.makeText(activity, "绑定失败(此腕表已经被其他用户绑定)", Toast.LENGTH_LONG).show();
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            finish();
+                        }
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(Throwable ex) {
+
+
+                    }
+                }
+
+        );
+
+
+    }
 
     private void getTemperatureeAndWeathere(final boolean flag) {
         UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostWeatherInfoRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
@@ -441,15 +480,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                     temperatureeAndWeathere = new Gson().fromJson(response, TemperatureeAndWeathere.class);
                     if (temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
                         if (flag) {
-                            vibrator.vibrate(100);
-                            startActivity(new Intent(activity, ConnectBlueActivity.class).putExtra("MAC", MAC).putExtra("flag", flag).
-                                    putExtra("temperatureeAndWeathere", temperatureeAndWeathere).
-                                    putExtra("postParameterRequest", postParameterRequest)
-                            );
-                            finish();
+                            checkMac();
+
                         }
 
-                    } else  if (flag) {
+                    } else if (flag) {
                         MyToash.ToashNoNet(activity);
                         finish();
                     }

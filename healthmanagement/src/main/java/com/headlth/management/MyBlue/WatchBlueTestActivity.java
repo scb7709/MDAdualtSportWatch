@@ -590,7 +590,11 @@ public class WatchBlueTestActivity extends Activity {
             if (isup) {//前八个数字
                 namee = DataTransferUtils.string2Unicode(name.substring(0, 8));
             } else {
-                namee = DataTransferUtils.string2Unicode(name.substring(8, name.length()));
+                if (name.length() > 16) {
+                    namee = DataTransferUtils.string2Unicode(name.substring(8, 16));
+                }else {
+                    namee = DataTransferUtils.string2Unicode(name.substring(8, name.length()));
+                }
             }
         } else {
             namee = DataTransferUtils.string2Unicode(name);
@@ -743,7 +747,13 @@ public class WatchBlueTestActivity extends Activity {
         }
         bytes[0] = 03;
         bytes[1] = 8;
-        bytes[2] = (byte) Integer.parseInt(userInformation.getHeight());
+        float tempheight;
+        try {
+            tempheight = Float.parseFloat(userInformation.getHeight());
+        }catch (Exception E){
+            tempheight = 175;
+        }
+        bytes[2] = (byte)((int)tempheight);
         String weightt[] = userInformation.getWeight().split("\\.");
         bytes[3] = (byte) Integer.parseInt(weightt[0]);
         if (weightt.length == 2) {
