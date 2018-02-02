@@ -1,1 +1,1 @@
-include ':healthmanagement', ':Pushlib', ':toprightmenu', ':heartimage'
+include ':healthmanagement', ':Pushlib', ':toprightmenu', ':heartimage', ':oss-android-sdk'

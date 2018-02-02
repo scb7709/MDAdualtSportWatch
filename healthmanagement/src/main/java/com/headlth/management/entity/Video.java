@@ -25,7 +25,6 @@ public class Video implements Serializable {
     private List<SubVideo> ActionList;
 
 
-
     public long getVideoSize() {
         return VideoSize;
     }
@@ -34,7 +33,7 @@ public class Video implements Serializable {
         VideoSize = videoSize;
     }
 
-    public static class SubVideo implements Serializable{
+    public static class SubVideo implements Serializable {
         private static final long serialVersionUID = 1010001233L;
         private String Num;//本地编号（数据库的主键ID）
         private String ID;//网络给的ID
@@ -49,6 +48,25 @@ public class Video implements Serializable {
         private String VerificationCodeLocal;//本地MD5
         private String localAddress;//本地视频路径
         private long Size;
+        private String FileName;
+        private String CreateTime;
+
+        public String getFileName() {
+            return FileName;
+        }
+
+        public void setFileName(String fileName) {
+            FileName = fileName;
+        }
+
+        public String getCreateTime() {
+            return CreateTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            CreateTime = createTime;
+        }
+
         public String getVerificationCodeLocal() {
             return VerificationCodeLocal;
         }
@@ -91,7 +109,6 @@ public class Video implements Serializable {
         public void setNum(String num) {
             Num = num;
         }
-
 
 
         public String getLocalAddress() {
@@ -195,6 +212,8 @@ public class Video implements Serializable {
         return Tip;
     }
 
+
+
     public void setTip(String tip) {
         Tip = tip;
     }
@@ -294,6 +313,7 @@ public class Video implements Serializable {
     public void setActionList(List<SubVideo> actionList) {
         ActionList = actionList;
     }
+
     public String getStage() {
         return Stage;
     }
@@ -301,6 +321,7 @@ public class Video implements Serializable {
     public void setStage(String stage) {
         Stage = stage;
     }
+
     @Override
     public String toString() {
         return "Video{" +

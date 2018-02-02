@@ -428,8 +428,8 @@ public class AccountManageActivity extends BaseActivity {
                     public void onResponse(String response) {
                         Log.i("adsfdsgdfg", response);
 
-                        if (MainActivity.Activity != null) {
-                            MainActivity.Activity.finish();
+                        if (MainActivity.activity != null) {
+                            MainActivity.activity.finish();
                         }
                         //清除所有文件数据
                         ShareUitls.cleanSharedPreference(AccountManageActivity.this);
@@ -446,8 +446,8 @@ public class AccountManageActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(Throwable ex) {
 
-                        if (MainActivity.Activity != null) {
-                            MainActivity.Activity.finish();
+                        if (MainActivity.activity != null) {
+                            MainActivity.activity.finish();
                         }
                         //清除所有文件数据
                         ShareUitls.cleanSharedPreference(AccountManageActivity.this);

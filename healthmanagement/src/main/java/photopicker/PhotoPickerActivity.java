@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.headlth.management.R;
 import com.headlth.management.activity.LookBigImageActivity;
+import com.headlth.management.clenderutil.WaitDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,7 +102,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(R.layout.activity_photopicker);
-
+        initDialog();
         initViews();
 
         // 照片属性
@@ -231,10 +232,10 @@ public class PhotoPickerActivity extends AppCompatActivity{
         int folderItemViewHeight =
                 // 图片高度
                 getResources().getDimensionPixelOffset(R.dimen.folder_cover_size) +
-                // Padding Top
-                getResources().getDimensionPixelOffset(R.dimen.folder_padding) +
-                // Padding Bottom
-                getResources().getDimensionPixelOffset(R.dimen.folder_padding);
+                        // Padding Top
+                        getResources().getDimensionPixelOffset(R.dimen.folder_padding) +
+                        // Padding Bottom
+                        getResources().getDimensionPixelOffset(R.dimen.folder_padding);
         int folderViewHeight = mFolderAdapter.getCount() * folderItemViewHeight;
 
         int screenHeigh = getResources().getDisplayMetrics().heightPixels;
@@ -582,12 +583,33 @@ public class PhotoPickerActivity extends AppCompatActivity{
 
     // 返回已选择的图片数据
     private void complete(){
-        Intent data = new Intent();
-        data.putStringArrayListExtra(EXTRA_RESULT, resultList);
-        setResult(RESULT_OK, data);
-        finish();
+        waitDialog.showDailog();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Intent data = new Intent();
+                data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+
     }
 
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        waitDialog.dismissDialog();
+    }
+
+    private static WaitDialog waitDialog;
+    private  void initDialog() {
+        waitDialog = new WaitDialog(PhotoPickerActivity.this);
+        waitDialog.setCancleable(false);
+        waitDialog.setMessage("请在处理,请稍等...");
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         captureManager.onSaveInstanceState(outState);

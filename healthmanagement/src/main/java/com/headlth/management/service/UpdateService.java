@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.headlth.management.R;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.VersonUtils;
 
 import org.xutils.HttpManager;
@@ -39,32 +40,41 @@ public class UpdateService extends Service {
     private RemoteViews views;
     public boolean DownLoading;
     private File file;
+    public static boolean DOWNLOADING;//zhengzai xiaz
+
 
     @Override
     public void onCreate() {
         Log.e("tag", "UpdateService onCreate()");
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        //  filePath = Environment.getExternalStorageDirectory()+"/AppUpdate/czhappy.apk";
-        File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/apk/" + new Date().getTime() + "Version");
-        if (!tempfile.exists()) {
-            tempfile.mkdirs();
+        if (!DOWNLOADING) {
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            //  filePath = Environment.getExternalStorageDirectory()+"/AppUpdate/czhappy.apk";
+            File tempfile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/apk/" + new Date().getTime() + "Version");
+            if (!tempfile.exists()) {
+                tempfile.mkdirs();
+            }
+            filePath = tempfile.getPath().toString();
+        } else {
+            MyToash.Toash(UpdateService.this, "新版本正在下载");
         }
-        filePath = tempfile.getPath().toString();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("tag", "UpdateService onStartCommand()");
-        if (intent == null) {
-            notifyUser(getString(R.string.update_download_failed), getString(R.string.update_download_failed), 0);
+        if (!DOWNLOADING) {
+            if (intent == null) {
+                notifyUser(getString(R.string.update_download_failed), getString(R.string.update_download_failed), 0);
 
-            stopSelf();
-            return 0;
+                stopSelf();
+                return 0;
+            }
+            apkUrl = intent.getStringExtra("apkUrl");
+            notifyUser(getString(R.string.update_download_start), getString(R.string.update_download_start), 0);
+            startDownload();
         }
-        apkUrl = intent.getStringExtra("apkUrl");
-        notifyUser(getString(R.string.update_download_start), getString(R.string.update_download_start), 0);
-        startDownload();
         return super.onStartCommand(intent, flags, startId);
+
     }
 
     private void startDownload() {
@@ -83,12 +93,14 @@ public class UpdateService extends Service {
 
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
+                DOWNLOADING = true;
                 int percent = (int) (current * 100 / total);
                 notifyUser(getString(R.string.update_download_progressing), getString(R.string.update_download_progressing), percent);
             }
 
             @Override
             public void onSuccess(File result) {
+                DOWNLOADING = false;
                 VersonUtils.installApk(result, getApplicationContext());// 安装apk
                 file = result;
                 //notifyUser(getString(R.string.update_download_finish), getString(R.string.update_download_finish), 100);
@@ -97,6 +109,7 @@ public class UpdateService extends Service {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                DOWNLOADING = false;
                 notifyUser(getString(R.string.update_download_failed), getString(R.string.update_download_failed), 0);
                 stopSelf();
 
@@ -142,6 +155,8 @@ public class UpdateService extends Service {
                 PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
         notification = builder.build();
         notificationManager.notify(0, notification);
+
+
 
 
     }

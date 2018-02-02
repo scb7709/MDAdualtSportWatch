@@ -54,6 +54,7 @@ public class PubLicDialog {
 
     public static void showNotDialog2(final Activity activity, String[] str, final PubLicDialogOnClickListener2 pubLicDialogOnClickListener) {
         if (dialog == null || !dialog.isShowing()) {
+
             dialog = null;
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(str[0]);
@@ -77,6 +78,12 @@ public class PubLicDialog {
             builder.setCancelable(false);
             dialog = builder.create();
             dialog.show();
+        }
+    }
+    public static void CancleshowNotDialog2(){
+        if (dialog == null ||dialog.isShowing()) {
+            dialog.dismiss();
+            dialog=null;
         }
     }
 }

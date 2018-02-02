@@ -155,8 +155,7 @@ public class LivingHabitActivity extends BaseActivity {
     private void userInformationHttp(final JSONArray tempDiseaseContent, final JSONArray tempHabitContent, final View view) {
         Log.i("userInformationAAAA", tempDiseaseContent + "   " + tempHabitContent);
         waitDialog.showDailog();
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
-
+        final RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
         params.addBodyParameter("UID", ShareUitls.getString(LivingHabitActivity.this, "UID", ""));
         params.addBodyParameter("ResultJWT", ShareUitls.getString(LivingHabitActivity.this, "ResultJWT", "0"));
         params.addBodyParameter("NickName", userInformation.getNickName());
@@ -167,14 +166,19 @@ public class LivingHabitActivity extends BaseActivity {
         params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
         params.addBodyParameter("Illness", tempDiseaseContent.toString());
         params.addBodyParameter("Badhabit", tempHabitContent.toString());
-
-
         if (userInformation.getFile() != null) {
-
+            String pictime = System.currentTimeMillis() + "";
+            Bimp.saveBitmap(userInformation.getFile(), pictime, new Bimp.OnSaveSuccessListener() {
+                @Override
+                public void onSuccess(String filepath) {
+                    params.addBodyParameter("File", new File(filepath), "image/png");
+                }
+            });
+      /*
             String pictime = System.currentTimeMillis() + "";
             ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(userInformation.getFile()), pictime, false, LivingHabitActivity.this);
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-            params.addBodyParameter("File", new File(path), "image/png");
+            params.addBodyParameter("File", new File(path), "image/png");*/
 
         }
         Log.i("userInformation", userInformation.toString());

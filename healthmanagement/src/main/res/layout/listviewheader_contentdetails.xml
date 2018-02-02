@@ -89,8 +89,8 @@
         android:id="@+id/contentdetails_Scrollgridview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="35dp"
         android:verticalSpacing="5dp"></com.headlth.management.myview.MyRecyclerViewGridView>
 
     <LinearLayout

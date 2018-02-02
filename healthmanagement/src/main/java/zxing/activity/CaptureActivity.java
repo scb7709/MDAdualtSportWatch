@@ -51,6 +51,7 @@ import com.headlth.management.entity.TemperatureeAndWeathere;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
+import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.watchdatasqlite.UpLoadingWatchData;
 
 import org.xutils.http.RequestParams;
@@ -448,7 +449,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                            startConnectBlue();
                         } else {
 
-                            Toast.makeText(activity, "绑定失败(此腕表已经被其他用户绑定)", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, "绑定失败(此腕表已经被用户绑定)", Toast.LENGTH_LONG).show();
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {
@@ -470,7 +471,34 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 
     }
+    public void updatekMac() {//上传更新User蓝牙地址
 
+        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostMACRequest&version=v2.9.6");
+        params.addBodyParameter("MACAddress", "");
+        HttpUtils.getInstance(activity).sendRequestRequestParamsNew("", params, true, new HttpUtils.ResponseListenerNew() {
+                    @Override
+                    public void onResponse(String response, PublicDataClass.MdResponse mdResponse) {
+
+                        MyToash.Log(response);
+                        if (mdResponse.Status.equals("1")) {
+
+                        } else {
+
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(Throwable ex) {
+
+                    }
+                }
+
+        );
+
+
+    }
     private void getTemperatureeAndWeathere(final boolean flag) {
         UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostWeatherInfoRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
             @Override

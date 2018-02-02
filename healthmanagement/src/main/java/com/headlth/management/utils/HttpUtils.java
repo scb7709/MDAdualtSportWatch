@@ -179,7 +179,7 @@ public class HttpUtils {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
                                 if (jsonObject.getString("ErrCode") != null && (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600"))) {
-
+                                    responseListener.onErrorResponse(null);
                                     //Toast.makeText(context, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
                                     if (jsonObject.getString("ErrCode").equals("601")) {
                                         Toast.makeText(context, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
@@ -205,6 +205,7 @@ public class HttpUtils {
 
 
                             } catch (JSONException e) {
+                                responseListener.onErrorResponse(null);
                                 e.printStackTrace();
                             }
 
@@ -225,6 +226,7 @@ public class HttpUtils {
                                 try {
                                     responseListener.onErrorResponse(ex);
                                 } catch (Exception E) {
+                                    responseListener.onErrorResponse(null);
                                 }
                             }
 

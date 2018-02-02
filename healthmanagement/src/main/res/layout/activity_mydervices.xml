@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/activity_mydevice_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="90dp"
 
         android:orientation="horizontal">
 
@@ -57,16 +57,40 @@
             android:layout_height="1dp"
             android:layout_weight="1"></View>
 
-        <Button
-            android:id="@+id/activity_mydevice_bangding"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginRight="15dp"
-            android:background="@drawable/shape_mydevice_nobangding"
-            android:clickable="false"
-            android:text="去绑定"
-            android:textColor="#ffac04" />
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"></View>
+
+            <Button
+                android:id="@+id/activity_mydevice_bangding"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:background="@drawable/shape_mydevice_nobangding"
+                android:text="去绑定"
+                android:textColor="#ffac04" />
+
+            <Button
+                android:id="@+id/activity_mydevice_cancerbangding"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/shape_mydevice_nobangding"
+                android:text="去解绑"
+                android:textColor="#bfbfbf" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"></View>
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -76,9 +100,10 @@
         android:background="@color/gray"></View>
 
     <Button
-        android:visibility="visible"
+
         android:id="@+id/activity_mydevice_MACNULL"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="清空账户蓝牙信息" />
+        android:text="清空账户蓝牙信息"
+        android:visibility="gone" />
 </LinearLayout>

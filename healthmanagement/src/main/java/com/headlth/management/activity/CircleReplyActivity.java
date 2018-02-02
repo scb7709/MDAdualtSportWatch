@@ -216,7 +216,7 @@ public class CircleReplyActivity extends BaseActivity {
 
 
         footer = LayoutInflater.from(this).inflate(R.layout.listview_footer_view, null);
-         Safa = (TextView) footer.findViewById(R.id.listview_footer_view_text);
+        Safa = (TextView) footer.findViewById(R.id.listview_footer_view_text);
         Safa.setText("暂无回复,快来抢沙发吧...");
         circlereply_maidongcircle_listview.addFooterView(footer, null, false);
         Safa.setOnClickListener(new View.OnClickListener() {
@@ -248,8 +248,8 @@ public class CircleReplyActivity extends BaseActivity {
     //获取回复：MdMobileService.ashx?do=GetShareReplyRequest。  UserID  ContentID  CommentID
     private void getReply() {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetShareReplyRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(this, "UID", "0"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", ShareUitls.getString(this, "UID", "0"));
         params.addBodyParameter("ContentID", comment.getContentID());
         params.addBodyParameter("CommentID", comment.getCommentID());
 
@@ -334,8 +334,8 @@ public class CircleReplyActivity extends BaseActivity {
 
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareCommentReplyRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(this, "UID", "0"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", ShareUitls.getString(this, "UID", "0"));
         params.addBodyParameter("ContentID", comment.getContentID());
         params.addBodyParameter("CommentID", comment.getCommentID());
         params.addBodyParameter("ReplyText", ReplyText);
@@ -381,8 +381,8 @@ public class CircleReplyActivity extends BaseActivity {
 
         requestnetworking=true;
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareAttitudeRequest");
-        params.addBodyParameter("ResultJWT",ShareUitls.getString(this, "ResultJWT", "0"));
-        params.addBodyParameter("UID",ShareUitls.getString(this, "UID", "0"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+        params.addBodyParameter("UID", ShareUitls.getString(this, "UID", "0"));
         params.addBodyParameter("ContentID", comment.getContentID());
         params.addBodyParameter("CommentID", comment.getCommentID());
         params.addBodyParameter("ReplyID", "0");

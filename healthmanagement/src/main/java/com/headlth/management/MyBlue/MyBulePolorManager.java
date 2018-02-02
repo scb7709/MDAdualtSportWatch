@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +35,8 @@ public class MyBulePolorManager implements Serializable {
     public interface OnCharacteristicListener {
         void onCharacteristicChanged(BluetoothGattCharacteristic characteristic);
     }
-    private static OnCharacteristicListener CharacteristicListener ;
+
+    private static OnCharacteristicListener CharacteristicListener;
     private static MyBulePolorManager myBuleConnectManager;
     private Activity activity;
     private BluetoothAdapter bluetoothAdapter;
@@ -47,9 +47,10 @@ public class MyBulePolorManager implements Serializable {
     private static int CONNECT_TIME;//两次重新连接间的最小时间间隔
 
     public static boolean OVER;//结束
+    public static boolean FIRDT_CONNECT = true;//第一次连接
     private Timer timer;
     private TimerTask timerTask;
-
+    private MyBuleSearchManager myBuleSerachManager;
 
     public MyBulePolorManager(Activity activity, String ADRS, OnCharacteristicListener mCharacteristicListener) {
         this.activity = activity;
@@ -59,31 +60,64 @@ public class MyBulePolorManager implements Serializable {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         boolean flag = bluetoothAdapter.isEnabled();
         timer = new Timer();
+        activity.registerReceiver(receiver, MyBuleSearchManager.registBroadcast());
         if (flag) {
             first_connect();//开启首次连接
         } else {
-            activity.registerReceiver(receiver,MyBuleSearchManager. registBroadcast());
             MyBuleSearchManager.openBluetooth(activity);
         }
 
 
-
     }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.i("", "蓝牙广播回调 action=" + action);
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {//关闭系统蓝牙
-                Log.i("", "系统蓝牙断开！！");
-             //   boolean isEnable = enable();
-             //   if (!isEnable)
-                //    openBluetooth(activity);
+                IS_CONNECT = false;
+                MyBuleSearchManager.openBluetooth(activity);
             } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
-                first_connect();//开启首次连接
+                myBuleSerachManager = MyBuleSearchManager.getInstance(activity, 3000, new MyBuleSearchManager.LeScanCallbackListener() {
+                    @Override
+                    public void getBluetoothDeviceList(List<MyBuleSearchManager.BluetoothDeviceEntity> bluetoothDevices) {
+                    }
+
+                    @Override
+                    public void getBluetoothDevice(MyBuleSearchManager.BluetoothDeviceEntity bluetoothDevice) {
+                        if (bluetoothDevice.rssi == 1111) {//搜索八秒结束
+                            // MyToash.Toash(activity,"收不到");
+                            myBuleSerachManager.StartScan();
+                        } else {
+                            if (bluetoothDevice.device != null) {
+                                if (bluetoothDevice.device.getAddress() != null && bluetoothDevice.device.getName() != null) {
+                                    if (bluetoothDevice.device.getAddress().equals(ADRS)) {
+                                        myBuleSerachManager.endSearch();
+                                        try {
+                                            Thread.sleep(2000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (FIRDT_CONNECT) {
+                                            first_connect();//开启首次连接
+                                        } else {
+
+                                            nofirst_connect();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                });
+
+
             }
         }
     };
+
     public static MyBulePolorManager getInstance(Activity activity, String ADRS, OnCharacteristicListener mCharacteristicListener) {
         if (myBuleConnectManager == null) {
             synchronized (MyBulePolorManager.class) {
@@ -91,8 +125,8 @@ public class MyBulePolorManager implements Serializable {
                     myBuleConnectManager = new MyBulePolorManager(activity, ADRS, mCharacteristicListener);
                 }
             }
-        }else {
-            if(mCharacteristicListener!=null) {
+        } else {
+            if (mCharacteristicListener != null) {
                 if (CharacteristicListener != null) {
                     CharacteristicListener = null;
                 }
@@ -126,6 +160,7 @@ public class MyBulePolorManager implements Serializable {
      * @return true 已连接
      */
     public boolean first_connect() {
+        FIRDT_CONNECT = false;
         // Log.i("myblue", "first_connect开始连接+" + ADRS);
         if (ADRS == null) {
             return false;
@@ -147,19 +182,22 @@ public class MyBulePolorManager implements Serializable {
     }
 
     public void nofirst_connect() {
-        if (mBluetoothGatt != null && mBluetoothGatt.connect()) {
-            Log.i("myblue", "拦截" + mBluetoothGatt.connect());
-            return;
+        if (bluetoothAdapter.isEnabled()) {
+
+            if (mBluetoothGatt != null && mBluetoothGatt.connect()) {
+                Log.i("myblue", "拦截" + mBluetoothGatt.connect());
+                return;
+            }
+            try {
+                if (mBluetoothGatt != null) {
+                    mBluetoothGatt.disconnect();
+                    // mBluetoothGatt.close();
+                }
+            } catch (Exception e) {
+
+            }
+            first_connect();
         }
-        // Log.i("myblue", "nofirst_connect开始连接+" + ADRS);
-        if (ADRS == null) {
-            return;
-        }
-        if (mBluetoothGatt != null) {
-            mBluetoothGatt.disconnect();
-            mBluetoothGatt.close();
-        }
-        first_connect();
     }
 
     Handler handler = new Handler() {
@@ -184,7 +222,7 @@ public class MyBulePolorManager implements Serializable {
                     break;
                 case 1://重启连接
                     Log.i("myblue", "重启连接");
-                    if (!IS_CONNECT) {
+                    if (!IS_CONNECT && bluetoothAdapter.isEnabled()) {
                         nofirst_connect();
                     }
                     break;
@@ -200,6 +238,15 @@ public class MyBulePolorManager implements Serializable {
                 case 3://设备可用
 
                     break;
+
+                case 5://
+                    if (!bluetoothAdapter.enable()) {
+                        // MyBuleSearchManager.openBluetooth(activity);
+                    } else {
+                        first_connect();//开启首次连接
+                    }
+                    break;
+
             }
         }
     };
@@ -267,7 +314,7 @@ public class MyBulePolorManager implements Serializable {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        //    Log.i("myblue", "数据通知11");
+            //    Log.i("myblue", "数据通知11");
             if (CharacteristicListener != null) {
                 CharacteristicListener.onCharacteristicChanged(characteristic);
             }
@@ -300,10 +347,20 @@ public class MyBulePolorManager implements Serializable {
             timerTask = null;
         }
         try {
+            activity.unregisterReceiver(receiver);
+        } catch (Exception e) {
+        }
+        try {
             if (mBluetoothGatt != null) {
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt.close();
                 mBluetoothGatt = null;
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (myBuleSerachManager != null) {
+                myBuleSerachManager.endSearch();
             }
         } catch (Exception e) {
         }

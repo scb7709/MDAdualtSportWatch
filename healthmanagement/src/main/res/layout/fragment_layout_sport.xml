@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:text="总有效时长"
+            android:textColor="#3C3C3C"
+            android:textSize="13dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/icon_time" />
+
+            <TextView
+                android:id="@+id/AvgEffectTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="00&apos;00&quot;"
+                android:textColor="#000000"
+                android:textSize="28dp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/backd"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:background="#c7c7c7">
+
+            <TextView
+                android:id="@+id/youxiao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top"
+                android:background="#ffad00" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:text="周目标:"
+                android:textColor="#3c3c3c"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/AvgTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+
+                android:text="0分钟"
+                android:textColor="#3c3c3c"
+                android:textSize="13dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"></View>
+
+            <TextView
+                android:id="@+id/Percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="0.0%"
+                android:textColor="#3c3c3c"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/TotalDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="达标天数：0天"
+                    android:textColor="#666666"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/textView40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:text="过去7天"
+                    android:textColor="#c7c7c7"
+                    android:textSize="13dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/MaxTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="0min"
+                android:textColor="#c7c7c7"
+                android:textSize="13dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c7c7c7" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"></View>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/midleTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="0"
+                            android:textColor="#c7c7c7"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#c7c7c7" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="0"
+                            android:textColor="#c7c7c7"
+                            android:textSize="13dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#c7c7c7" />
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/zhu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou1"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhouyiall"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou2"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhouerall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou3"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show3"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhousanall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou4"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show4"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhousiall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou5"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show5"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhouwuall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou6"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/show6"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhouliuall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:id="@+id/fragment_layout_sport_zhou7"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:id="@+id/show7"
+                            android:clickable="false"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizegray" />
+                        <Button
+                            android:clickable="false"
+                            android:id="@+id/zhouriall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/analizeeffect" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/t1"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t2"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t3"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t4"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t5"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t6"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/t7"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

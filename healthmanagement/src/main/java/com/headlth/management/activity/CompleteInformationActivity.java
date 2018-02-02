@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -62,6 +63,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import photopicker.PhotoPickerActivity;
+import photopicker.SelectModel;
+import photopicker.intent.PhotoPickerIntent;
 
 /**
  * Created by abc on 2016/9/13.
@@ -389,7 +394,7 @@ public class CompleteInformationActivity extends BaseActivity {
         userInformation.setNickName(NickName);
         userInformation.setWeight(Weight);
         userInformation.setHeight(Height);
-        userInformation.setGender(sex);
+        userInformation.setGender(sex.equals("2")?"2":"1");
         userInformation.setBirthday(Birthday);
         if (path.length() != 0) {
             userInformation.setFile(path);
@@ -406,6 +411,15 @@ public class CompleteInformationActivity extends BaseActivity {
     }
 
     private void openPhotoPop() {
+
+        PhotoPickerIntent intent = new PhotoPickerIntent(activity);
+        intent.setSelectModel(SelectModel.SINGLE);
+        intent.setShowCarema(true); // 是否显示拍照
+        intent.setMaxTotal(1); // 最多选择照片数量，默认为6
+        //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+        startActivityForResult(intent, 1);
+
+      /*
         bottomMenuDialog = new BottomMenuDialog.Builder(CompleteInformationActivity.this)
                 .addMenu("拍照", new View.OnClickListener() {
                     @Override
@@ -418,26 +432,52 @@ public class CompleteInformationActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, 1);
                         bottomMenuDialog.dismiss();
+
+                        PhotoPickerIntent intent = new PhotoPickerIntent(activity);
+                        intent.setSelectModel(SelectModel.SINGLE);
+                        intent.setShowCarema(false); // 是否显示拍照
+                        intent.setMaxTotal(1); // 最多选择照片数量，默认为6
+                        //intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+                        startActivityForResult(intent, 1);
+
+
+                       *//* Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image*//**//*");
+                        startActivityForResult(intent, 1);
+                        bottomMenuDialog.dismiss();*//*
 
                     }
                 }).create();
 
-        bottomMenuDialog.show();
+        bottomMenuDialog.show();*/
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {//拍照
-            if (resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == 1) {//
+            ArrayList<String> list = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+            if(list!=null&&list.size()>0){
+                String pictime = System.currentTimeMillis() + "";
+                Bimp.saveBitmap(list.get(0), pictime, new Bimp.OnSaveSuccessListener() {
+                    @Override
+                    public void onSuccess(String filepath) {
+                        Bitmap bitmap= Bimp.getSmallBitmap(filepath);
+                        activity_completeinformation_icon.setImageBitmap(bitmap);
+                        path=filepath;
+                    }
+                });
+            }else {
+                Toast.makeText(CompleteInformationActivity.this, "没有选中图片", Toast.LENGTH_LONG).show();
+            }
+
+         /*   if (resultCode == Activity.RESULT_OK && data != null) {
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
 
 
                 //activity_completeinformation_icon_bt.setVisibility(View.GONE);
                 // activity_completeinformation_icon.setVisibility(View.VISIBLE);
+
                 activity_completeinformation_icon.setImageBitmap(bitmap);
 
                 String pictime = System.currentTimeMillis() + "";
@@ -446,11 +486,22 @@ public class CompleteInformationActivity extends BaseActivity {
 
             } else {
                 Toast.makeText(CompleteInformationActivity.this, "没有选中图片", Toast.LENGTH_LONG).show();
-            }
-        } else if (requestCode == 1) {//相册选图
+            }*/
+        } /*else if (requestCode == 1) {//相册选图
             if (resultCode == Activity.RESULT_OK && data != null) {
                 Uri uri = data.getData();
                 String pickPath = MiPictureHelper.getPath(CompleteInformationActivity.this, uri);  // 获取图片路径的方法调用
+
+                String pictime = System.currentTimeMillis() + "";
+                Bimp.saveBitmap(pickPath, pictime, new Bimp.OnSaveSuccessListener() {
+                    @Override
+                    public void onSuccess(String filepath) {
+                        Bitmap bitmap= Bimp.getSmallBitmap(filepath);
+                        activity_completeinformation_icon.setImageBitmap(bitmap);
+                        path=filepath;
+                    }
+                });*/
+
 
               /*  Cursor cursor = CompleteInformationActivity.this.getContentResolver().query(data.getData(), null, null, null, null);
                cursor.moveToFirst();
@@ -458,11 +509,11 @@ public class CompleteInformationActivity extends BaseActivity {
                 File file = new File(cursor.getString(idx));*/
 
 
-                // Bitmap bitmap = BitmapFactory.decodeFile(pickPath);
-                Bitmap bitmap = Bimp.getSmallBitmap(pickPath);
-               /* String pictime = System.currentTimeMillis() + "";
+        // Bitmap bitmap = BitmapFactory.decodeFile(pickPath);
+              /*  Bitmap bitmap = Bimp.getSmallBitmap(pickPath);
+               *//* String pictime = System.currentTimeMillis() + "";
                 ScreenShot.saveMyBitmap( Bimp.getSmallBitmap(path), pictime, false, CompleteInformationActivity.this);
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/" + pictime + ".png";*/
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/" + pictime + ".png";*//*
 
 
                 //activity_completeinformation_icon_bt.setVisibility(View.GONE);
@@ -473,12 +524,12 @@ public class CompleteInformationActivity extends BaseActivity {
                 String pictime = System.currentTimeMillis() + "";
                 path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
 
-                ScreenShot.saveMyBitmap(bitmap, pictime, false, CompleteInformationActivity.this);
+                ScreenShot.saveMyBitmap(bitmap, pictime, false, CompleteInformationActivity.this);*/
 
-                // cursor.close();//cursor查询完之后要关掉
-            }
+        // cursor.close();//cursor查询完之后要关掉
+        //   }
 
-        }
+        //  }
     }
 
     //输入昵称
@@ -583,7 +634,7 @@ public class CompleteInformationActivity extends BaseActivity {
         waitDialog.setMessage("正在上传,请稍后...");
         waitDialog.setCancleable(true);
         waitDialog.showDailog();
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
+        final RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
         params.addBodyParameter("UID", ShareUitls.getString(CompleteInformationActivity.this, "UID", "") + "");
         params.addBodyParameter("ResultJWT", ShareUitls.getString(CompleteInformationActivity.this, "ResultJWT", "0"));
         params.addBodyParameter("NickName", userInformation.getNickName());
@@ -595,11 +646,12 @@ public class CompleteInformationActivity extends BaseActivity {
         Log.i("userInformationSSS", "" + path.length());
         if (path.length() != 0) {//从我的界面过来 而且头像没更改//        二次压缩
             String pictime = System.currentTimeMillis() + "";
-            ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(path), pictime, false, CompleteInformationActivity.this);
-            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-
-            Log.i("userInformationSSSAA", "" + path.length());
-            params.addBodyParameter("File", new File(path), "image/png");
+            Bimp.saveBitmap(path, pictime, new Bimp.OnSaveSuccessListener() {
+                @Override
+                public void onSuccess(String filepath) {
+                    params.addBodyParameter("File", new File(filepath), "image/png");
+                }
+            });
         }
         params.setMultipart(true);
         Callback.Cancelable cancelable = x.http().post(params,

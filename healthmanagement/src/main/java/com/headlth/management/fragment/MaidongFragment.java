@@ -24,12 +24,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.headlth.management.R;
 import com.headlth.management.activity.AdvancedPrescriptionActivity;
+import com.headlth.management.activity.AlbbStrengthSportActivity;
 import com.headlth.management.activity.ChuFangDtail;
 import com.headlth.management.activity.ConnectBlueActivity;
 import com.headlth.management.activity.ExercisePlanActivity;
 import com.headlth.management.activity.ExerciseRecordActivity;
 import com.headlth.management.activity.MainActivity;
 import com.headlth.management.activity.NewChuFang;
+import com.headlth.management.activity.NewSearchBlueActivity;
 import com.headlth.management.activity.PrescriptionDetailsActivity;
 import com.headlth.management.activity.SearchBlueActivity;
 import com.headlth.management.activity.StrengthSportActivity;
@@ -332,7 +334,7 @@ public class MaidongFragment extends BaseFragment {
                 break;
             case R.id.fragment_maidong_strength_go:
                 // if(InternetUtils.internet(getActivity())) {
-                startActivity(new Intent(getActivity(), StrengthSportActivity.class));
+                startActivity(new Intent(getActivity(), AlbbStrengthSportActivity.class));
                 // }
                 break;
             case R.id.fragment_maidong_exercise_plan_youyang_detials_layout:
@@ -518,7 +520,7 @@ public class MaidongFragment extends BaseFragment {
 
     public static void getAdvancedPrescriptionRequest(final Activity activity) {
         initDialog(activity);
-        if (true) {
+        if (startSport) {
             String SPID = ShareUitls.getString(activity, "SPID", "");//获取当前处方的SPID（本页刷新 和 答完问卷后会更新该参数 （QuestionnaireAdapter））
             if (SPID.length() != 0) {
                 // startSport = false;
@@ -531,7 +533,7 @@ public class MaidongFragment extends BaseFragment {
                             @Override
                             public void onResponse(String response) {
                                 AdvancedPrescription advancedPrescription = new Gson().fromJson(response, AdvancedPrescription.class);//advancedPrescription.WatchDuration
-                                //   startSport = true;
+                                 startSport = true;
                                 Log.i("myblue", "  " + response.toString());
                                 if (advancedPrescription == null || advancedPrescription.IsSuccess.equals("false")) {
                                     getAdvancedPrescriptionRequest(activity);
@@ -553,7 +555,7 @@ public class MaidongFragment extends BaseFragment {
                             @Override
                             public void onErrorResponse(Throwable ex) {
                                 waitDialog.dismissDialog();
-                                // startSport = true;
+                             startSport = true;
                                 Log.i("myblue", "onErrorResponse");
                             }
                         }
@@ -597,7 +599,7 @@ public class MaidongFragment extends BaseFragment {
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
                 ShareUitls.putString(getActivity(), "UBound", UserIndexList.UBound + "");
                 // String LBound = "50";
-                   String LBound=UserIndexList.LBound ;
+                 String LBound=UserIndexList.LBound ;
                 ShareUitls.putString(getActivity(), "LBound", LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 
@@ -730,7 +732,7 @@ public class MaidongFragment extends BaseFragment {
         polar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.startActivity(new Intent(activity, SearchBlueActivity.class));
+                activity.startActivity(new Intent(activity, NewSearchBlueActivity.class));
                 chooseDevice.dismiss();
             }
         });
@@ -739,20 +741,26 @@ public class MaidongFragment extends BaseFragment {
         watch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
-                String WATCHSPORT = ShareUitls.getString(activity, "WATCHSPORT", "");
-                if (WATCHSPORT.length() != 0) {
-                    showNotDialog(activity, false, null);
-                } else {
-                    if (mySQLiteDataDao == null) {
-                        mySQLiteDataDao = MySQLiteDataDao.getInstance(activity);
-                    }
-                    if (mySQLiteDataDao.querySingleNOOriginal().size() != 0) {
-                        MainActivity.RemindSyncDataDailog(activity);//弹出提示同步的提示框
-                        chooseDevice.dismiss();
-                        return;
-                    }
+                final String MAC = ShareUitls.getUserInformationMac(activity);//CF:09:6B:27:02:BB
+
+                if (MAC.equals("")) {
                     getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
+                }else {
+                    //  getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
+                    String WATCHSPORT = ShareUitls.getString(activity, "WATCHSPORT", "");
+                    if (WATCHSPORT.length() != 0) {
+                        showNotDialog(activity, false, null);
+                    } else {
+                        if (mySQLiteDataDao == null) {
+                            mySQLiteDataDao = MySQLiteDataDao.getInstance(activity);
+                        }
+                        if (mySQLiteDataDao.querySingleNOOriginal().size() != 0) {
+                            MainActivity.RemindSyncDataDailog(activity);//弹出提示同步的提示框
+                            chooseDevice.dismiss();
+                            return;
+                        }
+                        getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
+                    }
                 }
                 chooseDevice.dismiss();
             }

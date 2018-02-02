@@ -1,5 +1,6 @@
 package com.headlth.management.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import com.headlth.management.MyBlue.MyBuleSearchManager;
 import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.deviceEntity;
+import com.headlth.management.myview.MyToash;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -77,6 +79,7 @@ public class SearchBlueActivity extends BaseActivity {
     //开启动画扫描效果
     TranslateAnimation ta1;
     private MyBuleSearchManager myBuleSerachManager;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class SearchBlueActivity extends BaseActivity {
     }
 
     private void initialize() {
+        activity = this;
         view_publictitle_title.setText("搜索心率设备");
         devices = new ArrayList<>();
         adapter = new AppAdapter(devices);
@@ -99,7 +103,7 @@ public class SearchBlueActivity extends BaseActivity {
                 myBuleSerachManager = null;
                 Intent intent = new Intent();
                 intent.putExtra("MAC", adrs);
-                intent.setClass(SearchBlueActivity.this, AerobicSportActivity.class);//por开始运动
+                intent.setClass(activity, AerobicSportActivity.class);//por开始运动
                 startActivity(intent);
                 finish();
 
@@ -108,7 +112,7 @@ public class SearchBlueActivity extends BaseActivity {
         });
 
         startAnimation();
-        myBuleSerachManager = MyBuleSearchManager.getInstance(SearchBlueActivity.this, 3000, new MyBuleSearchManager.LeScanCallbackListener() {
+        myBuleSerachManager = MyBuleSearchManager.getInstance(activity, 3000, new MyBuleSearchManager.LeScanCallbackListener() {
             @Override
             public void getBluetoothDeviceList(List<MyBuleSearchManager.BluetoothDeviceEntity> bluetoothDevices) {
                 activity_serachblue_tration.setVisibility(View.INVISIBLE);
@@ -311,7 +315,6 @@ public class SearchBlueActivity extends BaseActivity {
             }
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

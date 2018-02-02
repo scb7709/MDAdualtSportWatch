@@ -63,10 +63,10 @@ public class MaidongCircleFragment extends BaseFragment {
     private RelativeLayout share;
     private ImageView main_share_add;
 
-    private String userIDFlag = "0";
+    //  private String userIDFlag = "0";
     private int flag;
-    private String UserID;
-    private String UID;
+    //  private String UserID;
+    private String UID,AuthorUserID,ResultJWT;
     Gson gson;
     private BottomMenuDialog bottomMenuDialog;
 
@@ -91,8 +91,8 @@ public class MaidongCircleFragment extends BaseFragment {
 
             } else {
 
-                Log.i("VVVV", UserID + "  " + CircleList.getInstance().circlelist.get(position).getUserID());
-                if (UserID.equals(CircleList.getInstance().circlelist.get(position).getUserID())) {
+                Log.i("VVVV", UID + "  " + CircleList.getInstance().circlelist.get(position).getUserID());
+                if (UID.equals(CircleList.getInstance().circlelist.get(position).getUserID())) {
 
                     bottomMenuDialog = new BottomMenuDialog.Builder(getActivity())
                             .addMenu("删除", new View.OnClickListener() {
@@ -131,7 +131,8 @@ public class MaidongCircleFragment extends BaseFragment {
 
     private void initialize() {
         gson = new Gson();
-        UserID = ShareUitls.getString(getActivity(), "UID", "0");
+        UID = ShareUitls.getString(getActivity(), "UID", "0");
+        ResultJWT= ShareUitls.getString(getActivity(), "ResultJWT", "0");
         share = (RelativeLayout) getActivity().findViewById(R.id.main_share);
         main_share_add = (ImageView) getActivity().findViewById(R.id.main_share_add);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -155,7 +156,7 @@ public class MaidongCircleFragment extends BaseFragment {
             //b;清理磁盘缓存
         }
 
-       circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler,false);
+        circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler,false);
         frgment_maidongcircle_SwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -239,14 +240,21 @@ public class MaidongCircleFragment extends BaseFragment {
                                         startActivityForResult(intent, 147);
                                         break;
                                     case 1:
-                                        userIDFlag = ShareUitls.getString(getActivity(), "UID", "0");
+                                        ShareUitls.putString(getActivity(), "circlelastOffset", "0");
+                                        ShareUitls.putString(getActivity(), "circlelastPosition", "0");
+                                        ShareUitls.putString(getActivity(), "AuthorUserID",UID);
                                         CircleList.getInstance().circlelist.clear();
+                                        circleRecyclerViewAdapter.notifyDataSetChanged();
                                         Glide.get(getActivity()).clearMemory();
                                         getAllContent(1);
                                         break;
                                     case 2:
-                                        userIDFlag = "0";
+                                        ShareUitls.putString(getActivity(), "circlelastOffset", "0");
+                                        ShareUitls.putString(getActivity(), "circlelastPosition", "0");
+                                        ShareUitls.putString(getActivity(), "AuthorUserID", "0");
+
                                         CircleList.getInstance().circlelist.clear();
+                                        circleRecyclerViewAdapter.notifyDataSetChanged();
                                         Glide.get(getActivity()).clearMemory();
                                         getAllContent(0);
                                         break;
@@ -259,7 +267,7 @@ public class MaidongCircleFragment extends BaseFragment {
 
 
         });
-       // circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
+        // circleRecyclerViewAdapter = new CircleRecyclerViewAdapter(CircleList.getInstance().circlelist, getActivity(), handler);
         frgment_maidongcircle_recyclerView.setAdapter(circleRecyclerViewAdapter);
     }
 
@@ -270,9 +278,9 @@ public class MaidongCircleFragment extends BaseFragment {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareUpdateRequest");
 
-        params.addBodyParameter("UID", ShareUitls.getString(getActivity(), "UID", "") + "");
-        params.addBodyParameter("ResultJWT", ShareUitls.getString(getActivity(), "ResultJWT", "0"));
-        params.addBodyParameter("UserID", ShareUitls.getString(getActivity(), "UID", "0"));
+        params.addBodyParameter("UID",UID);
+        params.addBodyParameter("ResultJWT", ResultJWT);
+        params.addBodyParameter("UserID", UID);
         params.addBodyParameter("ContentID", circle.getContentID());
         params.addBodyParameter("CommentID", "0");
         params.addBodyParameter("ReplyID", "0");
@@ -305,14 +313,11 @@ public class MaidongCircleFragment extends BaseFragment {
 
     //参数：UserID, ContentID， flag 后两个值初始为0，上拉时传入当前页面第一条内容ContentID，flag=7；下拉时传入当前页面最后一条内容的ContentID,flag=8
     private void getAllContent(final int flag) {
-
-
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetShareContentRequest");
-
-        params.addBodyParameter("UID", ShareUitls.getString(getActivity(), "UID", "") + "");
-        params.addBodyParameter("ResultJWT", ShareUitls.getString(getActivity(), "ResultJWT", "0"));
-        params.addBodyParameter("AuthorUserID", userIDFlag);
-        params.addBodyParameter("MyUserID", ShareUitls.getString(getActivity(), "UID", "0"));
+        params.addBodyParameter("UID", UID);
+        params.addBodyParameter("ResultJWT", ResultJWT);
+        params.addBodyParameter("AuthorUserID",ShareUitls.getString(getActivity(), "AuthorUserID", "0") );
+        params.addBodyParameter("MyUserID", UID);
         if (flag == 8) {
             if (CircleList.getInstance().circlelist.size() != 0) {
                 params.addBodyParameter("ContentID", CircleList.getInstance().circlelist.get(0).getContentID());
@@ -354,7 +359,7 @@ public class MaidongCircleFragment extends BaseFragment {
                                     CircleList.getInstance().circlelist.addAll(0, shareContentList.ShareContentList);
                                     circleRecyclerViewAdapter.notifyItemRangeInserted(0, shareContentList.ShareContentList.size());
                                 } else if (flag == 7) {
-                                   CircleList.getInstance().circlelist.addAll(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList);
+                                    CircleList.getInstance().circlelist.addAll(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList);
                                     circleRecyclerViewAdapter.notifyItemRangeInserted(CircleList.getInstance().circlelist.size(), shareContentList.ShareContentList.size());
 
                                 } else {

@@ -544,6 +544,7 @@ public class WatchBlueTestActivity extends Activity {
     };
 
     public static byte[] bangding(boolean isbangding, String UID) {
+        Log.i("bytes[]", UID+"");
         byte[] bytes = new byte[19];
         for (int i = 0; i < 19; i++) {//初始化全部为0
             bytes[i] = 0;
@@ -562,11 +563,11 @@ public class WatchBlueTestActivity extends Activity {
         byte sum = 0;
 
         for (int i = 0; i < bytes.length; i++) {
-            Log.i("myblue", bytes[i] + "");
+            Log.i("bytes["+i+"]", bytes[i] + "");
             sum += bytes[i];
         }
         bytes[18] = sum;
-        Log.i("myblue", str + "");
+        Log.i("bytes[18]", sum+"");
         return bytes;
     }
 
@@ -958,7 +959,7 @@ public class WatchBlueTestActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         if (myBuleConnectManager != null) {
-            myBuleConnectManager.endConnect();
+            MyBuleWatchManager.endConnect();
         }
         if (myBuleSerachManager != null) {
             myBuleSerachManager.endSearch();//停止搜索

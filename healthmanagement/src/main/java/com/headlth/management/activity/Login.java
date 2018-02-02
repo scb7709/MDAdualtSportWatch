@@ -259,8 +259,8 @@ public class Login extends OriginalActivity {
                                 case "2":
                                 case "3":
                                     ShareUitls.putString(activity, "IsfLoginToMain", "true");
-                                    if (MainActivity.Activity != null) {
-                                        MainActivity.Activity.finish();
+                                    if (MainActivity.activity != null) {
+                                        MainActivity.activity.finish();
                                     }
                                     i.setClass(activity, MainActivity.class);
                                     ShareUitls.putString(activity, "UID", userLogin.UserID);

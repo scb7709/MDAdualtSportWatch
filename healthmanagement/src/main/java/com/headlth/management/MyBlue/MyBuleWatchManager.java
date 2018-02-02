@@ -54,7 +54,7 @@ public class MyBuleWatchManager implements Serializable {
     private boolean FirstRemind, IS_FIRST = true;//当前设备被其他设备连接
     public static boolean OVER;//结束
     private Timer timer;
-    private TimerTask timerTask;
+    private static TimerTask timerTask;
     private static BluetoothGattCharacteristic READE_BluetoothGattCharacteristic;
     private static BluetoothGattCharacteristic WRITE_BluetoothGattCharacteristic;
 
@@ -66,14 +66,12 @@ public class MyBuleWatchManager implements Serializable {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         boolean flag = bluetoothAdapter.isEnabled();
         timer = new Timer();
+        activity.registerReceiver(receiver, MyBuleSearchManager.registBroadcast());
         if (flag) {
             first_connect();//开启首次连接
         } else {
-            activity.registerReceiver(receiver, MyBuleSearchManager.registBroadcast());
-            MyBuleSearchManager.openBluetooth(activity);
+             MyBuleSearchManager.openBluetooth(activity);
         }
-
-
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -85,7 +83,7 @@ public class MyBuleWatchManager implements Serializable {
                 Log.i("", "系统蓝牙断开！！");
                 //   boolean isEnable = enable();
                 //   if (!isEnable)
-                //    openBluetooth(activity);
+                MyBuleSearchManager.openBluetooth(activity);
             } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
                 first_connect();//开启首次连接
             }
@@ -213,6 +211,11 @@ public class MyBuleWatchManager implements Serializable {
                     } catch (NullPointerException n) {
                     }
                     break;
+                case 5://
+
+                    break;
+
+
             }
         }
     };
@@ -337,11 +340,19 @@ public class MyBuleWatchManager implements Serializable {
         }
     };
 
-    public void endConnect() {
+    public static void endConnect() {
         OVER = true;
         if (timerTask != null) {
             timerTask.cancel();
             timerTask = null;
+        }
+        try {
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.disconnect();
+                mBluetoothGatt.close();
+                mBluetoothGatt = null;
+            }
+        } catch (Exception e) {
         }
         try {
             if (mBluetoothGatt != null) {

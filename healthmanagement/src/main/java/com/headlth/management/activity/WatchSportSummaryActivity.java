@@ -109,6 +109,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
         upLoadingWatchData = UpLoadingWatchData.getInstance(activity);
         mySQLiteDataDao = MySQLiteDataDao.getInstance(activity);
         MAC = ShareUitls.getUserInformationMac(activity);
+        ShareUitls.putString(activity, "isConnectActivity", "");
         MyToash.Log("MAC=====" + MAC);
         // UID = ShareUitls.getString(activity, "UID", "0");
         //  version = VersonUtils.getVersionName(activity);
@@ -216,10 +217,10 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 WRITE_BluetoothGattCharacteristic = WRITE_BluetoothGattCharacteristi;
                 mBluetoothGatt = bluetoothGatt;
                 if (WRITE_BluetoothGattCharacteristic != null && mBluetoothGatt != null) {
-                    waitDialog.setMessage("正在同步数据...");
-                    byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
-                    sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
-                    myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                    waitDialog.setMessage("正在查询设备状态");
+                    byte[] bytes = WatchBlueTestActivity.getWatchBuleData("GetWatchSportState");
+                    sendToBule(bytes,WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                    myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("GetWatchSportState");
                 }
             }
 
@@ -241,6 +242,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {//画心率图
+                myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
                 // Log.i("mybule", "设备可读可写");
                 String text = msg.obj.toString();
                 int length = text.length();
@@ -248,12 +250,6 @@ public class WatchSportSummaryActivity extends BaseActivity {
                 if (length > 5) {
                     String head = text.substring(0, 2);
                     HandlerData(length, head, text);
-                }
-            } else {//画心率图
-                MyToash.Log("画心率图");
-                if (lines != null && lines.size() > 0) {
-                    MyToash.Log("画心率图"+  lines.size());
-                    suitLines.feedWithAnim(lines);
                 }
             }
         }
@@ -280,6 +276,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
                             dataSyncFail();//数据获取失败
                         }
                         break;
+                    case "GetWatchSportState":
                     case "Single_motion_results":
 
                   /*      cruuent = startTimeList.size() - 1;//用来记录当前集合最后一个
@@ -323,6 +320,25 @@ public class WatchSportSummaryActivity extends BaseActivity {
     // @TargetApi(Build.VERSION_CODES.N)
     private void HandlerData(int length, String head, String text) {
         switch (head) {
+            case "13"://运动状态查询
+                if (text.substring(0, 6).equals("130400")) {//
+
+                    waitDialog.setMessage("正在同步数据...");
+                    byte[] bytes = WatchBlueTestActivity.getWatchBuleData("Single_motion_results");
+                    sendToBule(bytes, WRITE_BluetoothGattCharacteristic, mBluetoothGatt);
+                    myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("Single_motion_results");
+                } else {
+                    ShareUitls.putString(activity, "isConnectActivity", "SPORTING");
+                    MyToash.Toash(activity,"同步失败(腕表正处于运动模式中)");
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    waitDialog.dismissDialog();
+                    finish();
+                }
+                break;
             case "08"://单次运动总结
                 if (length == 40) {
                     if (!text.equals("081400000000000000000000000000000000001c")) {
@@ -455,6 +471,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
     }
 
     private void dataSyncOver() {
+        ShareUitls.putString(activity, "isConnectActivity", "connect");//回到首页的时候 能获取连接
         myWatchBlueHandler.sendMyWatchEmptyMessageDelayed("");
         canback = true;
         waitDialog.setMessage("同步完成...");
@@ -468,7 +485,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
         MyToash.Toash(activity, "连接失败");
         waitDialog.dismissDialog();
         if (myBuleWatchManager != null) {
-            myBuleWatchManager.endConnect();
+            MyBuleWatchManager.endConnect();
         }
         startActivity(new Intent(activity, MainActivity.class));
         finish();
@@ -581,8 +598,8 @@ public class WatchSportSummaryActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ShareUitls.putString(WatchSportSummaryActivity.this, "WATCHSPORT", "");
-        ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
+        ShareUitls.putString(activity, "WATCHSPORT", "");
+        //ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
        /* if (myBuleWatchManager != null) {
             myBuleWatchManager.endConnect();
         }*/
@@ -596,7 +613,7 @@ public class WatchSportSummaryActivity extends BaseActivity {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
             if (canback) {
                 ShareUitls.putString(WatchSportSummaryActivity.this, "WATCHSPORT", "");
-                ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
+                //ShareUitls.putString(WatchSportSummaryActivity.this, "isConnectActivity", "");
               /*  if (myBuleWatchManager != null) {
                     myBuleWatchManager.endConnect();
                 }*/

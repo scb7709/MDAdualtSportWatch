@@ -28,7 +28,9 @@
 
     <color name="tab_not_sel">#999999</color>
 
-
+    <color name="analizegray">#c7c7c7</color>
+    <color name="analizeline">#6D6F6E</color>
+    <color name="analizeeffect">#ffac04</color>
 
 
 

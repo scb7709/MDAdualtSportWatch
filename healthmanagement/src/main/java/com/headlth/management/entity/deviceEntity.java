@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Created by Administrator on 2016/5/3.
  */
-public class deviceEntity implements Comparable<deviceEntity> {
+public class deviceEntity implements Comparable{
     private String address;
     private String name;
     private int rssi;//信号强度
@@ -19,6 +19,13 @@ public class deviceEntity implements Comparable<deviceEntity> {
                 ", rssi=" + rssi +
                 ", distance=" + distance +
                 '}';
+    }
+
+    public deviceEntity() {
+    }
+
+    public deviceEntity(String address) {
+        this.address = address;
     }
 
     public double getDistance() {
@@ -54,12 +61,12 @@ public class deviceEntity implements Comparable<deviceEntity> {
     }
 
 
-    @Override
+   /* @Override
     public int compareTo(deviceEntity deviceEntity) {
 
 
         return (int) (this.distance - deviceEntity.distance);
-    }
+    }*/
 
     @Override
     public boolean equals(Object obj) {
@@ -74,7 +81,7 @@ public class deviceEntity implements Comparable<deviceEntity> {
         }
         deviceEntity deviceEntity = (deviceEntity) obj;
 
-        if ( this.name.equals(deviceEntity.name)) {
+        if ( this.address.equals(deviceEntity.address)) {
             return true;
         }
 
@@ -94,5 +101,10 @@ public class deviceEntity implements Comparable<deviceEntity> {
     //覆写Object中的hashCode方法
     public int hashCode() {
         return this.name.hashCode() * this.address.hashCode()* (int)(this.distance)* this.rssi;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

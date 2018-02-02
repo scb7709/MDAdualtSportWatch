@@ -46,6 +46,7 @@ import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.MGridView;
 import com.headlth.management.myview.MyRecyclerViewGridView;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.RoundImageView;
 import com.headlth.management.myview.SpaceItemDecoration;
 import com.headlth.management.utils.Constant;
@@ -165,14 +166,21 @@ public class CircleRecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder
             holder.listview_maidongcircle_user.setText(circle.getUsername());
 
         }
-
-
-        if (circle.getContentText().length() >= 150) {
-            holder.listview_maidongcircle_text_all.setVisibility(View.VISIBLE);
-            holder.listview_maidongcircle_text.setText(circle.getContentText().substring(0, 150));
-        } else {
-            holder.listview_maidongcircle_text.setText(circle.getContentText());
+        int length = circle.getContentText().length();//replace(" ","").length()==0 length==1&&
+        if (length == 0||(circle.getContentText().equals(" "))) {//服务器返回的数据 如果没有文字内容 默认是空格
+            MyToash.Log("length0="+length);
+            holder.listview_maidongcircle_text.setVisibility(View.GONE);
             holder.listview_maidongcircle_text_all.setVisibility(View.GONE);
+        } else {
+            MyToash.Log("length!0="+length);
+            holder.listview_maidongcircle_text.setVisibility(View.VISIBLE);
+            if (length >= 150) {
+                holder.listview_maidongcircle_text_all.setVisibility(View.VISIBLE);
+                holder.listview_maidongcircle_text.setText(circle.getContentText().substring(0, 150));
+            } else {
+                holder.listview_maidongcircle_text.setText(circle.getContentText());
+                holder.listview_maidongcircle_text_all.setVisibility(View.GONE);
+            }
         }
 
         holder.listview_maidongcircle_time.setText(DataString.showTime(circle.getCreateTime()));
@@ -268,7 +276,7 @@ public class CircleRecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder
                     @Override
                     public void onResponse(String response) {
                         requestnetworking = false;
-                       // Log.i("onResponse", Flag + "   " + CircleList.getInstance().circlelist.get(position).getUsername() + "  " + position);
+                        // Log.i("onResponse", Flag + "   " + CircleList.getInstance().circlelist.get(position).getUsername() + "  " + position);
                         Circle circle = list.get(position);
                         int likecount = circle.getAttitudeCount();
                         if (Flag.equals("0")) {
@@ -287,7 +295,7 @@ public class CircleRecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder
                         }
                         notifyItemChanged(position, "notifyItemChanged");
                         // handler.sendEmptyMessage(0);
-                        if(flag){
+                        if (flag) {
                             CircleList.getInstance().circlelist.clear();//迈动圈子数据变化 清空数据
                         }
                     }

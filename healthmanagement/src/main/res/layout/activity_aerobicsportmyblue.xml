@@ -339,7 +339,14 @@
                             android:layout_marginBottom="6dp"
                             android:src="@mipmap/move"
                             android:visibility="gone" />
-
+                        <ImageView
+                            android:id="@+id/movemax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|bottom"
+                            android:layout_marginBottom="6dp"
+                            android:src="@mipmap/move"
+                            android:visibility="gone" />
                         <TextView
                             android:id="@+id/zhubutishentip"
                             android:layout_width="wrap_content"
@@ -441,6 +448,7 @@
                     android:id="@+id/drawline"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:weightSum="1">
@@ -649,7 +657,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView"

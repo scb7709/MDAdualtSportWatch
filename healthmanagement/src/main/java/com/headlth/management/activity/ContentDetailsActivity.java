@@ -258,7 +258,11 @@ public class ContentDetailsActivity extends BaseActivity {
 
         holder.contentdetails_user.setText(circle.getUsername());
         holder.contentdetails_time.setText(DataString.showTime(circle.getCreateTime()));
-        holder.contentdetails_text.setText(circle.getContentText());
+        if (circle.getContentText().length() == 0||(circle.getContentText().equals(" "))) {
+            holder.contentdetails_text.setVisibility(View.GONE);
+        }else {
+            holder.contentdetails_text.setText(circle.getContentText());
+        }
         if (circle.getImageUrls() != null && circle.getImageUrls().size() != 0) {
             holder.contentdetails_Scrollgridview.setVisibility(View.VISIBLE);
 

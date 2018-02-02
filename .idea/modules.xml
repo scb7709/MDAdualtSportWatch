@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/Pushlib/Pushlib.iml" filepath="$PROJECT_DIR$/Pushlib/Pushlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/healthmanagement/healthmanagement.iml" filepath="$PROJECT_DIR$/healthmanagement/healthmanagement.iml" />
       <module fileurl="file://$PROJECT_DIR$/heartimage/heartimage.iml" filepath="$PROJECT_DIR$/heartimage/heartimage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oss-android-sdk/oss-android-sdk.iml" filepath="$PROJECT_DIR$/oss-android-sdk/oss-android-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/toprightmenu/toprightmenu.iml" filepath="$PROJECT_DIR$/toprightmenu/toprightmenu.iml" />
     </modules>
   </component>

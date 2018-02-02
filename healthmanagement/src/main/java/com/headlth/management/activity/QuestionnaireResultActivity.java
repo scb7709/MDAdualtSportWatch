@@ -333,7 +333,7 @@ public class QuestionnaireResultActivity extends BaseActivity {
                   /*  if (PrescriptionDetailsActivity.activity != null) {
                         PrescriptionDetailsActivity.activity.finish();
                     }*/
-                    startActivity(new Intent(QuestionnaireResultActivity.this, StrengthSportActivity.class));
+                    startActivity(new Intent(QuestionnaireResultActivity.this, AlbbStrengthSportActivity.class));
                     popupWindow.dismiss();
                 }
             });

@@ -1,20 +1,13 @@
 package com.headlth.management.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -26,22 +19,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.SeekBar;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.headlth.management.R;
-import com.headlth.management.acs.App;
 import com.headlth.management.entity.User;
-import com.headlth.management.entity.UserLogin;
 import com.headlth.management.entity.VersionClass;
 
 import com.headlth.management.utils.Constant;
-
 
 import com.headlth.management.utils.InternetUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -58,18 +46,15 @@ import com.umeng.message.PushAgent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.HttpManager;
-import org.xutils.common.Callback;
+
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -168,19 +153,24 @@ public class HomeActivity extends Activity {
     }
 
     private void initialize() {
+
+
+
         x.view().inject(this);
+
         activity = this;
         ShareUitls.putString(activity, "questionnaire", "1");//控制首页界面推荐内容重新刷新
         ShareUitls.putString(activity, "maidong", "1");//控制首页界面重新刷新
         ShareUitls.putString(activity, "analize", "1");//控制分析重新刷新
         ShareUitls.putString(activity, "todaydata", "{}");//
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        ShareUitls.putString(activity, "isConnectActivity", "");
         ShareUitls.putString(activity, "CLICKDADE", format.format(new Date()));//把日历 点击 默认今天
         ShareUitls.putString(activity, "todayvideo", "");
         // ShareUitls.putString(getApplicationContext(), "TODAY", format.format(new Date()));//保存启动APP的时间 确保每天都重新登录过
+
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.onAppStart();
+
 
 
     }
@@ -352,22 +342,7 @@ public class HomeActivity extends Activity {
         if (!loginFlag.equals("null")) {
             if (loginFlag.equals("0")) {
                 User user = ShareUitls.getUser(activity);
-                if (user == null) {
-                    Toast.makeText(activity, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
-                    activity.startActivity(new Intent(activity, Login.class));
-                    activity.finish();
-                    return;
-                }
-                if (user.getPhone() != null) {
-                    Login.phoneLogin(activity, user.getPhone(), user.getPwd(), FlagActivity);
-                } else if (user.getUserInformation().getNickName() != null) {
-                    Login.phoneLogin(activity, user.getUserInformation().getNickName(), user.getPwd(), FlagActivity);
-                } else {
-                    Toast.makeText(activity, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
-                    activity.startActivity(new Intent(activity, Login.class));
-                    activity.finish();
-                }
-
+                Login.phoneLogin(activity, user.getPhone(), user.getPwd(), FlagActivity);
             } else {
                 Map<String, String> map = new HashMap<String, String>();
                 User user = ShareUitls.getUser(activity);
@@ -453,14 +428,11 @@ public class HomeActivity extends Activity {
                         Log.e("ffff广告aaaaa", response.toString());
                         try {
                             jsonObject = new JSONObject(response);
-
-
                             if (jsonObject.getString("Status").equals("1")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("AdImgList");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     Log.e("ffff广告-----", Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
                                     LoadingPagesUrl.add(Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
-
                                 }
                                 if (LoadingPagesUrl.size() != 0) {//广告展示
                                     Log.e("ffff广告-----AAA", LoadingPagesUrl.size() + "");
@@ -476,13 +448,11 @@ public class HomeActivity extends Activity {
                                     setTimeTask();//
                                 }
                             } else {
-
                                 setTimeTask();//
                             }
 
-
                         } catch (JSONException e) {
-                            setTimeTask();
+                            setTimeTask();//
                             e.printStackTrace();
                             Log.e("ffff广告-----", "异常");
                         }
@@ -506,18 +476,9 @@ public class HomeActivity extends Activity {
 
         );
 
-        // http://192.168.0.250:8082/
     }
 
-    public String changDataType(String str) {
-        String s3 = str;
-        String[] temp = null;
-        temp = s3.split("/");
-        for (int j = 0; j < temp.length; j++) {
-            Log.e("ffff", temp[j]);
-        }
-        return temp[0] + "-" + second(Integer.parseInt(temp[1])) + "-" + second(Integer.parseInt(temp[2]));
-    }
+
 
     public String second(int i) {
         if (i < 10) {
@@ -569,7 +530,7 @@ public class HomeActivity extends Activity {
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    // VersionClass versionClass;
+   // VersionClass versionClass;
 
     public void checkVersion() {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostVersionNewRequest");
@@ -577,7 +538,7 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onResponse(String response) {
                         VersionClass versionClass = g.fromJson(response, VersionClass.class);
-                        Log.e("版本aaaaa", response.toString());
+                        Log.i("版本aaaaa", response.toString());
                         if (versionClass.Status == 1) {
                             ShareUitls.putVersion(HomeActivity.this, versionClass.Version);
                         /*    if (versionClass.Version.VersionCode > VersonUtils.getVerisonCode(HomeActivity.this)) {
